@@ -39,7 +39,6 @@ public class UDMLParser {
 	public UDMLParser(String sInput, String sOutput) {
 		docUDML = XMLUtils.createDOMDocument();
 		root = docUDML.createElement("UDML");
-		//root.setAttribute("xmlns", "http://www.oracle.com/rpd_cubicimpact");
 		fNQ_UDML = new File (sInput);
 		if(isUDML())
 			parse();

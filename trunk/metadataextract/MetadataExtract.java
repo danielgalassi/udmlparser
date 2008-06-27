@@ -5,7 +5,6 @@ import xmlutils.XMLUtils;
 
 public class MetadataExtract {
 
-
 	private static String sUDMLtxt		= null;
 	private static String sUDMLxml		= null;
 	private static String sUDMLxsl		= null;
@@ -15,7 +14,6 @@ public class MetadataExtract {
 	private static String sXMLFile		= null;
 	private static String sXSLFile		= null;
 	private static String sTXTFile		= null;
-
 
 	/**
 	 * Constructor, validation of parameters and 
@@ -37,7 +35,7 @@ public class MetadataExtract {
 					"from XSL transformation");
 			
 			System.out.println("UNIX path form: /dir1/../dirN/file");
-			System.out.println("WINDOWS path form: drive\\dir1\\..\\dirN\\file");
+			System.out.println("WIN path form: drive\\dir1\\..\\dirN\\file");
 			return;
 		}
 
