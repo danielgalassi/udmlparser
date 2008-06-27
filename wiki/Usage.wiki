@@ -2,7 +2,6 @@
 #labels Phase-Deploy
 
 
-
 ===How to make it run===
 
   # download it, from _*Downloads*_ tab.
@@ -19,4 +18,5 @@
 
 
 *I like the idea of getting issues reported*
+
 *I also like the idea of someone contributing to the project*
