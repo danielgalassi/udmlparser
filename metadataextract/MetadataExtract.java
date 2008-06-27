@@ -14,11 +14,6 @@ public class MetadataExtract {
 	private static String sUDMLxml		= null;
 	private static String sUDMLxsl		= null;
 	private static String sUDMLtarget	= null;
-	private static String sWebCatDir	= null;
-	private static String sWorkingDir	= null;
-	private static String sXMLFile		= null;
-	private static String sXSLFile		= null;
-	private static String sTXTFile		= null;
 
 	/**
 	 * Constructor, validation of parameters and 
@@ -72,10 +67,5 @@ public class MetadataExtract {
 		sUDMLxml		= null;
 		sUDMLxsl		= null;
 		sUDMLtarget		= null;
-		sWebCatDir		= null;
-		sWorkingDir		= null;
-		sXMLFile		= null;
-		sXSLFile		= null;
-		sTXTFile		= null;
 	}
 }
