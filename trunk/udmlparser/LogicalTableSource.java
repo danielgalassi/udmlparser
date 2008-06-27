@@ -127,7 +127,7 @@ public class LogicalTableSource {
  * {<FQ logical column name 2>}  AS {<FQ mapping to Physical layer 2>} )
  * FROM 
  * (
- * <source tables � joins> 
+ * <source tables & joins> 
  * DETAIL FILTER {<filter condition>}  CAN NOT COMBINE
  * PRIVILEGES ( READ);
  */
