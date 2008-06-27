@@ -15,23 +15,30 @@ import org.w3c.dom.Node;
  */
 public class CatalogFolder {
 
-	private String		sCatalogFolderID;
-	private String		sCatalogFolderName;
-	private String[]	saCatalogFolderAliases = null;
-	private String		sCatalogFolderMappingID;
+	private String		sCatFolderID;
+	private String		sCatFolderName;
+	private String[]	saCatFolderAliases = null;
+	private String		sCatFolderMappingID;
 	private Vector		vEntityFolderID = null;
 
-	public CatalogFolder(String sDeclareStmt, String sCatalogFolder, BufferedReader brUDML) {
+	public CatalogFolder(String sDeclareStmt,
+							String sCatFolder,
+							BufferedReader brUDML) {
 		String line;
-		sCatalogFolderID = sDeclareStmt.trim().substring(sCatalogFolder.length(),sDeclareStmt.trim().indexOf(" AS ")).trim().replaceAll("\"", "");
-		sCatalogFolderName = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" AS ")+4).trim().replaceAll("\"", "");
+		sCatFolderID = sDeclareStmt.trim().substring(sCatFolder.length(),
+				sDeclareStmt.trim().indexOf(" AS ")).
+				trim().replaceAll("\"", "");
+		sCatFolderName = sDeclareStmt.trim().substring(sDeclareStmt.
+				indexOf(" AS ")+4).trim().replaceAll("\"", "");
 
 		try {
 			//SUBJECT AREA
 			line = brUDML.readLine().trim().replaceAll("\"", "");
 
 			if(line.indexOf("SUBJECT AREA ") != -1)
-				sCatalogFolderMappingID = line.substring(line.indexOf("SUBJECT AREA ")+13).trim().replaceAll("\"", "");
+				sCatFolderMappingID = line.substring(line.
+						indexOf("SUBJECT AREA ")+13).
+						trim().replaceAll("\"", "");
 
 			//ENTITY FOLDERS LIST
 			line = brUDML.readLine().trim().replaceAll("\"", "");
@@ -43,11 +50,14 @@ public class CatalogFolder {
 				} while (line.charAt(line.length()-1) != ')');
 			}
 
-			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES, RECOVERING ALIASES
+			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES,
+			//RECOVERING ALIASES
 			do {
 				line = brUDML.readLine().trim().replaceAll("\"", "");
 				if(line.indexOf("ALIASES (") != -1)
-					saCatalogFolderAliases = line.substring(line.indexOf("ALIASES (")+9, line.lastIndexOf(")")-1).trim().replaceAll("\"", "").split(",");
+					saCatFolderAliases = line.substring(line.
+							indexOf("ALIASES (")+9, line.lastIndexOf(")")-1).
+							trim().replaceAll("\"", "").split(",");
 			} while (line.indexOf(";") == -1);
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
@@ -60,9 +70,9 @@ public class CatalogFolder {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		Node nPresentationCatalogID = xmldoc.createTextNode(sCatalogFolderID);
-		Node nPresentationCatalogName = xmldoc.createTextNode(sCatalogFolderName);
-		Node nCatalogFolderMappingID = xmldoc.createTextNode(sCatalogFolderMappingID);
+		Node nPresentationCatalogID = xmldoc.createTextNode(sCatFolderID);
+		Node nPresentationCatalogName = xmldoc.createTextNode(sCatFolderName);
+		Node nCatalogFolderMappingID = xmldoc.createTextNode(sCatFolderMappingID);
 
 		Element ePresentationCatalog = xmldoc.createElement("PresentationCatalog");
 		Element ePresentationCatalogID = xmldoc.createElement("PresentationCatalogID");
@@ -81,10 +91,10 @@ public class CatalogFolder {
 		Element eCatalogFolderAlias = null;
 		Node nCatalogFolderAlias = null;
 
-		if(saCatalogFolderAliases != null)
-			for (int i=0; i< saCatalogFolderAliases.length; i++) {
+		if(saCatFolderAliases != null)
+			for (int i=0; i< saCatFolderAliases.length; i++) {
 				eCatalogFolderAlias = xmldoc.createElement("PresentationCatalogAlias");
-				nCatalogFolderAlias = xmldoc.createTextNode(saCatalogFolderAliases[i]);
+				nCatalogFolderAlias = xmldoc.createTextNode(saCatFolderAliases[i]);
 				eCatalogFolderAlias.appendChild(nCatalogFolderAlias);
 				eCatalogFolderAliasList.appendChild(eCatalogFolderAlias);
 			}

@@ -5,61 +5,68 @@ import java.util.Vector;
 public class Utils {
 
 	/**
-	 * UDML calculation parser (identifies both, Logical and Physical columns).
-	 * @param sPrefixString where to get the Subject Area prefix from
+	 * UDML calculation parser -identifies both, Logical and Physical columns
+	 * @param sPrefixStr where to get the Subject Area prefix from
 	 * @param sCalculation contains the expression to parse
-	 * @param isDerived points out the type of expression to evaluate (derived column or mapping calculation)
+	 * @param isDerived points out the type of expression to evaluate 
+	 * 			(derived column or mapping calculation)
 	 * @return Vector containing (logical or physical) column IDs
 	 */
-	public static Vector CalculationParser(String sPrefixString, String sCalculation, boolean isDerived) {
-		String sSAPrefix = "\"" + sPrefixString.substring(0, sPrefixString.indexOf(".")) + "\"";
-		String sExpression = sCalculation.toString();
-		String sRemainingExpr = sCalculation.toString();
+	public static Vector CalculationParser(String sPrefixStr,
+											String sCalculation,
+											boolean isDerived) {
+		String sSAPrefix		= "\"" + sPrefixStr.substring(0,
+										sPrefixStr.indexOf(".")) + "\"";
+		String sExpr			= sCalculation.toString();
+		String sRemainingExpr	= sCalculation.toString();
 
-		Vector vColumnMappingID = null;
+		Vector vColMapID = null;
 
 		int iExpBegins	= 0;
 		int iStPos		= 0;
 		int iRelPos		= 0;
-		int iFinalPos	= 0;
+		int iEndPos		= 0;
 		int iLoop		= 8;
 
 		boolean bDuplicated;
 
-		if(sExpression.indexOf(sSAPrefix) != -1)
-			vColumnMappingID = new Vector();
+		if(sExpr.indexOf(sSAPrefix) != -1)
+			vColMapID = new Vector();
 
 		if (isDerived)
 			iLoop = 4;
 
-		while (sExpression.indexOf(sSAPrefix) != -1) {
-			iStPos = sExpression.indexOf(sSAPrefix);
+		while (sExpr.indexOf(sSAPrefix) != -1) {
+			iStPos = sExpr.indexOf(sSAPrefix);
 			//gets the first ocurrence of ."
-			iRelPos = sExpression.indexOf(".\"");
-			iFinalPos = sExpression.indexOf(sSAPrefix) + sSAPrefix.length();
+			iRelPos = sExpr.indexOf(".\"");
+			iEndPos = sExpr.indexOf(sSAPrefix) + sSAPrefix.length();
 			//4 = derived calculation; 8 = LTS calculation
 			for (int i=0; i<iLoop; i++) {
-				sExpression = sExpression.substring(iRelPos);
-				iRelPos = sExpression.indexOf("\"") + 1;
-				iFinalPos += iRelPos;
+				sExpr = sExpr.substring(iRelPos);
+				iRelPos = sExpr.indexOf("\"") + 1;
+				iEndPos += iRelPos;
 			}
 
 			//prevents repeatedly added columns --begin
 			bDuplicated = false;
-			for(int j=0; j<vColumnMappingID.size(); j++)
-				if (((String)vColumnMappingID.get(j)).equals(sRemainingExpr.substring(iStPos, iFinalPos).replaceAll("\"", ""))) {
+			for(int j=0; j<vColMapID.size(); j++)
+				if (((String)vColMapID.get(j)).equals(
+						sRemainingExpr.substring(iStPos, iEndPos).
+						replaceAll("\"", ""))) {
 					bDuplicated = true;
 					break;
 				}
 			if (!bDuplicated)
-				vColumnMappingID.add(sRemainingExpr.substring(iStPos, iFinalPos).replaceAll("\"", ""));
+				vColMapID.add(sRemainingExpr.
+						substring(iStPos, iEndPos).replaceAll("\"", ""));
 			//prevents repeatedly added columns --end
 
-			iExpBegins += iFinalPos;
-			sExpression = sCalculation.substring(iExpBegins);
-			sRemainingExpr = sExpression.toString();
+			iExpBegins += iEndPos;
+			sExpr = sCalculation.substring(iExpBegins);
+			sRemainingExpr = sExpr.toString();
 		}
 
-		return vColumnMappingID;
+		return vColMapID;
 	}
 }
