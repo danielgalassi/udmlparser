@@ -2,7 +2,9 @@
 ===Requisites===
 
 As a Java application you need JRE installed in whatever the target system is.
+
 JAR files are often compiled using the latest JDK available.
+
 Path: both relative and absolute path forms can be used, be sure you use "\\" (instead of a single backslash) when running the application on Windows OS.
 
 
@@ -20,7 +22,7 @@ Path: both relative and absolute path forms can be used, be sure you use "\\" (i
 <Describe the whole procedure step by step>
 
 
-
+----
 *I like the idea of getting issues reported*
 
 *I also like the idea of someone contributing to the project*
