@@ -1,0 +1,20 @@
+#labels Phase-Deploy
+Interested on how to use this code? You got the right document!
+
+
+= How to make it run =
+
+  # download it, from _*Downloads*_ tab.
+  # move it to a target directory
+  # run: {{{java UDMLParser}}}
+  # check the required parameters, provide your own next time
+
+
+= Step by Step =
+
+<Describe the whole procedure step by step>
+
+
+
+*I like the idea of getting issues reported*
+*I also like the idea of someone contributing to the project*
