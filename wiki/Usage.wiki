@@ -1,7 +1,4 @@
-#summary Interested on how to use this code? You got the right document!
 #labels Phase-Deploy
-
-
 ===How to make it run===
 
   # download it, from _*Downloads*_ tab.
