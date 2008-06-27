@@ -3,6 +3,11 @@ package metadataextract;
 import udmlparser.UDMLParser;
 import xmlutils.XMLUtils;
 
+/**
+ * Extract tool getting UDML stmts parsed into an XML tree
+ * @author daniel
+ *
+ */
 public class MetadataExtract {
 
 	private static String sUDMLtxt		= null;
