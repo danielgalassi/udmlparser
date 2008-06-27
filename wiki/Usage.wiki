@@ -18,6 +18,9 @@ Path: both relative and absolute path forms can be used, be sure you use "\\" (i
   # move it to a target directory
   # run: {{{java -jar udmlparser.jar}}}
   # check the required parameters
+
+Now you need to extract UDML code out of your repository file, do that using nqUDMLgen tool (provided OOTB with OBIEE, check {{{OBIHOME/server/Bin}}} (run it using -n -q -8 flags).
+
   # run the application, append required parameters.
 
 
