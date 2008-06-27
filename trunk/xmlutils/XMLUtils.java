@@ -30,7 +30,8 @@ public class XMLUtils {
 		DocumentBuilder builder = null;
 		Document doc = null;
 		try {
-			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			builder = DocumentBuilderFactory.newInstance().
+										newDocumentBuilder();
 			doc = builder.newDocument();
 		} catch (Exception e) {
 		}
@@ -67,7 +68,8 @@ public class XMLUtils {
 			File XMLFile = new File(filename);
 			Result result = new StreamResult(XMLFile);
 
-			Transformer xformer = TransformerFactory.newInstance().newTransformer();
+			Transformer xformer = TransformerFactory.newInstance().
+													newTransformer();
 			xformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
 		} catch (TransformerException e) {
@@ -80,7 +82,9 @@ public class XMLUtils {
 	 * @param strXSLFile
 	 * @param strRESFile
 	 */
-	public static void xsl4Files(String strXMLFile, String strXSLFile, String strRESFile){
+	public static void xsl4Files(String strXMLFile,
+								String strXSLFile,
+								String strRESFile){
 		File fXMLFile = new File(strXMLFile);
 		File fXSLFile = new File(strXSLFile);
 		File fResult = new File(strRESFile);
