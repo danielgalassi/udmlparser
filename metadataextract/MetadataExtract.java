@@ -34,7 +34,7 @@ public class MetadataExtract {
 			System.out.println("-udmltgt=\tXML file resulting " +
 					"from XSL transformation");
 			
-			System.out.println("UNIX path form: /dir1/../dirN/file");
+			System.out.println("\n\nUNIX path form: /dir1/../dirN/file");
 			System.out.println("WIN path form: drive\\dir1\\..\\dirN\\file");
 			return;
 		}
