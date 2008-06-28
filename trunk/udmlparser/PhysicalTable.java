@@ -15,16 +15,16 @@ import org.w3c.dom.Node;
  */
 public class PhysicalTable {
 
-	private String		sPhysicalTableID;
-	private String		sPhysicalTableName;
-	private String		sPhysicalTableSource;
-	private boolean		bIsPhysicalAlias;
-	private Vector		vPhysicalColumnID;
-	private Vector		vPhysicalColumnName;
-	private Vector		vPhysicalColumnDataType;
-	private Vector		vPhysicalColumnSize;
-	private Vector		vPhysicalColumnScale;
-	private Vector		vPhysicalColumnNullable;
+	private String			sPhysicalTableID;
+	private String			sPhysicalTableName;
+	private String			sPhysicalTableSource;
+	private boolean			bIsPhysicalAlias;
+	private Vector <String>	vPhysicalColumnID;
+	private Vector <String>	vPhysicalColumnName;
+	private Vector <String>	vPhysicalColumnDataType;
+	private Vector <String>	vPhysicalColumnSize;
+	private Vector <String>	vPhysicalColumnScale;
+	private Vector <String>	vPhysicalColumnNullable;
 
 	public PhysicalTable (String sDeclareStmt, String sPhysicalTable, BufferedReader brUDML) {
 		String line;
@@ -35,12 +35,12 @@ public class PhysicalTable {
 		try {
 			line = brUDML.readLine();
 
-			vPhysicalColumnID = new Vector();
-			vPhysicalColumnName = new Vector();
-			vPhysicalColumnDataType = new Vector();
-			vPhysicalColumnSize = new Vector();
-			vPhysicalColumnScale = new Vector();
-			vPhysicalColumnNullable = new Vector();
+			vPhysicalColumnID = new Vector<String>();
+			vPhysicalColumnName = new Vector<String>();
+			vPhysicalColumnDataType = new Vector<String>();
+			vPhysicalColumnSize = new Vector<String>();
+			vPhysicalColumnScale = new Vector<String>();
+			vPhysicalColumnNullable = new Vector<String>();
 
 			do {
 				line = brUDML.readLine().trim().replaceAll("\"", "");
@@ -134,12 +134,12 @@ public class PhysicalTable {
 				ePhColScale		= xmldoc.createElement("PhysicalColumnScale");
 				ePhColNullable	= xmldoc.createElement("PhysicalColumnNullable");
 
-				nPhColID		= xmldoc.createTextNode((String)vPhysicalColumnID.get(i));
-				nPhColName		= xmldoc.createTextNode((String)vPhysicalColumnName.get(i));
-				nPhColDatatype	= xmldoc.createTextNode((String)vPhysicalColumnDataType.get(i));
-				nPhColSize		= xmldoc.createTextNode((String)vPhysicalColumnSize.get(i));
-				nPhColScale		= xmldoc.createTextNode((String)vPhysicalColumnScale.get(i));
-				nPhColNullable	= xmldoc.createTextNode((String)vPhysicalColumnNullable.get(i));
+				nPhColID		= xmldoc.createTextNode(vPhysicalColumnID.get(i));
+				nPhColName		= xmldoc.createTextNode(vPhysicalColumnName.get(i));
+				nPhColDatatype	= xmldoc.createTextNode(vPhysicalColumnDataType.get(i));
+				nPhColSize		= xmldoc.createTextNode(vPhysicalColumnSize.get(i));
+				nPhColScale		= xmldoc.createTextNode(vPhysicalColumnScale.get(i));
+				nPhColNullable	= xmldoc.createTextNode(vPhysicalColumnNullable.get(i));
 
 				ePhColID.appendChild(nPhColID);
 				ePhColName.appendChild(nPhColName);

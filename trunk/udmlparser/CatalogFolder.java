@@ -15,11 +15,11 @@ import org.w3c.dom.Node;
  */
 public class CatalogFolder {
 
-	private String		sCatFolderID;
-	private String		sCatFolderName;
-	private String[]	saCatFolderAliases = null;
-	private String		sCatFolderMappingID;
-	private Vector		vEntityFolderID = null;
+	private String			sCatFolderID;
+	private String			sCatFolderName;
+	private String[]		saCatFolderAliases = null;
+	private String			sCatFolderMappingID;
+	private Vector <String>	vEntityFolderID = null;
 
 	public CatalogFolder(String sDeclareStmt,
 							String sCatFolder,
@@ -43,7 +43,7 @@ public class CatalogFolder {
 			//ENTITY FOLDERS LIST
 			line = brUDML.readLine().trim().replaceAll("\"", "");
 			if(line.indexOf("ENTITY FOLDERS (") != -1) {
-				vEntityFolderID = new Vector();
+				vEntityFolderID = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim().replaceAll("\"", "");
 					vEntityFolderID.add(line.substring(0,line.length()-1));
@@ -108,7 +108,7 @@ public class CatalogFolder {
 		if(vEntityFolderID != null)
 			for (int i=0; i< vEntityFolderID.size(); i++) {
 				ePresentationFolder = xmldoc.createElement("PresentationTableID");
-				nPresentationFolder = xmldoc.createTextNode((String)vEntityFolderID.get(i));
+				nPresentationFolder = xmldoc.createTextNode(vEntityFolderID.get(i));
 				ePresentationFolder.appendChild(nPresentationFolder);
 				ePresentationFolderList.appendChild(ePresentationFolder);
 			}

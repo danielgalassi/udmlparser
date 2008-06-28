@@ -20,7 +20,7 @@ public class Utils {
 		String sExpr			= sCalculation.toString();
 		String sRemainingExpr	= sCalculation.toString();
 
-		Vector vColMapID = null;
+		Vector <String>	vColMapID = null;
 
 		int iExpBegins	= 0;
 		int iStPos		= 0;
@@ -31,7 +31,7 @@ public class Utils {
 		boolean bDuplicated;
 
 		if(sExpr.indexOf(sSAPrefix) != -1)
-			vColMapID = new Vector();
+			vColMapID = new Vector<String>();
 
 		if (isDerived)
 			iLoop = 4;
@@ -51,7 +51,7 @@ public class Utils {
 			//prevents repeatedly added columns --begin
 			bDuplicated = false;
 			for(int j=0; j<vColMapID.size(); j++)
-				if (((String)vColMapID.get(j)).equals(
+				if ((vColMapID.get(j)).equals(
 						sRemainingExpr.substring(iStPos, iEndPos).
 						replaceAll("\"", ""))) {
 					bDuplicated = true;

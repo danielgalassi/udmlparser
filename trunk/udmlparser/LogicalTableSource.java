@@ -17,10 +17,10 @@ import utils.Utils;
  */
 public class LogicalTableSource {
 
-	private String		sLogicalTableSourceID;
-	private String		sLogicalTableSourceName;
-	private Vector		vLogicalColumnID;
-	private Vector		vLogicalColumnCalculation;
+	private String			sLogicalTableSourceID;
+	private String			sLogicalTableSourceName;
+	private Vector <String>	vLogicalColumnID;
+	private Vector <String>	vLogicalColumnCalculation;
 
 	public LogicalTableSource (String sDeclareStmt, String sLogicalTableSource, BufferedReader brUDML) {
 		String line;
@@ -35,10 +35,10 @@ public class LogicalTableSource {
 
 			//LOGICAL COLUMNS
 			if (line.indexOf("PROJECT (") != -1) {
-				vLogicalColumnID = new Vector();
-				vLogicalColumnCalculation = new Vector();
+				vLogicalColumnID = new Vector<String>();
+				vLogicalColumnCalculation = new Vector<String>();
 				do {
-					line = brUDML.readLine().trim();//.replaceAll("\"", "");
+					line = brUDML.readLine().trim();
 					if(line.indexOf(" AS ") != -1) {
 						vLogicalColumnID.add(line.substring(line.indexOf("{")+1, line.indexOf("}")).replaceAll("\"", ""));
 						vLogicalColumnCalculation.add(line.substring(line.lastIndexOf("{")+1, line.lastIndexOf("}")));
@@ -59,6 +59,7 @@ public class LogicalTableSource {
 	 * @param xmldoc XML document
 	 * @return XML fragment
 	 */
+	@SuppressWarnings("unchecked")
 	public Element serialize(Document xmldoc) {
 		String sTemp = null;
 		Node nLogicalTableSourceID = xmldoc.createTextNode(sLogicalTableSourceID);
@@ -81,7 +82,7 @@ public class LogicalTableSource {
 		Node nLogicalColumnID = null;
 		Node nLogicalColumnCalculation = null;
 
-		Vector vPhysicalColumnMappingList = new Vector();
+		Vector <String> vPhysicalColumnMappingList = new Vector<String>();
 		Element ePhysicalColumnMapping = null;
 		Element ePhysicalColumnID = null;
 		Node nPhysicalColumnID = null;
@@ -91,10 +92,10 @@ public class LogicalTableSource {
 			for (int i=0; i< vLogicalColumnID.size(); i++) {
 				eLogicalColumn = xmldoc.createElement("LogicalColumn");
 				eLogicalColumnID = xmldoc.createElement("LogicalColumnID");
-				nLogicalColumnID = xmldoc.createTextNode((String)vLogicalColumnID.get(i));
+				nLogicalColumnID = xmldoc.createTextNode(vLogicalColumnID.get(i));
 				eLogicalColumnID.appendChild(nLogicalColumnID);
 				eLogicalColumnCalculation = xmldoc.createElement("LogicalColumnCalculation");
-				sTemp = (String)vLogicalColumnCalculation.get(i);
+				sTemp = vLogicalColumnCalculation.get(i);
 				nLogicalColumnCalculation = xmldoc.createTextNode(sTemp.replaceAll("\"", ""));
 				eLogicalColumnCalculation.appendChild(nLogicalColumnCalculation);
 
@@ -102,11 +103,11 @@ public class LogicalTableSource {
 				eLogicalColumn.appendChild(eLogicalColumnCalculation);
 
 				ePhysicalColumnMapping = xmldoc.createElement("PhysicalColumnMapping");
-				vPhysicalColumnMappingList = Utils.CalculationParser(sLogicalTableSourceID, (String)vLogicalColumnCalculation.get(i), false);
+				vPhysicalColumnMappingList = Utils.CalculationParser(sLogicalTableSourceID, vLogicalColumnCalculation.get(i), false);
 				if(vPhysicalColumnMappingList != null) {
 					for(int j=0; j< vPhysicalColumnMappingList.size(); j++) {
 						ePhysicalColumnID = xmldoc.createElement("PhysicalColumnID");
-						nPhysicalColumnID = xmldoc.createTextNode((String)vPhysicalColumnMappingList.get(j));
+						nPhysicalColumnID = xmldoc.createTextNode(vPhysicalColumnMappingList.get(j));
 						ePhysicalColumnID.appendChild(nPhysicalColumnID);
 						ePhysicalColumnMapping.appendChild(ePhysicalColumnID);
 					}

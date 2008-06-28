@@ -15,11 +15,11 @@ import org.w3c.dom.Node;
  */
 public class EntityFolder {
 
-	private String		sPresentationTableID;
-	private String		sPresentationTableName;
-	private String		sPresentationTableMappingID;
-	private Vector		vFolderAttributesID = null;
-	private String[]	saPresentationTableAliases = null;
+	private String			sPresentationTableID;
+	private String			sPresentationTableName;
+	private String			sPresentationTableMappingID;
+	private Vector <String>	vFolderAttributesID = null;
+	private String[]		saPresentationTableAliases = null;
 
 	public EntityFolder (String sDeclareStmt, String sEntityFolder, BufferedReader brUDML) {
 		String line;
@@ -38,7 +38,7 @@ public class EntityFolder {
 			//FOLDER ATTRIBUTES LIST
 			line = brUDML.readLine().trim().replaceAll("\"", "");
 			if(line.indexOf("FOLDER ATTRIBUTES ") != -1) {
-				vFolderAttributesID = new Vector();
+				vFolderAttributesID = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim().replaceAll("\"", "");
 					vFolderAttributesID.add(line.substring(0,line.length()-1));
@@ -106,7 +106,7 @@ public class EntityFolder {
 		if(vFolderAttributesID != null)
 			for (int i=0; i< vFolderAttributesID.size(); i++) {
 				ePresentationAttributeID = xmldoc.createElement("PresentationAttributeID");
-				nPresentationAttributeID = xmldoc.createTextNode((String)vFolderAttributesID.get(i));
+				nPresentationAttributeID = xmldoc.createTextNode(vFolderAttributesID.get(i));
 				ePresentationAttributeID.appendChild(nPresentationAttributeID);
 				ePresentationAttributeIDList.appendChild(ePresentationAttributeID);
 			}
