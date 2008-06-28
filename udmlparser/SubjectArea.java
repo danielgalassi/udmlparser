@@ -15,9 +15,9 @@ import org.w3c.dom.Node;
  */
 public class SubjectArea {
 
-	private String		sSubjectAreaID;
-	private String		sSubjectAreaName;
-	private Vector		vLogicalTablesID = null;
+	private String			sSubjectAreaID;
+	private String			sSubjectAreaName;
+	private Vector <String>	vLogicalTablesID = null;
 
 	public SubjectArea (String sDeclareStmt, String sSubjectArea, BufferedReader brUDML) {
 		String line;
@@ -33,7 +33,7 @@ public class SubjectArea {
 
 			//LOGICAL TABLES LIST
 			if(line.indexOf("LOGICAL TABLES ") != -1) {
-				vLogicalTablesID = new Vector();
+				vLogicalTablesID = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim().replaceAll("\"", "");
 					if(line.charAt(line.length()-1) == ',')
@@ -77,7 +77,7 @@ public class SubjectArea {
 		if(vLogicalTablesID != null)
 			for (int i=0; i< vLogicalTablesID.size(); i++) {
 				eLogicalTable = xmldoc.createElement("LogicalTableID");
-				nLogicalTable = xmldoc.createTextNode((String)vLogicalTablesID.get(i));
+				nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));
 				eLogicalTable.appendChild(nLogicalTable);
 				eLogicalTableList.appendChild(eLogicalTable);
 			}
