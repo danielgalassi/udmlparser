@@ -23,6 +23,7 @@ public class MetadataExtract {
 	public static void main(String[] args) {
 		if (args.length < 2 || args[0].startsWith("-h") 
 				|| args[0].startsWith("-?")) {
+			System.out.println("UDML Parser utility\n\n");
 			System.out.println("Application usage:");
 
 			//RPD extract parameters
@@ -32,9 +33,9 @@ public class MetadataExtract {
 			System.out.println("-udmlxsl=\tXSL file for optional " +
 					"transformation");
 			System.out.println("-udmltgt=\tXML file resulting " +
-					"from XSL transformation");
+					"from XSL transformation\n\n");
 			
-			System.out.println("\n\nUNIX path form: /dir1/../dirN/file");
+			System.out.println("UNIX path form: /dir1/../dirN/file");
 			System.out.println("WIN path form: drive\\dir1\\..\\dirN\\file");
 			return;
 		}
