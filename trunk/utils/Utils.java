@@ -12,7 +12,7 @@ public class Utils {
 	 * 			(derived column or mapping calculation)
 	 * @return Vector containing (logical or physical) column IDs
 	 */
-	public static Vector CalculationParser(String sPrefixStr,
+	public static Vector<String> CalculationParser(String sPrefixStr,
 											String sCalculation,
 											boolean isDerived) {
 		String sSAPrefix		= "\"" + sPrefixStr.substring(0,
