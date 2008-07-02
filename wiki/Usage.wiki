@@ -24,14 +24,10 @@ Now you need to extract UDML code out of your repository file, do that using nqU
   * run the application, append required parameters.
 
 
+
 ===Step by Step===
 
-<Describe the whole procedure step by step, to be defined>
-
-
-
-
-
+You can find a step by step guide [http://it.toolbox.com/wiki/index.php/Oracle_BI_EE_-_Encoding_Repository_metadata_in_XML here].
 
 
 ----
