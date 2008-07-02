@@ -56,7 +56,7 @@ public class CatalogFolder {
 				line = brUDML.readLine().trim().replaceAll("\"", "");
 				if(line.indexOf("ALIASES (") != -1)
 					saCatFolderAliases = line.substring(line.
-							indexOf("ALIASES (")+9, line.lastIndexOf(")")-1).
+							indexOf("ALIASES (")+9, line.lastIndexOf(")")).
 							trim().replaceAll("\"", "").split(",");
 			} while (line.indexOf(";") == -1);
 		} catch (IOException e) {
