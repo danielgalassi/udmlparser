@@ -30,6 +30,7 @@ public class UDMLParser {
 	private String			sLogicalTableSource	= "DECLARE LOGICAL TABLE SOURCE ";
 	private String			sPhysicalTable		= "DECLARE TABLE ";
 	private String			sPhysicalTableKey	= "DECLARE TABLE KEY ";
+	private String			sDimensionLevel		= "DECLARE LEVEL ";
 
 	/**
 	 * Constructor
@@ -83,6 +84,7 @@ public class UDMLParser {
 			LogicalTable l;
 			LogicalTableSource llts;
 			PhysicalTable p;
+			DimensionLevel d;
 
 			do {
 				line = brUDML.readLine();
@@ -117,6 +119,10 @@ public class UDMLParser {
 						line.indexOf(sPhysicalTableKey) == -1) { //physical table
 					p = new PhysicalTable(line, sPhysicalTable, brUDML);
 					root.appendChild(p.serialize(docUDML));
+				}
+				if (line.indexOf(sLogicalTableSource) != -1) { //hier. dim. level
+					d = new DimensionLevel(line, sDimensionLevel, brUDML);
+					root.appendChild(d.serialize(docUDML));
 				}
 			} while (true);
 
