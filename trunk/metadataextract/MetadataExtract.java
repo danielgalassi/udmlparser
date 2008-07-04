@@ -16,6 +16,28 @@ public class MetadataExtract {
 	private static String sUDMLtarget	= null;
 
 	/**
+	 * Available help
+	 *
+	 */
+	private static void display_help() {
+		System.out.println("UDML Parser utility\n\n");
+		System.out.println("Application usage:");
+
+		//RPD extract parameters
+		System.out.println("Repository extract parameters:");
+		System.out.println("-udml=\t\tRepository UDML file");
+		System.out.println("-rpdxml=\tFull XML extract");
+		System.out.println("-udmlxsl=\tXSL file for optional " +
+				"transformation");
+		System.out.println("-udmltgt=\tXML file resulting " +
+				"from XSL transformation\n\n");
+		
+		System.out.println("UNIX path form: /dir1/../dirN/file");
+		System.out.println("WIN path form: drive\\dir1\\..\\dirN\\file");
+		return;
+	}
+
+	/**
 	 * Constructor, validation of parameters and 
 	 * execution control of the extraction process
 	 * @param args web catalog and repository extract process parameters
@@ -23,21 +45,7 @@ public class MetadataExtract {
 	public static void main(String[] args) {
 		if (args.length < 2 || args[0].startsWith("-h") 
 				|| args[0].startsWith("-?")) {
-			System.out.println("UDML Parser utility\n\n");
-			System.out.println("Application usage:");
-
-			//RPD extract parameters
-			System.out.println("Repository extract parameters:");
-			System.out.println("-udml=\t\tRepository UDML file");
-			System.out.println("-rpdxml=\tFull XML extract");
-			System.out.println("-udmlxsl=\tXSL file for optional " +
-					"transformation");
-			System.out.println("-udmltgt=\tXML file resulting " +
-					"from XSL transformation\n\n");
-			
-			System.out.println("UNIX path form: /dir1/../dirN/file");
-			System.out.println("WIN path form: drive\\dir1\\..\\dirN\\file");
-			return;
+			display_help();
 		}
 
 		for(int i=0; i<args.length; i++) {
