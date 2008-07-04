@@ -72,7 +72,9 @@ public class XMLUtils {
 													newTransformer();
 			xformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
+			System.out.println(e);
 		} catch (TransformerException e) {
+			System.out.println(e);
 		}
 	}
 
