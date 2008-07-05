@@ -120,7 +120,7 @@ public class UDMLParser {
 					p = new PhysicalTable(line, sPhysicalTable, brUDML);
 					root.appendChild(p.serialize(docUDML));
 				}
-				if (line.indexOf(sLogicalTableSource) != -1) { //hier. dim. level
+				if (line.indexOf(sDimensionLevel) != -1) { //hier. dim. level
 					d = new DimensionLevel(line, sDimensionLevel, brUDML);
 					root.appendChild(d.serialize(docUDML));
 				}
