@@ -46,16 +46,17 @@ public class EntityFolder {
 			}
 
 			//ALIASES
-			do {
-				line = brUDML.readLine().trim().replaceAll("\"", "");
-			} while (line.indexOf("ALIASES (") != -1);
-			if(line.indexOf("ALIASES (") != -1)
-				saPresentationTableAliases = line.substring(line.indexOf("ALIASES (")+9, line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
+			if (line.indexOf(";") == -1) {
+				do {
+					line = brUDML.readLine().trim().replaceAll("\"", "");
+				} while (line.indexOf("ALIASES (") != -1);
+				if(line.indexOf("ALIASES (") != -1)
+					saPresentationTableAliases = line.substring(line.indexOf("ALIASES (")+9, line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
+			}
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			do {
-				line = brUDML.readLine().trim().replaceAll("\"", "");
-			} while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1);
+			while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1)
+				line = brUDML.readLine();
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
