@@ -22,8 +22,8 @@ public class CatalogFolder {
 	private Vector <String>	vEntityFolderID = null;
 
 	public CatalogFolder(String sDeclareStmt,
-							String sCatFolder,
-							BufferedReader brUDML) {
+			String sCatFolder,
+			BufferedReader brUDML) {
 		String line;
 		sCatFolderID = sDeclareStmt.trim().substring(sCatFolder.length(),
 				sDeclareStmt.trim().indexOf(" AS ")).
