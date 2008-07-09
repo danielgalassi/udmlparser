@@ -153,14 +153,12 @@ public class MetadataExtract {
 
 		//REPOSITORY METADATA EXTRACTION
 		for (int b = 0; b<vsUDMLtxt.size(); b++) {
-
 			//required parameters check
 			if (vsUDMLtxt.size() > 0 && vsUDMLxml.size() > 0 &&
 					vsUDMLtxt.get(b).length() > 0 &&
 					vsUDMLxml.get(b).length() > 0)
 				new UDMLParser(vsUDMLtxt.get(b),
 						vsUDMLxml.get(b));
-
 			//Custom XML
 			if (vsUDMLxsl.size() > 0 && vsUDMLtgt.size() > 0 &&
 					vsUDMLxsl.get(b).length() > 0 &&
