@@ -70,10 +70,6 @@ public class PhysicalTable {
 				}
 			} while (!(line.indexOf("PRIVILEGES (") != -1 && line.indexOf(";") != -1));
 
-			do {
-				line = brUDML.readLine();
-			} while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1);
-
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
