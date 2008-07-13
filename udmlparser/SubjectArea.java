@@ -44,9 +44,9 @@ public class SubjectArea {
 			}
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			do {
-				line = brUDML.readLine().trim().replaceAll("\"", "");
-			} while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1);
+			while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+				line = brUDML.readLine();
+			}
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}

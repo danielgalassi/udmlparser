@@ -53,9 +53,9 @@ public class LogicalTable {
 			} while (line.indexOf("KEYS (") == -1 && line.indexOf("SOURCES (") == -1);
 
 			//DISCARD SOURCES, DESCRIPTION AND PRIVILEGES
-			do {
+			while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
 				line = brUDML.readLine();
-			} while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1);
+			}
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
