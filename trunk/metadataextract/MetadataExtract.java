@@ -38,10 +38,10 @@ public class MetadataExtract {
 		iBatchSize = dBatch.getElementsByTagName("jobdetails").getLength();
 
 		//loading batch arguments
-		vsUDMLtxt =		new Vector<String>();
-		vsUDMLxml =		new Vector<String>();
-		vsUDMLxsl = 	new Vector<String>();
-		vsUDMLtgt =		new Vector<String>();
+		vsUDMLtxt =	new Vector<String>();
+		vsUDMLxml =	new Vector<String>();
+		vsUDMLxsl =	new Vector<String>();
+		vsUDMLtgt =	new Vector<String>();
 
 		for (int s=0; s<iBatchSize; s++) {
 
@@ -70,7 +70,7 @@ public class MetadataExtract {
 				vsUDMLtgt.add("");
 		}
 		//loading batch arguments --end
-		fBatch=null;
+		fBatch = null;
 	}
 
 
@@ -79,20 +79,20 @@ public class MetadataExtract {
 	 * @param args command line arguments
 	 */
 	private static void commandLine(String[] args) {
-		vsUDMLtxt =		new Vector<String>();
-		vsUDMLxml =		new Vector<String>();
-		vsUDMLxsl = 	new Vector<String>();
-		vsUDMLtgt =		new Vector<String>();
+		vsUDMLtxt =	new Vector<String>();
+		vsUDMLxml =	new Vector<String>();
+		vsUDMLxsl =	new Vector<String>();
+		vsUDMLtgt =	new Vector<String>();
 
 		for(int i=0; i<args.length; i++) {
 			if (args[i].startsWith("-udml="))
-				vsUDMLtxt.add(		args[i].replaceFirst("-udml=",   ""));
+				vsUDMLtxt.add(	args[i].replaceFirst("-udml=",   ""));
 
 			if (args[i].startsWith("-rpdxml="))
-				vsUDMLxml.add(		args[i].replaceFirst("-rpdxml=", ""));
+				vsUDMLxml.add(	args[i].replaceFirst("-rpdxml=", ""));
 
 			if (args[i].startsWith("-udmlxsl="))
-				vsUDMLxsl.add(		args[i].replaceFirst("-udmlxsl=",""));
+				vsUDMLxsl.add(	args[i].replaceFirst("-udmlxsl=",""));
 
 			if (args[i].startsWith("-udmltgt="))
 				vsUDMLtgt.add(	args[i].replaceFirst("-udmltgt=",""));
@@ -154,24 +154,26 @@ public class MetadataExtract {
 		//REPOSITORY METADATA EXTRACTION
 		for (int b = 0; b<vsUDMLtxt.size(); b++) {
 			//required parameters check
-			if (vsUDMLtxt.size() > 0 && vsUDMLxml.size() > 0 &&
-					vsUDMLtxt.get(b).length() > 0 &&
-					vsUDMLxml.get(b).length() > 0)
+			if (vsUDMLtxt.size() > 0 &&
+				vsUDMLxml.size() > 0 &&
+				vsUDMLtxt.get(b).length() > 0 &&
+				vsUDMLxml.get(b).length() > 0)
 				new UDMLParser(vsUDMLtxt.get(b),
-						vsUDMLxml.get(b));
+								vsUDMLxml.get(b));
 			//Custom XML
-			if (vsUDMLxsl.size() > 0 && vsUDMLtgt.size() > 0 &&
-					vsUDMLxsl.get(b).length() > 0 &&
-					vsUDMLtgt.get(b).length() > 0)
+			if (vsUDMLxsl.size() > 0 &&
+				vsUDMLtgt.size() > 0 &&
+				vsUDMLxsl.get(b).length() > 0 &&
+				vsUDMLtgt.get(b).length() > 0)
 				XMLUtils.xsl4Files(vsUDMLxml.get(b),
-						vsUDMLxsl.get(b),
-						vsUDMLtgt.get(b));
+									vsUDMLxsl.get(b),
+									vsUDMLtgt.get(b));
 		}
 		//REPOSITORY METADATA EXTRACTION (END)
 
-		vsUDMLtxt		= null;
-		vsUDMLxml		= null;
-		vsUDMLxsl		= null;
-		vsUDMLtgt		= null;
+		vsUDMLtxt	= null;
+		vsUDMLxml	= null;
+		vsUDMLxsl	= null;
+		vsUDMLtgt	= null;
 	}
 }
