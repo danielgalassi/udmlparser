@@ -22,6 +22,7 @@ public class UDMLParser {
 	private File			fNQ_UDML;
 	private FileReader		frNQ_UDML;
 	private BufferedReader	brUDML;
+	//UDML statements declaration first token
 	private String			sCatalogFolder		= "DECLARE CATALOG FOLDER ";
 	private String			sEntityFolder		= "DECLARE ENTITY FOLDER ";
 	private String			sFolderAttribute	= "DECLARE FOLDER ATTRIBUTE ";
@@ -56,7 +57,7 @@ public class UDMLParser {
 		try {
 			FileReader frNQ_UDML = new FileReader (fNQ_UDML);
 			BufferedReader brUDML = new BufferedReader (frNQ_UDML);
-			if(brUDML.readLine().indexOf("DECLARE ") != -1)
+			if(brUDML.readLine().indexOf("DECLARE ") == 0)
 				bIsUDML = true;
 			brUDML.close();
 			frNQ_UDML.close();
@@ -64,6 +65,8 @@ public class UDMLParser {
 		catch (IOException e) {
 			System.out.println ("IO exception =" + e );
 		}
+		if (bIsUDML)
+			System.out.println(fNQ_UDML + "is a valid file.");
 		return bIsUDML;
 	}
 
@@ -107,11 +110,11 @@ public class UDMLParser {
 					root.appendChild(s.serialize(docUDML));
 				}
 				if (line.indexOf(sLogicalTable) != -1 &&
-						line.indexOf(sLogicalTableSource) == -1) { //logical table
+						line.indexOf(sLogicalTableSource) == -1) { //logl tbl
 					l = new LogicalTable(line, sLogicalTable, brUDML);
 					root.appendChild(l.serialize(docUDML));
 				}
-				if (line.indexOf(sLogicalTableSource) != -1) { //logical table source
+				if (line.indexOf(sLogicalTableSource) != -1) { //logl tbl src
 					llts = new LogicalTableSource(line, sLogicalTableSource, brUDML);
 					root.appendChild(llts.serialize(docUDML));
 				}
