@@ -18,33 +18,57 @@ public class SubjectArea {
 	private String			sSubjectAreaID;
 	private String			sSubjectAreaName;
 	private Vector <String>	vLogicalTablesID = null;
+	private Vector <String> vHierDimensionsID = null;
+
+	private void parseLogicalTable(String line) {
+		int iIndexSA = line.indexOf(") SUBJECT AREA ");
+		if (line.endsWith(","))
+			vLogicalTablesID.add(line.substring(0, line.length()-1));
+		if (iIndexSA != -1)
+			vLogicalTablesID.add(line.substring(0, iIndexSA));
+	}
+
+	private void parseHierDim(String line) {
+		vHierDimensionsID.add(line.substring(0, line.length()-1));
+	}
 
 	public SubjectArea (String sDeclareStmt, String sSubjectArea, BufferedReader brUDML) {
 		String line;
-		sSubjectAreaID = sDeclareStmt.trim().substring(sSubjectArea.length(),sDeclareStmt.trim().indexOf(" AS ")).trim().replaceAll("\"", "");
-		sSubjectAreaName = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" AS ")+4).trim().replaceAll("\"", "");
+		String sTrimmedDS = sDeclareStmt.trim();
+		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		sSubjectAreaID = sTrimmedDS.substring(sSubjectArea.length(),iIndexAS).
+												trim().replaceAll("\"", "");
+		sSubjectAreaName = sTrimmedDS.substring(iIndexAS+4).
+												trim().replaceAll("\"", "");
 
 		try {
-			//DISCARD HIERARCHY DIMENSIONS
-			do {
+			
+			line = brUDML.readLine();
+			
+			//HIERARCHY DIMENSIONS
+			if (line.endsWith("DIMENSIONS (")) {
+				vHierDimensionsID = new Vector<String>();
 				line = brUDML.readLine().trim().replaceAll("\"", "");
-			} while ((line.indexOf("LOGICAL TABLES (") == -1) || 
-					(line.indexOf("PRIVILEGES") != -1 && line.indexOf(";") != -1));
+				while ((line.indexOf("LOGICAL TABLES (") == -1) ||
+					   (line.indexOf("PRIVILEGES") != -1 &&
+						line.indexOf(";") != -1)) {
+					parseHierDim(line);
+					line = brUDML.readLine().trim().replaceAll("\"", "");
+				};
+			}
 
 			//LOGICAL TABLES LIST
-			if(line.indexOf("LOGICAL TABLES ") != -1) {
+			if(line.endsWith("LOGICAL TABLES (")) {
 				vLogicalTablesID = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim().replaceAll("\"", "");
-					if(line.charAt(line.length()-1) == ',')
-						vLogicalTablesID.add(line.substring(0,line.length()-1));
-					if(line.indexOf(") SUBJECT AREA ") != -1)
-						vLogicalTablesID.add(line.substring(0, line.indexOf(") SUBJECT AREA ")).trim().replaceAll("\"", ""));
+					parseLogicalTable(line);
 				} while (line.indexOf(") SUBJECT AREA ") == -1);
 			}
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			while (line.indexOf("PRIVILEGES") == -1 &&
+				   line.indexOf(";") == -1) {
 				line = brUDML.readLine();
 			}
 		} catch (IOException e) {
@@ -70,11 +94,26 @@ public class SubjectArea {
 
 		eBusinessCatalog.appendChild(eBusinessCatalogID);
 		eBusinessCatalog.appendChild(eBusinessCatalogName);
+
+		Element eHierDimensionList = xmldoc.createElement("HierarchyDimensionIDList");
+		Element eHierDim = null;
+		Node nHierDim = null;
+		
+		if (vHierDimensionsID != null)
+			for (int i=0; i< vHierDimensionsID.size(); i++) {
+				eHierDim = xmldoc.createElement("HierarchyDimensionID");
+				nHierDim = xmldoc.createTextNode(vHierDimensionsID.get(i));
+				eHierDim.appendChild(nHierDim);
+				eHierDimensionList.appendChild(eHierDim);
+			}
+		
+		eBusinessCatalog.appendChild(eHierDimensionList);
+
 		Element eLogicalTableList = xmldoc.createElement("LogicalTableIDList");
 		Element eLogicalTable = null;
 		Node nLogicalTable = null;
 
-		if(vLogicalTablesID != null)
+		if (vLogicalTablesID != null)
 			for (int i=0; i< vLogicalTablesID.size(); i++) {
 				eLogicalTable = xmldoc.createElement("LogicalTableID");
 				nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));

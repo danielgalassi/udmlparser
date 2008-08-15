@@ -66,7 +66,7 @@ public class UDMLParser {
 			System.out.println ("IO exception =" + e );
 		}
 		if (bIsUDML)
-			System.out.println(fNQ_UDML + "is a valid file.");
+			System.out.println(fNQ_UDML + " is a valid file.");
 		return bIsUDML;
 	}
 
