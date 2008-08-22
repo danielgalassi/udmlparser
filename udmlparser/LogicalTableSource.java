@@ -12,20 +12,27 @@ import utils.Utils;
 
 /**
  * Logical Table Source Parser class
- * @author dgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public class LogicalTableSource {
 
-	private String			sLogicalTableSourceID;
-	private String			sLogicalTableSourceName;
+	private String			sLogTblSourceID;
+	private String			sLogTblSourceName;
 	private Vector <String>	vLogicalColumnID;
 	private Vector <String>	vLogicalColumnCalculation;
 
-	public LogicalTableSource (String sDeclareStmt, String sLogicalTableSource, BufferedReader brUDML) {
+	public LogicalTableSource ( String sDeclareStmt,
+								String sLogTblSource, 
+								BufferedReader brUDML) {
 		String line;
-		sLogicalTableSourceID = sDeclareStmt.trim().substring(sLogicalTableSource.length(),sDeclareStmt.trim().indexOf(" AS ")).trim().replaceAll("\"", "");
-		sLogicalTableSourceName = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" AS ")+4).trim().replaceAll("\"", "");
+		String sTrimmedDS = sDeclareStmt.trim();
+		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		sLogTblSourceID = sTrimmedDS.substring( sLogTblSource.length(), 
+												iIndexAS).
+												trim().replaceAll("\"", "");
+		sLogTblSourceName = sTrimmedDS.substring(iIndexAS + 4).
+												trim().replaceAll("\"", "");
 
 		try {
 			//DISCARD HEADING
@@ -39,19 +46,28 @@ public class LogicalTableSource {
 				vLogicalColumnCalculation = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim();
-					if(line.indexOf(" AS ") != -1) {
-						vLogicalColumnID.add(line.substring(line.indexOf("{")+1, line.indexOf("}")).replaceAll("\"", ""));
-						vLogicalColumnCalculation.add(line.substring(line.lastIndexOf("{")+1, line.lastIndexOf("}")));
+					if (line.indexOf(" AS ") != -1) {
+						vLogicalColumnID.add(line.substring(
+														line.indexOf("{") + 1,
+														line.indexOf("}")).
+														replaceAll("\"", ""));
+						vLogicalColumnCalculation.add(line.substring(
+													line.lastIndexOf("{") + 1, 
+													line.lastIndexOf("}")));
 					}
 				} while (line.indexOf("FROM") == -1);
 			}
 
-			while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			while ( line.indexOf("PRIVILEGES") == -1 && 
+					line.indexOf(";") == -1)
 				line = brUDML.readLine();
-			}
+
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
+
+		sTrimmedDS	= null;
+		line		= null;
 	}
 
 	/**
@@ -62,8 +78,8 @@ public class LogicalTableSource {
 	@SuppressWarnings("unchecked")
 	public Element serialize(Document xmldoc) {
 		String sTemp = null;
-		Node nLogicalTableSourceID = xmldoc.createTextNode(sLogicalTableSourceID);
-		Node nLogicalTableSourceName = xmldoc.createTextNode(sLogicalTableSourceName);
+		Node nLogicalTableSourceID = xmldoc.createTextNode(sLogTblSourceID);
+		Node nLogicalTableSourceName = xmldoc.createTextNode(sLogTblSourceName);
 
 		Element eLogicalTableSource = xmldoc.createElement("LogicalTableSource");
 		Element eLogicalTableSourceID = xmldoc.createElement("LogicalTableSourceID");
@@ -103,7 +119,7 @@ public class LogicalTableSource {
 				eLogicalColumn.appendChild(eLogicalColumnCalculation);
 
 				ePhysicalColumnMapping = xmldoc.createElement("PhysicalColumnMapping");
-				vPhysicalColumnMappingList = Utils.CalculationParser(sLogicalTableSourceID, vLogicalColumnCalculation.get(i), false);
+				vPhysicalColumnMappingList = Utils.CalculationParser(sLogTblSourceID, vLogicalColumnCalculation.get(i), false);
 				if(vPhysicalColumnMappingList != null) {
 					for(int j=0; j< vPhysicalColumnMappingList.size(); j++) {
 						ePhysicalColumnID = xmldoc.createElement("PhysicalColumnID");

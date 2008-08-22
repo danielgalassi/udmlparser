@@ -32,33 +32,34 @@ public class SubjectArea {
 		vHierDimensionsID.add(line.substring(0, line.length()-1));
 	}
 
-	public SubjectArea (String sDeclareStmt, String sSubjectArea, BufferedReader brUDML) {
+	public SubjectArea (String sDeclareStmt,
+						String sSubjectArea,
+						BufferedReader brUDML) {
 		String line;
 		String sTrimmedDS = sDeclareStmt.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		sSubjectAreaID = sTrimmedDS.substring(sSubjectArea.length(),iIndexAS).
 												trim().replaceAll("\"", "");
-		sSubjectAreaName = sTrimmedDS.substring(iIndexAS+4).
+		sSubjectAreaName = sTrimmedDS.substring(iIndexAS + 4).
 												trim().replaceAll("\"", "");
 
 		try {
-			
 			line = brUDML.readLine();
 			
 			//HIERARCHY DIMENSIONS
 			if (line.endsWith("DIMENSIONS (")) {
 				vHierDimensionsID = new Vector<String>();
 				line = brUDML.readLine().trim().replaceAll("\"", "");
-				while ((line.indexOf("LOGICAL TABLES (") == -1) ||
-					   (line.indexOf("PRIVILEGES") != -1 &&
-						line.indexOf(";") != -1)) {
+				while (( line.indexOf("LOGICAL TABLES (") == -1) || 
+						(line.indexOf("PRIVILEGES") != -1 && 
+						 line.indexOf(";") != -1)) {
 					parseHierDim(line);
 					line = brUDML.readLine().trim().replaceAll("\"", "");
 				};
 			}
 
 			//LOGICAL TABLES LIST
-			if(line.endsWith("LOGICAL TABLES (")) {
+			if (line.endsWith("LOGICAL TABLES (")) {
 				vLogicalTablesID = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim().replaceAll("\"", "");
@@ -67,13 +68,16 @@ public class SubjectArea {
 			}
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			while (line.indexOf("PRIVILEGES") == -1 &&
-				   line.indexOf(";") == -1) {
+			while ( line.indexOf("PRIVILEGES") == -1 &&
+					line.indexOf(";") == -1)
 				line = brUDML.readLine();
-			}
+
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
+
+		sTrimmedDS	= null;
+		line		= null;
 	}
 
 	/**
