@@ -10,7 +10,7 @@ import xmlutils.XMLUtils;
 
 /**
  * Extract tool getting UDML stmts parsed into an XML tree
- * @author daniel
+ * @author danielgalassi@gmail.com
  *
  */
 public class MetadataExtract {

@@ -2,6 +2,11 @@ package utils;
 
 import java.util.Vector;
 
+/**
+ * General Utilities class
+ * @author danielgalassi@gmail.com
+ *
+ */
 public class Utils {
 
 	/**
@@ -12,9 +17,9 @@ public class Utils {
 	 * 			(derived column or mapping calculation)
 	 * @return Vector containing (logical or physical) column IDs
 	 */
-	public static Vector<String> CalculationParser(String sPrefixStr,
-											String sCalculation,
-											boolean isDerived) {
+	public static Vector<String> CalculationParser (String sPrefixStr,
+													String sCalculation, 
+													boolean isDerived) {
 		String sSAPrefix		= "\"" + sPrefixStr.substring(0,
 										sPrefixStr.indexOf(".")) + "\"";
 		String sExpr			= sCalculation.toString();

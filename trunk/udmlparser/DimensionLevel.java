@@ -8,64 +8,104 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * Dimension Level Parser class
+ * @author danielgalassi@gmail.com
+ *
+ */
 public class DimensionLevel {
 	
 	private String 			sDimensionLevelID;
 	private String			sDimensionLevelName;
 	private Vector <String>	vLogicalColumnID = null;
 
-	public DimensionLevel(String sDeclareStmt, String sCatalogFolder, BufferedReader brUDML) {
+	public DimensionLevel ( String sDeclareStmt, 
+							String sCatalogFolder, 
+							BufferedReader brUDML) {
 		int iFullDrillCount;
 		int iGrandTotalCount;
+		int iTokenIndex;
 		String line;
-		sDimensionLevelID = sDeclareStmt.trim().substring(sCatalogFolder.length(),sDeclareStmt.trim().indexOf(" AS ")).trim().replaceAll("\"", "");
-		iFullDrillCount = sDeclareStmt.indexOf(" FULL DRILL ");
-		iGrandTotalCount = sDeclareStmt.indexOf(" GRAND TOTAL ");
-		if (iGrandTotalCount == -1 && iFullDrillCount == -1)
-			sDimensionLevelName = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" AS ")+4).trim().replaceAll("\"", "");
-		if(iFullDrillCount != -1 && iGrandTotalCount == -1)
-			sDimensionLevelName = sDeclareStmt.substring(sDeclareStmt.indexOf(" AS ")+4, sDeclareStmt.indexOf(" FULL DRILL ")).trim().replaceAll("\"", "");
-		if(iFullDrillCount == -1 && iGrandTotalCount != -1)
-			sDimensionLevelName = sDeclareStmt.substring(sDeclareStmt.indexOf(" AS ")+4, sDeclareStmt.indexOf(" GRAND TOTAL ")).trim().replaceAll("\"", "");
-		if(iFullDrillCount != -1 && 
+		String tempLogColID;
+		String sTrimmedDS = sDeclareStmt.trim();
+		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		sDimensionLevelID = sTrimmedDS.substring(sCatalogFolder.length(), 
+												 iIndexAS).
+												 trim().replaceAll("\"", "");
+		
+		iFullDrillCount = sTrimmedDS.indexOf(" FULL DRILL ");
+		iGrandTotalCount = sTrimmedDS.indexOf(" GRAND TOTAL ");
+		
+		if (iGrandTotalCount == -1 && 
+			iFullDrillCount == -1)
+			sDimensionLevelName = sTrimmedDS.substring(iIndexAS+4).
+												trim().replaceAll("\"", "");
+		
+		if (iFullDrillCount != -1 && 
+			iGrandTotalCount == -1)
+			sDimensionLevelName = sTrimmedDS.substring(iIndexAS+4,
+										sTrimmedDS.indexOf(" FULL DRILL ")).
+										trim().replaceAll("\"", "");
+		
+		if (iFullDrillCount == -1 && 
+			iGrandTotalCount != -1)
+			sDimensionLevelName = sTrimmedDS.substring(iIndexAS+4, 
+										sTrimmedDS.indexOf(" GRAND TOTAL ")).
+										trim().replaceAll("\"", "");
+		
+		if (iFullDrillCount != -1 &&
 			iGrandTotalCount != -1 && 
 			iFullDrillCount > iGrandTotalCount)
-			sDimensionLevelName = sDeclareStmt.substring(sDeclareStmt.indexOf(" AS ")+4, sDeclareStmt.indexOf(" GRAND TOTAL ")).trim().replaceAll("\"", "");
-
+			sDimensionLevelName = sTrimmedDS.substring(iIndexAS+4,
+										sTrimmedDS.indexOf(" GRAND TOTAL ")).
+										trim().replaceAll("\"", "");
+		
 		try {
 			//HAVING STRING
 			line = brUDML.readLine().trim().replaceAll("\"", "");
 
 			//LOGICAL COLUMNS LIST
-			if(line.indexOf("HAVING (") != -1) {
+			if (line.indexOf("HAVING (") != -1) {
 				vLogicalColumnID = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim().replaceAll("\"", "");
 					iFullDrillCount = line.indexOf(") FULL DRILL ");
 					iGrandTotalCount = line.indexOf(") GRAND TOTAL ");
-					if(line.charAt(line.length()-1) == ',')
-						vLogicalColumnID.add(line.substring(0, line.length()-1));
+					iTokenIndex = 0;
+					
+					if (line.charAt(line.length()-1) == ',')
+						iTokenIndex = line.length()-1;
 					else {
-						if(iFullDrillCount != -1 && iGrandTotalCount == -1)
-							vLogicalColumnID.add(line.substring(0, line.indexOf(") FULL DRILL ")));
-						if(iFullDrillCount == -1 && iGrandTotalCount != -1)
-							vLogicalColumnID.add(line.substring(0, line.indexOf(") GRAND TOTAL ")));
-						if(iFullDrillCount != -1 && 
-								iGrandTotalCount != -1 && 
-								iFullDrillCount > iGrandTotalCount)
-								vLogicalColumnID.add(line.substring(0, line.indexOf(") GRAND TOTAL ")));
+						if (iFullDrillCount != -1 && 
+							iGrandTotalCount == -1)
+							iTokenIndex = line.indexOf(") FULL DRILL ");
+						if (iFullDrillCount == -1 && 
+							iGrandTotalCount != -1)
+							iTokenIndex = line.indexOf(") GRAND TOTAL ");
+						if (iFullDrillCount != -1 && 
+							iGrandTotalCount != -1 && 
+							iFullDrillCount > iGrandTotalCount)
+							iTokenIndex = line.indexOf(") GRAND TOTAL ");
 					}
-				} while (iFullDrillCount == -1 && iGrandTotalCount == -1);
+					
+					tempLogColID = line.substring(0, iTokenIndex);
+					vLogicalColumnID.add(tempLogColID.trim());
+				} while (iFullDrillCount == -1 && 
+						 iGrandTotalCount == -1);
 			}
-
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			while ( line.indexOf("PRIVILEGES") == -1 && 
+					line.indexOf(";") == -1)
 				line = brUDML.readLine();
-			}
+
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
+
+		line			= null;
+		tempLogColID	= null;
+		sTrimmedDS		= null;
 	}
 	
 	/**

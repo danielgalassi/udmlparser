@@ -15,6 +15,11 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 
+/**
+ * XML Utilities class
+ * @author danielgalassi@gmail.com
+ *
+ */
 public class XMLUtils {
 
 	public static void publishException(Exception errMsg){

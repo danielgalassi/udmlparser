@@ -10,69 +10,100 @@ import org.w3c.dom.Node;
 
 /**
  * Physical Table Parser class
- * @author dgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public class PhysicalTable {
 
-	private String			sPhysicalTableID;
-	private String			sPhysicalTableName;
-	private String			sPhysicalTableSource;
+	private String			sPhysTblID;
+	private String			sPhysTblName;
+	private String			sPhysTblSrc;
 	private boolean			bIsPhysicalAlias;
-	private Vector <String>	vPhysicalColumnID;
-	private Vector <String>	vPhysicalColumnName;
-	private Vector <String>	vPhysicalColumnDataType;
-	private Vector <String>	vPhysicalColumnSize;
-	private Vector <String>	vPhysicalColumnScale;
-	private Vector <String>	vPhysicalColumnNullable;
+	private Vector <String>	vPhysColID;
+	private Vector <String>	vPhysColName;
+	private Vector <String>	vPhysColDataType;
+	private Vector <String>	vPhysColSize;
+	private Vector <String>	vPhysColScale;
+	private Vector <String>	vPhysColNullable;
 
-	public PhysicalTable (String sDeclareStmt, String sPhysicalTable, BufferedReader brUDML) {
+	public PhysicalTable (	String sDeclareStmt,
+							String sPhysTbl,
+							BufferedReader brUDML) {
 		String line;
-		sPhysicalTableID = sDeclareStmt.trim().substring(sPhysicalTable.length(),sDeclareStmt.trim().indexOf(" AS ")).trim().replaceAll("\"", "");
-		sPhysicalTableName = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" AS ")+4, sDeclareStmt.indexOf(" HAVING")).trim().replaceAll("\"", "");
+		String sTrimmedDS = sDeclareStmt.trim();
+		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		sPhysTblID = sTrimmedDS.substring(
+											sPhysTbl.length(),
+											iIndexAS).
+											trim().replaceAll("\"", "");
+		sPhysTblName = sTrimmedDS.substring(
+											iIndexAS+4, 
+											sDeclareStmt.indexOf(" HAVING")).
+											trim().replaceAll("\"", "");
 		bIsPhysicalAlias = false;
 
 		try {
 			line = brUDML.readLine();
 
-			vPhysicalColumnID = new Vector<String>();
-			vPhysicalColumnName = new Vector<String>();
-			vPhysicalColumnDataType = new Vector<String>();
-			vPhysicalColumnSize = new Vector<String>();
-			vPhysicalColumnScale = new Vector<String>();
-			vPhysicalColumnNullable = new Vector<String>();
+			vPhysColID = new Vector<String>();
+			vPhysColName = new Vector<String>();
+			vPhysColDataType = new Vector<String>();
+			vPhysColSize = new Vector<String>();
+			vPhysColScale = new Vector<String>();
+			vPhysColNullable = new Vector<String>();
 
 			do {
 				line = brUDML.readLine().trim().replaceAll("\"", "");
 				if (line.indexOf(" AS ") != -1) {
 					//FQPHYSCOLNAME
-					vPhysicalColumnID.add(line.substring(0, line.indexOf(" AS ")).trim().replaceAll("\"", ""));
+					vPhysColID.add(line.substring(0, line.indexOf(" AS ")).
+												trim().replaceAll("\"", ""));
 					//PHYSCOLNAME
-					vPhysicalColumnName.add(line.substring(line.indexOf(" AS ")+4, line.indexOf(" TYPE ")).trim().replaceAll("\"", ""));
+					vPhysColName.add(line.substring(line.indexOf(" AS ")+4, 
+													line.indexOf(" TYPE ")).
+													trim().
+													replaceAll("\"", ""));
 					//DATA TYPE
-					vPhysicalColumnDataType.add(line.substring(line.indexOf(" TYPE ")+6, line.indexOf(" PRECISION ")).trim().replaceAll("\"", ""));
+					vPhysColDataType.add(line.substring(
+												line.indexOf(" TYPE ")+6, 
+												line.indexOf(" PRECISION ")).
+												trim().replaceAll("\"", ""));
 					//SIZE
-					vPhysicalColumnSize.add(line.substring(line.indexOf(" PRECISION ")+11, line.indexOf(" SCALE ")).trim().replaceAll("\"", ""));
+					vPhysColSize.add(line.substring(
+												line.indexOf(" PRECISION ")+11, 
+												line.indexOf(" SCALE ")).
+												trim().replaceAll("\"", ""));
 					//SCALE & NULLABLE
-					if(line.indexOf(" NOT NULLABLE") != -1) {
-						vPhysicalColumnScale.add(line.substring(line.indexOf(" SCALE ")+7, line.indexOf(" NOT NULLABLE")).trim().replaceAll("\"", ""));
-						vPhysicalColumnNullable.add("NOT NULLABLE");
+					if (line.indexOf(" NOT NULLABLE") != -1) {
+						vPhysColScale.add(line.substring(
+												line.indexOf(" SCALE ")+7, 
+												line.indexOf(" NOT NULLABLE")).
+												trim().replaceAll("\"", ""));
+						vPhysColNullable.add("NOT NULLABLE");
 					}
 					else {
-						vPhysicalColumnScale.add(line.substring(line.indexOf(" SCALE ")+7, line.indexOf(" NULLABLE")).trim().replaceAll("\"", ""));
-						vPhysicalColumnNullable.add("NULLABLE");
+						vPhysColScale.add(line.substring(
+												line.indexOf(" SCALE ")+7, 
+												line.indexOf(" NULLABLE")).
+												trim().replaceAll("\"", ""));
+						vPhysColNullable.add("NULLABLE");
 					}
 				}
 
-				if (line.indexOf(")") == 0 && line.indexOf(" SOURCE ") != -1) {
-					sPhysicalTableSource = line.substring(line.indexOf(" SOURCE ")+8);
+				if (line.indexOf(")") == 0 && 
+					line.indexOf(" SOURCE ") != -1) {
+					sPhysTblSrc = line.substring(line.indexOf(" SOURCE ")+8);
 					bIsPhysicalAlias = true;
 				}
-			} while (!(line.indexOf("PRIVILEGES (") != -1 && line.indexOf(";") != -1));
+			} while (!( line.indexOf("PRIVILEGES (") != -1 && 
+						line.indexOf(";") != -1));
 
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
+
+		sTrimmedDS	= null;
+		line		= null;
 	}
 
 	/**
@@ -81,8 +112,8 @@ public class PhysicalTable {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		Node nPhysicalTableID = xmldoc.createTextNode(sPhysicalTableID);
-		Node nPhysicalTableName = xmldoc.createTextNode(sPhysicalTableName);
+		Node nPhysicalTableID = xmldoc.createTextNode(sPhysTblID);
+		Node nPhysicalTableName = xmldoc.createTextNode(sPhysTblName);
 
 		Element ePhysicalTable = xmldoc.createElement("PhysicalTable");
 		Element ePhysicalTableID = xmldoc.createElement("PhysicalTableID");
@@ -92,7 +123,7 @@ public class PhysicalTable {
 		
 		if (bIsPhysicalAlias) {
 			ePhysicalTable.setAttribute("isAlias", "true");
-			ePhysicalTable.setAttribute("reference", sPhysicalTableSource);
+			ePhysicalTable.setAttribute("reference", sPhysTblSrc);
 		}
 		else
 			ePhysicalTable.setAttribute("reference", "");
@@ -119,8 +150,8 @@ public class PhysicalTable {
 		Element	ePhColNullable	= null;
 		Node	nPhColNullable	= null;
 
-		if(vPhysicalColumnID != null)
-			for (int i=0; i< vPhysicalColumnID.size(); i++) {
+		if(vPhysColID != null)
+			for (int i=0; i< vPhysColID.size(); i++) {
 				ePhysicalColumn = xmldoc.createElement("PhysicalColumn");
 
 				ePhColID		= xmldoc.createElement("PhysicalColumnID");
@@ -130,12 +161,12 @@ public class PhysicalTable {
 				ePhColScale		= xmldoc.createElement("PhysicalColumnScale");
 				ePhColNullable	= xmldoc.createElement("PhysicalColumnNullable");
 
-				nPhColID		= xmldoc.createTextNode(vPhysicalColumnID.get(i));
-				nPhColName		= xmldoc.createTextNode(vPhysicalColumnName.get(i));
-				nPhColDatatype	= xmldoc.createTextNode(vPhysicalColumnDataType.get(i));
-				nPhColSize		= xmldoc.createTextNode(vPhysicalColumnSize.get(i));
-				nPhColScale		= xmldoc.createTextNode(vPhysicalColumnScale.get(i));
-				nPhColNullable	= xmldoc.createTextNode(vPhysicalColumnNullable.get(i));
+				nPhColID		= xmldoc.createTextNode(vPhysColID.get(i));
+				nPhColName		= xmldoc.createTextNode(vPhysColName.get(i));
+				nPhColDatatype	= xmldoc.createTextNode(vPhysColDataType.get(i));
+				nPhColSize		= xmldoc.createTextNode(vPhysColSize.get(i));
+				nPhColScale		= xmldoc.createTextNode(vPhysColScale.get(i));
+				nPhColNullable	= xmldoc.createTextNode(vPhysColNullable.get(i));
 
 				ePhColID.appendChild(nPhColID);
 				ePhColName.appendChild(nPhColName);

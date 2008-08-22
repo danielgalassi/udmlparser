@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 
 /**
  * Catalog Folder Parser Class
- * @author dgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public class CatalogFolder {
@@ -22,27 +22,28 @@ public class CatalogFolder {
 	private Vector <String>	vEntityFolderID = null;
 
 	public CatalogFolder(String sDeclareStmt,
-			String sCatFolder,
-			BufferedReader brUDML) {
+						 String sCatFolder,
+						 BufferedReader brUDML) {
 		String line;
-		sCatFolderID = sDeclareStmt.trim().substring(sCatFolder.length(),
-				sDeclareStmt.trim().indexOf(" AS ")).
-				trim().replaceAll("\"", "");
-		sCatFolderName = sDeclareStmt.trim().substring(sDeclareStmt.
-				indexOf(" AS ")+4).trim().replaceAll("\"", "");
+		String sTrimmedDS = sDeclareStmt.trim();
+		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		sCatFolderID = sTrimmedDS.substring(sCatFolder.length(), iIndexAS).
+												trim().replaceAll("\"", "");
+		sCatFolderName = sTrimmedDS.substring(iIndexAS+4).
+												trim().replaceAll("\"", "");
 
 		try {
 			//SUBJECT AREA
 			line = brUDML.readLine().trim().replaceAll("\"", "");
 
-			if(line.indexOf("SUBJECT AREA ") != -1)
+			if (line.indexOf("SUBJECT AREA ") != -1)
 				sCatFolderMappingID = line.substring(line.
-						indexOf("SUBJECT AREA ")+13).
-						trim().replaceAll("\"", "");
+												indexOf("SUBJECT AREA ")+13).
+												trim().replaceAll("\"", "");
 
 			//ENTITY FOLDERS LIST
 			line = brUDML.readLine().trim().replaceAll("\"", "");
-			if(line.indexOf("ENTITY FOLDERS (") != -1) {
+			if (line.indexOf("ENTITY FOLDERS (") != -1) {
 				vEntityFolderID = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim().replaceAll("\"", "");
@@ -54,14 +55,18 @@ public class CatalogFolder {
 			//RECOVERING ALIASES
 			do {
 				line = brUDML.readLine().trim().replaceAll("\"", "");
-				if(line.indexOf("ALIASES (") != -1)
+				if (line.indexOf("ALIASES (") != -1)
 					saCatFolderAliases = line.substring(line.
 							indexOf("ALIASES (")+9, line.lastIndexOf(")")).
 							trim().replaceAll("\"", "").split(",");
 			} while (line.indexOf(";") == -1);
+
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
+
+		sTrimmedDS	= null;
+		line		= null;
 	}
 
 	/**

@@ -12,22 +12,29 @@ import utils.Utils;
 
 /**
  * Logical Table Parser class
- * @author dgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public class LogicalTable {
 
-	private String			sLogicalTableID;
-	private String			sLogicalTableName;
+	private String			sLogTblID;
+	private String			sLogTblName;
 	private Vector <String>	vLogicalColumnID = null;
 	private Vector <String>	vLogicalColumnName = null;
 	private Vector <String>	vDerivedLogicalColumnExpression = null;
 	private Vector <String>	vBiz2BizColumnMappingList = null;
 
-	public LogicalTable (String sDeclareStmt, String sLogicalTable, BufferedReader brUDML) {
+	public LogicalTable (String sDeclareStmt,
+						 String sLogTbl,
+						 BufferedReader brUDML) {
 		String line;
-		sLogicalTableID = sDeclareStmt.trim().substring(sLogicalTable.length(),sDeclareStmt.trim().indexOf(" AS ")).trim().replaceAll("\"", "");
-		sLogicalTableName = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" AS ")+4, sDeclareStmt.indexOf(" HAVING")).trim().replaceAll("\"", "");
+		String sTrimmedDS = sDeclareStmt.trim();
+		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		sLogTblID = sTrimmedDS.substring( sLogTbl.length(), iIndexAS).
+												trim().replaceAll("\"", "");
+		sLogTblName = sTrimmedDS.substring( iIndexAS + 4, 
+											sTrimmedDS.indexOf(" HAVING")).
+											trim().replaceAll("\"", "");
 
 		try {
 			line = brUDML.readLine();
@@ -38,27 +45,42 @@ public class LogicalTable {
 				line = brUDML.readLine().trim();
 				if (line.indexOf(" AS ") != -1) {
 					//FQLOGCOLNAME
-					vLogicalColumnID.add(line.substring(0, line.indexOf(" AS ")).trim().replaceAll("\"", ""));
+					vLogicalColumnID.add(line.substring(0, 
+												line.indexOf(" AS ")).
+												trim().replaceAll("\"", ""));
 					//LOGCOLNAME
 					if (line.indexOf(" {") != -1)
-						vLogicalColumnName.add(line.substring(line.indexOf(" AS ")+4, line.indexOf(" {")).trim().replaceAll("\"", ""));
+						vLogicalColumnName.add(line.substring(
+											line.indexOf(" AS ")+4,
+											line.indexOf(" {")).
+											trim().replaceAll("\"", ""));
 					else
-						vLogicalColumnName.add(line.substring(line.indexOf(" AS ")+4).trim().replaceAll("\"", ""));
+						vLogicalColumnName.add(line.substring(
+											line.indexOf(" AS ")+4).
+											trim().replaceAll("\"", ""));
 					//DERIVED EXPRESSION
 					if (line.indexOf(" DERIVED") != -1)
-						vDerivedLogicalColumnExpression.add(line.substring(line.indexOf(" {")+2, line.indexOf("} ")).trim());
+						vDerivedLogicalColumnExpression.add(line.substring(
+														line.indexOf(" {")+2, 
+														line.indexOf("} ")).
+														trim());
 					else
 						vDerivedLogicalColumnExpression.add("");
 				}
-			} while (line.indexOf("KEYS (") == -1 && line.indexOf("SOURCES (") == -1);
+			} while (line.indexOf("KEYS (") == -1 &&
+					 line.indexOf("SOURCES (") == -1);
 
 			//DISCARD SOURCES, DESCRIPTION AND PRIVILEGES
-			while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			while ( line.indexOf("PRIVILEGES") == -1 &&
+					line.indexOf(";") == -1)
 				line = brUDML.readLine();
-			}
+
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
+
+		sTrimmedDS	= null;
+		line		= null;
 	}
 
 	/**
@@ -68,8 +90,8 @@ public class LogicalTable {
 	 */
 	@SuppressWarnings("unchecked")
 	public Element serialize(Document xmldoc) {
-		Node nLogicalTableID = xmldoc.createTextNode(sLogicalTableID);
-		Node nLogicalTableName = xmldoc.createTextNode(sLogicalTableName);
+		Node nLogicalTableID = xmldoc.createTextNode(sLogTblID);
+		Node nLogicalTableName = xmldoc.createTextNode(sLogTblName);
 
 		Element eLogicalTable = xmldoc.createElement("LogicalTable");
 		Element eLogicalTableID = xmldoc.createElement("LogicalTableID");
@@ -115,7 +137,7 @@ public class LogicalTable {
 				eLogicalColumn.appendChild(eLogicalColumnDerivedExpression);
 
 				eLogicalColumnDerivedMappingList = xmldoc.createElement("LogicalColumnDerivedMappingList");
-				vBiz2BizColumnMappingList = Utils.CalculationParser(sLogicalTableID, vDerivedLogicalColumnExpression.get(i), true);
+				vBiz2BizColumnMappingList = Utils.CalculationParser(sLogTblID, vDerivedLogicalColumnExpression.get(i), true);
 				if(vBiz2BizColumnMappingList != null) {
 					for(int j=0; j< vBiz2BizColumnMappingList.size(); j++) {
 						eBiz2BizColumnMappingID = xmldoc.createElement("LogicalColumnDerivedMappingID");

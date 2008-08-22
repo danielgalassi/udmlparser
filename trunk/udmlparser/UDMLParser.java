@@ -12,7 +12,7 @@ import xmlutils.XMLUtils;
 
 /**
  * Universal Database Markup Language (UDML for short) Parser class
- * @author dgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public class UDMLParser {
@@ -22,16 +22,17 @@ public class UDMLParser {
 	private File			fNQ_UDML;
 	private FileReader		frNQ_UDML;
 	private BufferedReader	brUDML;
-	//UDML statements declaration first token
+	//UDML declaration statement's first token
 	private String			sCatalogFolder		= "DECLARE CATALOG FOLDER ";
 	private String			sEntityFolder		= "DECLARE ENTITY FOLDER ";
 	private String			sFolderAttribute	= "DECLARE FOLDER ATTRIBUTE ";
 	private String			sSubjectArea		= "DECLARE SUBJECT AREA ";
 	private String			sLogicalTable		= "DECLARE LOGICAL TABLE ";
-	private String			sLogicalTableSource	= "DECLARE LOGICAL TABLE SOURCE ";
+	private String			sLogicalTableSrc	= "DECLARE LOGICAL TABLE SOURCE ";
 	private String			sPhysicalTable		= "DECLARE TABLE ";
 	private String			sPhysicalTableKey	= "DECLARE TABLE KEY ";
 	private String			sDimensionLevel		= "DECLARE LEVEL ";
+	private String			sHierarchyDim		= "DECLARE DIMENSION ";
 
 	/**
 	 * Constructor
@@ -39,13 +40,16 @@ public class UDMLParser {
 	 * @param sOutput target XML file
 	 */
 	public UDMLParser(String sInput, String sOutput) {
-		docUDML = XMLUtils.createDOMDocument();
-		root = docUDML.createElement("UDML");
-		fNQ_UDML = new File (sInput);
+		docUDML		= XMLUtils.createDOMDocument();
+		root		= docUDML.createElement("UDML");
+		fNQ_UDML	= new File (sInput);
 		if(isUDML())
 			parse();
 		docUDML.appendChild(root);
 		XMLUtils.Document2File(docUDML, sOutput);
+		fNQ_UDML	= null;
+		root		= null;
+		docUDML		= null;
 	}
 
 	/**
@@ -80,54 +84,79 @@ public class UDMLParser {
 			// Create a FileReader and then wrap it with BufferedReader.
 			frNQ_UDML = new FileReader (fNQ_UDML);
 			brUDML = new BufferedReader (frNQ_UDML);
+
 			CatalogFolder c;
 			EntityFolder e;
 			FolderAttribute f;
 			SubjectArea s;
 			LogicalTable l;
-			LogicalTableSource llts;
+			LogicalTableSource lts;
 			PhysicalTable p;
 			DimensionLevel d;
+			HierarchyDimension h;
 
 			do {
 				line = brUDML.readLine();
 				if (line == null)
 					break;
 				if (line.indexOf(sCatalogFolder) != -1) { //pres subject area
+					System.out.println( "Processing Subject Area...");
 					c = new CatalogFolder(line, sCatalogFolder, brUDML);
 					root.appendChild(c.serialize(docUDML));
 				}
 				if (line.indexOf(sEntityFolder) != -1) { //pres folder
+					System.out.println("Processing Presentation Folder...");
 					e = new EntityFolder(line, sEntityFolder, brUDML);
 					root.appendChild(e.serialize(docUDML));
 				}
 				if (line.indexOf(sFolderAttribute) != -1) { //pres column
+					System.out.println("Processing Presentation Column...");
 					f = new FolderAttribute(line, sFolderAttribute, brUDML);
 					root.appendChild(f.serialize(docUDML));
 				}
 				if (line.indexOf(sSubjectArea) != -1) { //bmm subject area
+					System.out.println("Processing Business Model...");
 					s = new SubjectArea(line, sSubjectArea, brUDML);
 					root.appendChild(s.serialize(docUDML));
 				}
 				if (line.indexOf(sLogicalTable) != -1 &&
-						line.indexOf(sLogicalTableSource) == -1) { //logl tbl
+						line.indexOf(sLogicalTableSrc) == -1) { //logl tbl
+					System.out.println("Processing Logical Table...");
 					l = new LogicalTable(line, sLogicalTable, brUDML);
 					root.appendChild(l.serialize(docUDML));
 				}
-				if (line.indexOf(sLogicalTableSource) != -1) { //logl tbl src
-					llts = new LogicalTableSource(line, sLogicalTableSource, brUDML);
-					root.appendChild(llts.serialize(docUDML));
+				if (line.indexOf(sLogicalTableSrc) != -1) { //logl tbl src
+					System.out.println("Processing Logical Table Source...");
+					lts=new LogicalTableSource(line,sLogicalTableSrc,brUDML);
+					root.appendChild(lts.serialize(docUDML));
 				}
 				if (line.indexOf(sPhysicalTable) != -1 && 
-						line.indexOf(sPhysicalTableKey) == -1) { //physical table
+						line.indexOf(sPhysicalTableKey) == -1) { //physical tbl
+					System.out.println("Processing Physical Table...");
 					p = new PhysicalTable(line, sPhysicalTable, brUDML);
 					root.appendChild(p.serialize(docUDML));
 				}
 				if (line.indexOf(sDimensionLevel) != -1) { //hier. dim. level
+					System.out.println("Processing Hierarchy Dim Level...");
 					d = new DimensionLevel(line, sDimensionLevel, brUDML);
 					root.appendChild(d.serialize(docUDML));
 				}
+				if (line.indexOf(sHierarchyDim) != -1) { //hier dim
+					System.out.println("Processing Hierarchy Dimension...");
+					h = new HierarchyDimension(line, sHierarchyDim, brUDML);
+					root.appendChild(h.serialize(docUDML));
+				}
 			} while (true);
+
+			c	= null;
+			e	= null;
+			f	= null;
+			s	= null;
+			l	= null;
+			lts	= null;
+			p	= null;
+			d	= null;
+			h	= null;
 
 			brUDML.close ();
 			frNQ_UDML.close();
@@ -135,5 +164,7 @@ public class UDMLParser {
 		catch (IOException e) {
 			System.out.println ("IO exception =" + e );
 		}
+		
+		line = null;
 	}
 }

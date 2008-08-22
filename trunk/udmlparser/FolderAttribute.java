@@ -9,35 +9,55 @@ import org.w3c.dom.Node;
 
 /**
  * Folder Attribute Parser class
- * @author dgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public class FolderAttribute {
 
-	private String		sPresentationColumnID;
-	private String		sPresentationColumnName;
-	private String		sPresentationColumnMappingID;
-	private String[] 	saPresentationColumnAliases = null;
+	private String		sPresColumnID;
+	private String		sPresColumnName;
+	private String		sPresColumnMappingID;
+	private String[] 	saPresColAliases = null;
 
-	public FolderAttribute (String sDeclareStmt, String sPresentationColumn, BufferedReader brUDML) {
+	public FolderAttribute (String sDeclareStmt, 
+							String sPresColumn,
+							BufferedReader brUDML) {
 		String line;
-		sPresentationColumnID = sDeclareStmt.trim().substring(sPresentationColumn.length(),sDeclareStmt.trim().indexOf(" AS ")).trim().replaceAll("\"", "");
-		sPresentationColumnName = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" AS ")+4,sDeclareStmt.trim().indexOf(" LOGICAL ATTRIBUTE ", sDeclareStmt.trim().indexOf(" AS "))).trim().replaceAll("\"", "");
-		if (sDeclareStmt.indexOf(" OVERRIDE LOGICAL NAME") == -1)
-			sPresentationColumnMappingID = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" LOGICAL ATTRIBUTE ")+19).trim().replaceAll("\"", "");
+		String sTrimmedDS = sDeclareStmt.trim();
+		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		int iIndexLA = sTrimmedDS.indexOf(" LOGICAL ATTRIBUTE ");
+		sPresColumnID = sTrimmedDS.substring(sPresColumn.length(), iIndexAS).
+												trim().replaceAll("\"", "");
+		sPresColumnName = sTrimmedDS.substring(iIndexAS+4, 
+						sTrimmedDS.indexOf( " LOGICAL ATTRIBUTE ",iIndexAS)).
+						trim().replaceAll("\"", "");
+
+		if (sTrimmedDS.indexOf(" OVERRIDE LOGICAL NAME") == -1)
+			sPresColumnMappingID = sTrimmedDS.substring(iIndexLA+19).
+												trim().replaceAll("\"", "");
 		else
-			sPresentationColumnMappingID = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" LOGICAL ATTRIBUTE ")+19, sDeclareStmt.indexOf(" OVERRIDE LOGICAL NAME")).trim().replace("\"", "");
+			sPresColumnMappingID = sTrimmedDS.substring(iIndexLA+19, 
+								sTrimmedDS.indexOf(" OVERRIDE LOGICAL NAME")).
+								trim().replace("\"", "");
 
 		try {
 			//ALIASES
 			do {
 				line = brUDML.readLine().trim().replaceAll("\"", "");
 				if(line.indexOf("ALIASES (") != -1)
-					saPresentationColumnAliases = line.substring(line.indexOf("ALIASES (")+9, line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
-			} while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1);
+					saPresColAliases = line.substring(
+										line.indexOf("ALIASES (")+9, 
+										line.lastIndexOf(")")).
+										trim().replaceAll("\"", "").split(",");
+			} while (line.indexOf("PRIVILEGES") == -1 &&
+					 line.indexOf(";") == -1);
+
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
+
+		sTrimmedDS	= null;
+		line		= null;
 	}
 
 	/**
@@ -46,9 +66,9 @@ public class FolderAttribute {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		Node nPresentationColumnID = xmldoc.createTextNode(sPresentationColumnID);
-		Node nPresentationColumnName = xmldoc.createTextNode(sPresentationColumnName);
-		Node nPresentationColumnMappingID = xmldoc.createTextNode(sPresentationColumnMappingID);
+		Node nPresentationColumnID = xmldoc.createTextNode(sPresColumnID);
+		Node nPresentationColumnName = xmldoc.createTextNode(sPresColumnName);
+		Node nPresentationColumnMappingID = xmldoc.createTextNode(sPresColumnMappingID);
 
 		Element ePresentationColumn = xmldoc.createElement("PresentationColumn");
 		Element ePresentationColumnID = xmldoc.createElement("PresentationColumnID");
@@ -67,10 +87,10 @@ public class FolderAttribute {
 		Element ePresentationColumnAlias = null;
 		Node nCatalogFolderAlias = null;
 
-		if(saPresentationColumnAliases != null)
-			for (int i=0; i< saPresentationColumnAliases.length; i++) {
+		if(saPresColAliases != null)
+			for (int i=0; i< saPresColAliases.length; i++) {
 				ePresentationColumnAlias = xmldoc.createElement("PresentationColumnAlias");
-				nCatalogFolderAlias = xmldoc.createTextNode(saPresentationColumnAliases[i]);
+				nCatalogFolderAlias = xmldoc.createTextNode(saPresColAliases[i]);
 				ePresentationColumnAlias.appendChild(nCatalogFolderAlias);
 				ePresentationColumnAliasList.appendChild(ePresentationColumnAlias);
 			}

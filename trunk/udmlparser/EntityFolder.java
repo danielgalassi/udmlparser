@@ -10,34 +10,45 @@ import org.w3c.dom.Node;
 
 /**
  * Entity Folder Parser class
- * @author dgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public class EntityFolder {
 
-	private String			sPresentationTableID;
-	private String			sPresentationTableName;
-	private String			sPresentationTableMappingID;
+	private String			sPresTableID;
+	private String			sPresTableName;
+	private String			sPresTableMappingID;
 	private Vector <String>	vFolderAttributesID = null;
 	private String[]		saPresentationTableAliases = null;
 
-	public EntityFolder (String sDeclareStmt, String sEntityFolder, BufferedReader brUDML) {
+	public EntityFolder (String sDeclareStmt, 
+						 String sEntityFolder, 
+						 BufferedReader brUDML) {
 		String line;
-		sPresentationTableID = sDeclareStmt.trim().substring(sEntityFolder.length(),sDeclareStmt.trim().indexOf(" AS ")).trim().replaceAll("\"", "");
-		if (sDeclareStmt.indexOf(" ENTITY ") != -1 && 
-				sDeclareStmt.indexOf(" ENTITY ") != sDeclareStmt.lastIndexOf(" ENTITY ")) {
-			sPresentationTableName = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" AS ")+4,sDeclareStmt.trim().indexOf(" ENTITY ", sDeclareStmt.trim().indexOf(" AS "))).trim().replaceAll("\"", "");
-			sPresentationTableMappingID = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" ENTITY ", sDeclareStmt.trim().indexOf(" AS ")+4)+8).trim().replaceAll("\"", "");
+		String sTrimmedDS = sDeclareStmt.trim();
+		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		sPresTableID = sTrimmedDS.substring(sEntityFolder.length(), iIndexAS).
+												trim().replaceAll("\"", "");
+		if (sTrimmedDS.indexOf(" ENTITY ") != -1 && 
+			sTrimmedDS.indexOf(" ENTITY ") != sTrimmedDS.
+												lastIndexOf(" ENTITY ")) {
+			sPresTableName = sTrimmedDS.substring(iIndexAS + 4, 
+									sTrimmedDS.indexOf(" ENTITY ", iIndexAS)).
+									trim().replaceAll("\"", "");
+			sPresTableMappingID = sTrimmedDS.substring(sTrimmedDS.
+									indexOf(" ENTITY ", iIndexAS + 4) + 8).
+									trim().replaceAll("\"", "");
 		}
 		else {
-			sPresentationTableName = sDeclareStmt.trim().substring(sDeclareStmt.indexOf(" AS ")+4).trim().replaceAll("\"", "");
-			sPresentationTableMappingID = "";
+			sPresTableName = sTrimmedDS.substring(iIndexAS + 4).
+									trim().replaceAll("\"", "");
+			sPresTableMappingID = "";
 		}
 
 		try {
 			//FOLDER ATTRIBUTES LIST
 			line = brUDML.readLine().trim().replaceAll("\"", "");
-			if(line.indexOf("FOLDER ATTRIBUTES ") != -1) {
+			if (line.indexOf("FOLDER ATTRIBUTES ") != -1) {
 				vFolderAttributesID = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim().replaceAll("\"", "");
@@ -50,17 +61,24 @@ public class EntityFolder {
 				do {
 					line = brUDML.readLine().trim().replaceAll("\"", "");
 				} while (line.indexOf("ALIASES (") != -1);
-				if(line.indexOf("ALIASES (") != -1)
-					saPresentationTableAliases = line.substring(line.indexOf("ALIASES (")+9, line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
+				if (line.indexOf("ALIASES (") != -1)
+					saPresentationTableAliases = line.substring(
+										line.indexOf("ALIASES (")+9, 
+										line.lastIndexOf(")")).
+										trim().replaceAll("\"", "").split(",");
 			}
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1)
+			while ( line.indexOf("PRIVILEGES") == -1 &&
+					line.indexOf(";") == -1)
 				line = brUDML.readLine();
+
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
 
+		sTrimmedDS	= null;
+		line		= null;
 	}
 
 	/**
@@ -69,9 +87,9 @@ public class EntityFolder {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		Node nPresentationTableID = xmldoc.createTextNode(sPresentationTableID);
-		Node nPresentationTableName = xmldoc.createTextNode(sPresentationTableName);
-		Node nPresentationTableMappingID = xmldoc.createTextNode(sPresentationTableMappingID);
+		Node nPresentationTableID = xmldoc.createTextNode(sPresTableID);
+		Node nPresentationTableName = xmldoc.createTextNode(sPresTableName);
+		Node nPresentationTableMappingID = xmldoc.createTextNode(sPresTableMappingID);
 
 		Element ePresentationTable = xmldoc.createElement("PresentationTable");
 		Element ePresentationTableID = xmldoc.createElement("PresentationTableID");
