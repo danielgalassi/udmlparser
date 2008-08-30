@@ -31,6 +31,7 @@ public class PhysicalTable {
 							BufferedReader brUDML) {
 		String line;
 		String sTrimmedDS = sDeclareStmt.trim();
+		int iIndexColName; 
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		sPhysTblID = sTrimmedDS.substring(
 											sPhysTbl.length(),
@@ -59,9 +60,12 @@ public class PhysicalTable {
 					vPhysColID.add(line.substring(0, line.indexOf(" AS ")).
 												trim().replaceAll("\"", ""));
 					//PHYSCOLNAME
+					iIndexColName = line.indexOf(" TYPE ");
+					if (line.indexOf(" EXTERNAL ") != -1 &&
+						line.indexOf(" EXTERNAL ") < iIndexColName)
+						iIndexColName = line.indexOf(" EXTERNAL ");
 					vPhysColName.add(line.substring(line.indexOf(" AS ")+4, 
-													line.indexOf(" TYPE ")).
-													trim().
+													iIndexColName).trim().
 													replaceAll("\"", ""));
 					//DATA TYPE
 					vPhysColDataType.add(line.substring(
