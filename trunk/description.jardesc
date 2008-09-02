@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<jardesc>
+  <jar path="/media/disk/udmlparser.jar"/>
+  <options overwrite="true" compress="true" exportErrors="true" exportWarnings="true" saveDescription="true" descriptionLocation="/udmlparser/description.jardesc" useSourceFolders="false" buildIfNeeded="true" includeDirectoryEntries="false" storeRefactorings="false"/>
+  <storedRefactorings structuralOnly="false" deprecationInfo="true"/>
+  <selectedProjects/>
+  <manifest manifestVersion="1.0" usesManifest="true" reuseManifest="true" saveManifest="true" generateManifest="false" manifestLocation="/udmlparser/manifest.xml" mainClassHandleIdentifier="=udmlparser/&lt;metadataextract{MetadataExtract.java[MetadataExtract">
+    <sealing sealJar="false">
+      <packagesToSeal/>
+      <packagesToUnSeal/>
+    </sealing>
+  </manifest>
+  <selectedElements exportClassFiles="true" exportOutputFolder="false" exportJavaFiles="false">
+    <javaElement handleIdentifier="=udmlparser/&lt;utils"/>
+    <file path="/udmlparser/config.xml"/>
+    <file path="/udmlparser/foaf.rdf"/>
+    <file path="/udmlparser/manifest.xml"/>
+    <javaElement handleIdentifier="=udmlparser/&lt;metadataextract"/>
+    <file path="/udmlparser/doap.rdf"/>
+    <javaElement handleIdentifier="=udmlparser/&lt;xmlutils"/>
+    <javaElement handleIdentifier="=udmlparser/&lt;udmlparser"/>
+    <file path="/udmlparser/.project"/>
+    <file path="/udmlparser/.classpath"/>
+  </selectedElements>
+</jardesc>
