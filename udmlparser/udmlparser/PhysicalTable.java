@@ -55,7 +55,8 @@ public class PhysicalTable {
 
 			do {
 				line = brUDML.readLine().trim().replaceAll("\"", "");
-				if (line.indexOf(" AS ") != -1) {
+				if (line.indexOf(" AS ") != -1 &&
+					line.indexOf(" TYPE ") != -1) {
 					//FQPHYSCOLNAME
 					vPhysColID.add(line.substring(0, line.indexOf(" AS ")).
 												trim().replaceAll("\"", ""));
