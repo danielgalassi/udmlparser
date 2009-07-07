@@ -33,6 +33,8 @@ public class UDMLParser {
 	private String			sPhysicalTableKey	= "DECLARE TABLE KEY ";
 	private String			sDimensionLevel		= "DECLARE LEVEL ";
 	private String			sHierarchyDim		= "DECLARE DIMENSION ";
+	private String			sForeignKey				= "DECLARE FOREIGN KEY ";
+
 
 	/**
 	 * Constructor
@@ -94,6 +96,7 @@ public class UDMLParser {
 			PhysicalTable p;
 			DimensionLevel d;
 			HierarchyDimension h;
+			ForeignKey j;
 
 			do {
 				line = brUDML.readLine();
@@ -146,6 +149,11 @@ public class UDMLParser {
 					h = new HierarchyDimension(line, sHierarchyDim, brUDML);
 					root.appendChild(h.serialize(docUDML));
 				}
+				if (line.indexOf(sForeignKey) != -1) { //join
+					System.out.println("Processing Foreign Key...");
+					j = new ForeignKey(line, sForeignKey, brUDML);
+					root.appendChild(j.serialize(docUDML));
+				}
 			} while (true);
 
 			c	= null;
@@ -157,6 +165,7 @@ public class UDMLParser {
 			p	= null;
 			d	= null;
 			h	= null;
+			j	= null;
 
 			brUDML.close ();
 			frNQ_UDML.close();
