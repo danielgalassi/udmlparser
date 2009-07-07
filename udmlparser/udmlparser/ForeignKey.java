@@ -2,7 +2,6 @@ package udmlparser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Vector;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
