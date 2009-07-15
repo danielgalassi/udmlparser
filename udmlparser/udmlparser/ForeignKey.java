@@ -85,9 +85,11 @@ public class ForeignKey {
 		Node nFKColumn2 = null;
 
 		eFKColumn1 = xmldoc.createElement("FKColumnID");
+		eFKColumn1.setAttribute("isReferenced", "false");
 		nFKColumn1 = xmldoc.createTextNode(sPhysicalColumn1);
 		
 		eFKColumn2 = xmldoc.createElement("FKColumnID");
+		eFKColumn1.setAttribute("isReferenced", "true");
 		nFKColumn2 = xmldoc.createTextNode(sPhysicalColumn2);
 
 		eFKColumn1.appendChild(nFKColumn1);
