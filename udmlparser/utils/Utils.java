@@ -24,7 +24,7 @@ public class Utils {
 										sPrefixStr.indexOf(".")) + "\"";
 		String sExpr			= sCalculation.toString();
 		String sRemainingExpr	= sCalculation.toString();
-
+		
 		Vector <String>	vColMapID = null;
 
 		int iExpBegins	= 0;
@@ -40,7 +40,6 @@ public class Utils {
 
 		if (isDerived)
 			iLoop = 4;
-
 		while (sExpr.indexOf(sSAPrefix) != -1) {
 			iStPos = sExpr.indexOf(sSAPrefix);
 			//gets the first ocurrence of ."
@@ -53,6 +52,9 @@ public class Utils {
 				iEndPos += iRelPos;
 			}
 
+			if (iEndPos > sRemainingExpr.length())
+				iEndPos = sRemainingExpr.length();
+			
 			//prevents repeatedly added columns --begin
 			bDuplicated = false;
 			for(int j=0; j<vColMapID.size(); j++)
