@@ -75,7 +75,6 @@ public class LogicalTableSource {
 	 * @param xmldoc XML document
 	 * @return XML fragment
 	 */
-	@SuppressWarnings("unchecked")
 	public Element serialize(Document xmldoc) {
 		String sTemp = null;
 		Node nLogicalTableSourceID = xmldoc.createTextNode(sLogTblSourceID);

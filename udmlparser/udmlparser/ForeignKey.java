@@ -72,7 +72,6 @@ public class ForeignKey {
 	 * @param xmldoc XML document
 	 * @return XML fragment
 	 */
-	@SuppressWarnings("unchecked")
 	public Element serialize(Document xmldoc) {
 		Node nForeignKeyID = xmldoc.createTextNode(sForKeyID);
 		Node nForeignKeyName = xmldoc.createTextNode(sForKeyName);

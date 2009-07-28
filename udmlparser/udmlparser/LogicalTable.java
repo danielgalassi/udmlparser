@@ -88,7 +88,6 @@ public class LogicalTable {
 	 * @param xmldoc XML document
 	 * @return XML fragment
 	 */
-	@SuppressWarnings("unchecked")
 	public Element serialize(Document xmldoc) {
 		Node nLogicalTableID = xmldoc.createTextNode(sLogTblID);
 		Node nLogicalTableName = xmldoc.createTextNode(sLogTblName);
