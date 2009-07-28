@@ -33,7 +33,7 @@ public class UDMLParser {
 	private String			sPhysicalTableKey	= "DECLARE TABLE KEY ";
 	private String			sDimensionLevel		= "DECLARE LEVEL ";
 	private String			sHierarchyDim		= "DECLARE DIMENSION ";
-	private String			sForeignKey				= "DECLARE FOREIGN KEY ";
+	private String			sForeignKey			= "DECLARE FOREIGN KEY ";
 
 
 	/**
