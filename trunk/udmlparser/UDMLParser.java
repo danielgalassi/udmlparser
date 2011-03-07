@@ -103,7 +103,9 @@ public class UDMLParser {
 					System.out.println( "Processing Subject Area...");
 					c = new CatalogFolder(line, sCatalogFolder, brUDML);
 					root.appendChild(c.serialize(docUDML));
+					c.toXML();
 				}
+/*
 				if (line.indexOf(sEntityFolder) != -1) { //pres folder
 					System.out.println("Processing Presentation Folder...");
 					e = new EntityFolder(line, sEntityFolder, brUDML);
@@ -146,6 +148,7 @@ public class UDMLParser {
 					h = new HierarchyDimension(line, sHierarchyDim, brUDML);
 					root.appendChild(h.serialize(docUDML));
 				}
+*/
 			} while (true);
 
 			c	= null;
