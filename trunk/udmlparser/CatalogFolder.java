@@ -23,6 +23,7 @@ public class CatalogFolder {
 	private String			sCatFolderID;
 	@XStreamAlias("PresentationCatalogName")
 	private String			sCatFolderName;
+	@XStreamAlias("PresentationCatalogAlias")
 	private String[]		saCatFolderAliases = null;
 	@XStreamAlias("PresentationCatalogMappingID")
 	private String			sCatFolderMappingID;
