@@ -7,7 +7,7 @@ I like the idea of applications sharing a semantic layer.
 
 I like the idea of opening file formats to a user community.
 
-I like the idea of interoperatibility.
+I like the idea of interoperability.
 
 With that in mind, the question hammering my head is basically:
 
