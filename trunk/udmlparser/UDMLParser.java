@@ -34,6 +34,7 @@ public class UDMLParser {
 	private String			sDimensionLevel		= "DECLARE LEVEL ";
 	private String			sHierarchyDim		= "DECLARE DIMENSION ";
 	private String			sForeignKey			= "DECLARE FOREIGN KEY ";
+	private String			sLogicalJoin		= "DECLARE ROLE RELATIONSHIP ";
 
 
 	/**
@@ -97,11 +98,13 @@ public class UDMLParser {
 			DimensionLevel d;
 			HierarchyDimension h;
 			ForeignKey j;
+			LogicalJoin lj;
 
 			do {
 				line = brUDML.readLine();
 				if (line == null)
 					break;
+				/*
 				if (line.indexOf(sCatalogFolder) != -1) { //pres subject area
 					System.out.println( "Processing Subject Area...");
 					c = new CatalogFolder(line, sCatalogFolder, brUDML);
@@ -153,6 +156,11 @@ public class UDMLParser {
 					System.out.println("Processing Foreign Key...");
 					j = new ForeignKey(line, sForeignKey, brUDML);
 					root.appendChild(j.serialize(docUDML));
+				}*/
+				if (line.indexOf(sLogicalJoin) != -1) { //logical join (BMM)
+					System.out.println("Processing Logical Join...");
+					lj = new LogicalJoin(line, sLogicalJoin, brUDML);
+					root.appendChild(lj.serialize(docUDML));
 				}
 			} while (true);
 
