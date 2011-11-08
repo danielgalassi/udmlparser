@@ -22,10 +22,9 @@ public class LogicalJoin {
 		int iLogicalTable = line.indexOf(" ON ENTITY ") + 12;
 		int iMULTIPLICITY = line.indexOf(" MULTIPLICITY  ");
 		if (iLogicalTable != -1 || iMULTIPLICITY != -1)
-			vLogicalTablesID.add(line.substring(iLogicalTable, iMULTIPLICITY));
+			vLogicalTablesID.add(line.substring(iLogicalTable, iMULTIPLICITY).replace("\"", ""));
 		else
 			vLogicalTablesID.add("Review definition for this logical join");
-		System.out.println(line.substring(iLogicalTable, iMULTIPLICITY));
 	}
 
 	public LogicalJoin (String sDeclareStmt,
@@ -37,7 +36,6 @@ public class LogicalJoin {
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		sLogicalJoinID = sTrimmedDS.substring(sSubjectArea.length(),iIndexAS).
 							trim().replaceAll("\"", "");
-		System.out.println(sLogicalJoinID);
 		try {
 			String sLogicalJoinSpec = "DECLARE ROLE \"" + sLogicalJoinID;
 			vLogicalTablesID = new Vector<String>();
