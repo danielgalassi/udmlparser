@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import metadataextract.MetadataExtract;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -46,6 +48,7 @@ public class UDMLParser {
 		docUDML		= XMLUtils.createDOMDocument();
 		root		= docUDML.createElement("UDML");
 		fNQ_UDML	= new File (sInput);
+		System.out.println(MetadataExtract.isBusMatrixInvoked());
 		if(isUDML())
 			parse();
 		docUDML.appendChild(root);
@@ -104,12 +107,12 @@ public class UDMLParser {
 				line = brUDML.readLine();
 				if (line == null)
 					break;
-				/*
 				if (line.indexOf(sCatalogFolder) != -1) { //pres subject area
 					System.out.println( "Processing Subject Area...");
 					c = new CatalogFolder(line, sCatalogFolder, brUDML);
 					root.appendChild(c.serialize(docUDML));
 				}
+				/*
 				if (line.indexOf(sEntityFolder) != -1) { //pres folder
 					System.out.println("Processing Presentation Folder...");
 					e = new EntityFolder(line, sEntityFolder, brUDML);
@@ -120,11 +123,13 @@ public class UDMLParser {
 					f = new FolderAttribute(line, sFolderAttribute, brUDML);
 					root.appendChild(f.serialize(docUDML));
 				}
+				*/
 				if (line.indexOf(sSubjectArea) != -1) { //bmm subject area
 					System.out.println("Processing Business Model...");
 					s = new SubjectArea(line, sSubjectArea, brUDML);
 					root.appendChild(s.serialize(docUDML));
 				}
+				/*
 				if (line.indexOf(sLogicalTable) != -1 &&
 						line.indexOf(sLogicalTableSrc) == -1) { //logl tbl
 					System.out.println("Processing Logical Table...");
