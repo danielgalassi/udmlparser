@@ -20,6 +20,11 @@ public class MetadataExtract {
 	private static Vector <String>	vsUDMLxsl	= null;
 	private static Vector <String>	vsUDMLtgt	= null;
 	private static Document			dBatch		= null;
+	private static boolean			bBusMatrix	= false;
+
+	public static boolean isBusMatrixInvoked () {
+		return bBusMatrix;
+	}
 
 	/**
 	 * Method processing XML file containing batch params
@@ -96,6 +101,9 @@ public class MetadataExtract {
 
 			if (args[i].startsWith("-udmltgt="))
 				vsUDMLtgt.add(	args[i].replaceFirst("-udmltgt=",""));
+			
+			if (args[i].equals("-cmd=busmatrix"))
+				bBusMatrix = true;
 		}
 	}
 
