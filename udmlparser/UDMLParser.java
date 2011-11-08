@@ -48,7 +48,8 @@ public class UDMLParser {
 		docUDML		= XMLUtils.createDOMDocument();
 		root		= docUDML.createElement("UDML");
 		fNQ_UDML	= new File (sInput);
-		System.out.println(MetadataExtract.isBusMatrixInvoked());
+		if(MetadataExtract.isBusMatrixInvoked())
+			System.out.println("BusMatrix feature");
 		if(isUDML())
 			parse();
 		docUDML.appendChild(root);
