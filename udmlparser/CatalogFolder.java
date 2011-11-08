@@ -35,7 +35,6 @@ public class CatalogFolder {
 						 BufferedReader brUDML) {
 		String line;
 		String sTrimmedDS = sDeclareStmt.trim();
-		System.out.println(sTrimmedDS);
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		//finds custom icons in Subject Areas
 		int iICONIDX = sTrimmedDS.indexOf(" ICON INDEX ");
