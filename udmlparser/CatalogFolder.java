@@ -35,12 +35,18 @@ public class CatalogFolder {
 						 BufferedReader brUDML) {
 		String line;
 		String sTrimmedDS = sDeclareStmt.trim();
+		System.out.println(sTrimmedDS);
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		//finds custom icons in Subject Areas
+		int iICONIDX = sTrimmedDS.indexOf(" ICON INDEX ");
 		sCatFolderID = sTrimmedDS.substring(sCatFolder.length(), iIndexAS).
 												trim().replaceAll("\"", "");
-		sCatFolderName = sTrimmedDS.substring(iIndexAS+4).
-												trim().replaceAll("\"", "");
-
+		if (iICONIDX != -1)
+			sCatFolderName = sTrimmedDS.substring(iIndexAS+4, iICONIDX).
+										trim().replaceAll("\"", "");
+		else
+			sCatFolderName = sTrimmedDS.substring(iIndexAS+4).
+										trim().replaceAll("\"", "");
 		try {
 			//SUBJECT AREA
 			line = brUDML.readLine().trim().replaceAll("\"", "");
