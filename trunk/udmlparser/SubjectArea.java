@@ -38,11 +38,15 @@ public class SubjectArea {
 		String line;
 		String sTrimmedDS = sDeclareStmt.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		int iICONIDX = sTrimmedDS.indexOf(" ICON INDEX ");
 		sSubjectAreaID = sTrimmedDS.substring(sSubjectArea.length(),iIndexAS).
 												trim().replaceAll("\"", "");
-		sSubjectAreaName = sTrimmedDS.substring(iIndexAS + 4).
-												trim().replaceAll("\"", "");
-
+		if (iICONIDX != -1)
+			sSubjectAreaName = sTrimmedDS.substring(iIndexAS+4, iICONIDX).
+										trim().replaceAll("\"", "");
+		else
+			sSubjectAreaName = sTrimmedDS.substring(iIndexAS+4).
+										trim().replaceAll("\"", "");
 		try {
 			line = brUDML.readLine();
 			
