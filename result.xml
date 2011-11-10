@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<busMatrix>
+	<BusinessCatalog>
+		<BusinessCatalogID>Core</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="23">Core.Dim - Opportunity</LogicalTableID>
+			<LogicalTableID test="47">Core.Dim - Customer</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Household</LogicalTableID>
+			<LogicalTableID test="42">Core.Dim - Product</LogicalTableID>
+			<LogicalTableID test="29">Core.Dim - Account Geography</LogicalTableID>
+			<LogicalTableID test="25">Core.Dim - Created by Organization</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Opportunity Hierarchy</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Account Hierarchy</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Demographic</LogicalTableID>
+			<LogicalTableID test="26">Core.Dim - Person Geography</LogicalTableID>
+			<LogicalTableID test="23">Core.Dim - Industry</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Industry Hierarchy</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Product Hierarchy</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Order Carrier Name</LogicalTableID>
+			<LogicalTableID test="19">Core.Dim - Employee Primary Owner Organization</LogicalTableID>
+			<LogicalTableID test="8">Core.Dim - Requested Ship Date</LogicalTableID>
+			<LogicalTableID test="11">Core.Dim - Order</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Order Product Status</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Order Shipping Method</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Payment Date</LogicalTableID>
+			<LogicalTableID test="27">Core.Dim - Primary Visibility Organization</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Billed Account Geography</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Shipped Account Geography</LogicalTableID>
+			<LogicalTableID test="27">Core.Dim - Employee</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Billed Person</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Shipped Account</LogicalTableID>
+			<LogicalTableID test="9">Core.Dim - Shipped Person</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Billed Account</LogicalTableID>
+			<LogicalTableID test="5">Core.Dim - Historical Sales Stage</LogicalTableID>
+			<LogicalTableID test="6">Core.Dim - Territory</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Competitor Hierarchy</LogicalTableID>
+			<LogicalTableID test="5">Core.Dim - Competitor</LogicalTableID>
+			<LogicalTableID test="10">Core.Dim - Open Date</LogicalTableID>
+			<LogicalTableID test="41">Core.Dim - Date</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Order Field Service Status</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Activity</LogicalTableID>
+			<LogicalTableID test="15">Core.Dim - Service Request</LogicalTableID>
+			<LogicalTableID test="27">Core.Dim - Asset</LogicalTableID>
+			<LogicalTableID test="6">Core.Dim - Registration Date</LogicalTableID>
+			<LogicalTableID test="6">Core.Dim - Warranty End Date</LogicalTableID>
+			<LogicalTableID test="6">Core.Dim - Warranty Start Date</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Survey Knowledge</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Survey Resolve</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Survey Overall</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Survey Timely</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Survey Accessible</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Quote</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Quote Reason Won Lost</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Quote Lead Quality</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Assessment</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Response</LogicalTableID>
+			<LogicalTableID test="11">Core.Dim - Segment and List</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Vendor</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Wave</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Phone Campaign Call Completed Date</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Campaign EAI Start Date/Time</LogicalTableID>
+			<LogicalTableID test="10">Core.Dim - Created Date</LogicalTableID>
+			<LogicalTableID test="50">Core.Dim - Contact</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Claim Assign Date</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Claim Loss Date</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Claim Paid Date</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Claim Received Date</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Claim Service Date</LogicalTableID>
+			<LogicalTableID test="5">Core.Dim - Claim Element</LogicalTableID>
+			<LogicalTableID test="8">Core.Dim - Claim</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Account Region Hierarchy</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Contact Region Hierarchy</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Household Region Hierarchy</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Holding</LogicalTableID>
+			<LogicalTableID test="8">Core.Dim - Action Type</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Order Item Attributes</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Region</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Quote Item Attributes</LogicalTableID>
+			<LogicalTableID test="15">Core.Dim - End Date</LogicalTableID>
+			<LogicalTableID test="9">Core.Dim - Inception Date</LogicalTableID>
+			<LogicalTableID test="6">Core.Dim - Parent Product</LogicalTableID>
+			<LogicalTableID test="19">Core.Dim - Partner Employee Primary Owner Organization</LogicalTableID>
+			<LogicalTableID test="24">Core.Dim - Partner Primary Visibility Organization</LogicalTableID>
+			<LogicalTableID test="6">Core.Dim - Price List</LogicalTableID>
+			<LogicalTableID test="8">Core.Dim - Product Attributes</LogicalTableID>
+			<LogicalTableID test="13">Core.Dim - Agreement</LogicalTableID>
+			<LogicalTableID test="6">Core.Dim - Annuity Date</LogicalTableID>
+			<LogicalTableID test="6">Core.Dim - Teaser End Date</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Facility Type</LogicalTableID>
+			<LogicalTableID test="26">Core.Dim - Position - DEPRECATED</LogicalTableID>
+			<LogicalTableID test="11">Core.Dim - Asset Manager</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Invoice Date</LogicalTableID>
+			<LogicalTableID test="9">Core.Dim - Relationship Period</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Claim Close Date</LogicalTableID>
+			<LogicalTableID test="14">Core.Dim - Branch</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Market Basket Product</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Overlapping Campaign Source</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Call Status</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Agreement Start Date</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Pipeline Date</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Due Date RMW</LogicalTableID>
+			<LogicalTableID test="10">Core.Dim - Close Date</LogicalTableID>
+			<LogicalTableID test="16">Core.Dim - Start Date</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Order Date</LogicalTableID>
+			<LogicalTableID test="9">Core.Dim - Ship Date</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Installed Date</LogicalTableID>
+			<LogicalTableID test="5">Core.Dim - Status Change Date</LogicalTableID>
+			<LogicalTableID test="6">Core.Dim - Transaction Date</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Effective End Date</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Effective Start Date</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Survey Date</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Household Geography</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Birth Date</LogicalTableID>
+			<LogicalTableID test="9">Core.Dim - Offer</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Next Product Purchased</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Sales Stage Start Date</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Purchase Date</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Claim Open Date</LogicalTableID>
+			<LogicalTableID test="7">Core.Dim - Open Date (SR, Survey, Revn)</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Employee Creating Opportunity</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Maturity Date (Consumer Accounts)</LogicalTableID>
+			<LogicalTableID test="9">Core.Dim - Start Date FINS</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Agreement End Date</LogicalTableID>
+			<LogicalTableID test="54">Core.Fact - CRM - Order Item</LogicalTableID>
+			<LogicalTableID test="28">Core.Fact - CRM - Service Request</LogicalTableID>
+			<LogicalTableID test="35">Core.Fact - CRM - Quote Item</LogicalTableID>
+			<LogicalTableID test="40">Core.Fact - CRM - Revenue</LogicalTableID>
+			<LogicalTableID test="2">Core.Fact - CRM - KPI</LogicalTableID>
+			<LogicalTableID test="12">Core.Fact - CRM - Assess</LogicalTableID>
+			<LogicalTableID test="9">Core.Fact - CRM - Person</LogicalTableID>
+			<LogicalTableID test="19">Core.Fact - CRM - Balance History</LogicalTableID>
+			<LogicalTableID test="13">Core.Fact - CRM - Agree - DEPRECATED</LogicalTableID>
+			<LogicalTableID test="15">Core.Fact - CRM - Agree Item</LogicalTableID>
+			<LogicalTableID test="17">Core.Fact - CRM - Household</LogicalTableID>
+			<LogicalTableID test="23">Core.Fact - CRM - Ins Claim</LogicalTableID>
+			<LogicalTableID test="11">Core.Fact - CRM - Invoice</LogicalTableID>
+			<LogicalTableID test="30">Core.Fact - CRM - Pipeline</LogicalTableID>
+			<LogicalTableID test="22">Core.Fact - CRM - Survey</LogicalTableID>
+			<LogicalTableID test="17">Core.Fact - CRM - Fin Holding</LogicalTableID>
+			<LogicalTableID test="28">Core.Fact - CRM - Customer Attrition</LogicalTableID>
+			<LogicalTableID test="19">Core.Fact - CRM - Balance History Year Ago</LogicalTableID>
+			<LogicalTableID test="19">Core.Fact - CRM - Balance History Quarter Ago</LogicalTableID>
+			<LogicalTableID test="10">Core.Fact - CRM - Service Request Year Ago</LogicalTableID>
+			<LogicalTableID test="10">Core.Fact - CRM - Service Request Quarter Ago</LogicalTableID>
+			<LogicalTableID test="58">Core.Fact - CRM - Asset</LogicalTableID>
+			<LogicalTableID test="46">Core.Fact - CRM - Order Item Year Ago</LogicalTableID>
+			<LogicalTableID test="46">Core.Fact - CRM - Order Item Quarter Ago</LogicalTableID>
+			<LogicalTableID test="21">Core.Fact - CRM - Opty Escalated from eMail</LogicalTableID>
+			<LogicalTableID test="4">Core.Fact - CRM - Cross Sell Rate %</LogicalTableID>
+			<LogicalTableID test="27">Core.Fact - CRM - Acquired Customer</LogicalTableID>
+			<LogicalTableID test="30">Core.Fact - CRM - Asset FINS Cancelled Policy</LogicalTableID>
+			<LogicalTableID test="31">Core.Fact - CRM - Asset FINS Contact</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - CRM - Active Customer History</LogicalTableID>
+			<LogicalTableID test="52">Core.Fact - CRM - Order Item Same</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Balance History Time Series</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Quote Time Series</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Service Request Time Series</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Pipeline Time Series</LogicalTableID>
+			<LogicalTableID test="7">Core.Fact - CRM - Service Request Amount</LogicalTableID>
+			<LogicalTableID test="49">Core.Fact - CRM - Order Item Rollup</LogicalTableID>
+			<LogicalTableID test="6">Core.Fact - CRM - Product Affinity</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - CRM - Campaign Overlap</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - CRM - Active Asset History</LogicalTableID>
+			<LogicalTableID test="44">Core.Fact - CRM - Order Item Offered Product</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - CRM - Asset Churn</LogicalTableID>
+			<LogicalTableID test="5">Core.Fact - CRM - Next Order Same Account</LogicalTableID>
+			<LogicalTableID test="5">Core.Fact - CRM - Next Order Same Contact</LogicalTableID>
+			<LogicalTableID test="2">Core.Fact - CRM - Product Attrib</LogicalTableID>
+			<LogicalTableID test="21">Core.Fact - CRM - Email Response</LogicalTableID>
+			<LogicalTableID test="26">Core.Fact - CRM - Campaign History</LogicalTableID>
+			<LogicalTableID test="23">Core.Fact - CRM - Response</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Campaign History Response</LogicalTableID>
+			<LogicalTableID test="31">Core.Fact - CRM - Activity</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Order Time Series</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Agree Activity &amp; Order Item</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Order Item &amp; Campaign History</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Campaign Compund Facts</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Campaign History</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Ins Claim and Asset</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Activity &amp; Revenue</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Active Customer History &amp; Customer Attrition</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Order Item &amp; Revenue</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Agree &amp; Invoice</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Campaign History, Activity, Response</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Response, Revenue</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Activity &amp; Response</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Agree &amp; SR</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Activity &amp; Agree</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Agree &amp; Order Item</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Asset &amp; Asset FINS Contact</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Active Asset History &amp; Asset Churn</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Active Asset Hist &amp; Asset FINS Cancelled</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - SR &amp; SR Amount</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Invoice &amp; SR</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Invoice &amp; SR Amount</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Pipeline Rollup and Prior</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Invoice, SR and SR amount</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Order Item &amp; Next Order Same Contact</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Order Item &amp; Quote Item</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Order Item &amp; Order Item Same</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Order Item &amp; Next Order Same Account</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact for Presentation Foldering</LogicalTableID>
+			<LogicalTableID test="13">Core.Dim - Entitlement</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Invoice</LogicalTableID>
+			<LogicalTableID test="4">Core.Dim - Security Dimension - DEPRECATED</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Account Transaction</LogicalTableID>
+			<LogicalTableID test="9">Core.Fact - CRM - Account Transaction Last 6 Months</LogicalTableID>
+			<LogicalTableID test="7">Core.Fact - CRM - Balance History Last 6 Months</LogicalTableID>
+			<LogicalTableID test="7">Core.Fact - CRM - Service Request Last 6 Months</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Account Transactions Time Series</LogicalTableID>
+			<LogicalTableID test="5">Core.Fact - CRM - Data Mining Score</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Data Mining Model</LogicalTableID>
+			<LogicalTableID test="20">Core.Dim - Marketing Source</LogicalTableID>
+			<LogicalTableID test="16">Core.Fact - Marketing - Cost</LogicalTableID>
+			<LogicalTableID test="12">Core.Fact - Marketing - Goal</LogicalTableID>
+			<LogicalTableID test="11">Core.Dim - Campaign Wave Launch Date</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - CampaignHistory &amp; Marketing Cost</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Campaign Load Wave</LogicalTableID>
+			<LogicalTableID test="12">Core.Dim - Marketing Region</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Marketing Region Hierarchy</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Marketing Period</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Marketing Period Hierarchy</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Marketing Cost Category</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Marketing Cost Type</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Marketing Goal Type</LogicalTableID>
+			<LogicalTableID test="14">Core.Dim - Campaign End Date</LogicalTableID>
+			<LogicalTableID test="15">Core.Dim - Campaign Start Date</LogicalTableID>
+			<LogicalTableID test="14">Core.Dim - Campaign Launch Date</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Marketing Goals Achieved</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact  Compound - Marketing Goal Variance</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - E-Mail Bounce Reason</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - E-Mail Bounce Type</LogicalTableID>
+			<LogicalTableID test="2">Core.Fact - Marketing - Segmentation Account Cache</LogicalTableID>
+			<LogicalTableID test="2">Core.Fact - Marketing - Segmentation Person Cache</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - Marketing - Segmentation Account Saved Result</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Marketing Account Saved Result Header</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - Marketing - Segmentation Person Saved Result</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Opportunity Close Date</LogicalTableID>
+			<LogicalTableID test="5">Core.Fact - CRM - Campaign Opportunity</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - Marketing - Segmentation Opportunity Competitor</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - Marketing - Segmentation Opportunity Contact</LogicalTableID>
+			<LogicalTableID test="5">Core.Fact - Marketing - Segmentation Opportunity Stage</LogicalTableID>
+			<LogicalTableID test="4">Core.Fact - Marketing - Segmentation Response Product</LogicalTableID>
+			<LogicalTableID test="2">Core.Fact - Generic Qualified List Item Cache</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Offered Ordered Product</LogicalTableID>
+			<LogicalTableID test="2">Core.Fact - Marketing - Count</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - CRM - Offered Products</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Marketing Contact Saved Result Header</LogicalTableID>
+			<LogicalTableID test="2">Core.Fact - CRM - Account</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Call Outcome</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - Marketing - Segmentation Asset Saved Result</LogicalTableID>
+			<LogicalTableID test="3">Core.Fact - Marketing - Segmentation Claim Saved Result</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Marketing Claim Saved Result Header</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Marketing Asset Saved Result Header</LogicalTableID>
+			<LogicalTableID test="2">Core.Fact - Marketing - Segmentation Asset Cache</LogicalTableID>
+			<LogicalTableID test="2">Core.Fact - Marketing - Segmentation Claim Cache</LogicalTableID>
+			<LogicalTableID test="1">Core.Fact for Presentation Foldering - DO NOT DELETE</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Price List Same Order</LogicalTableID>
+			<LogicalTableID test="27">Core.Dim - Position</LogicalTableID>
+			<LogicalTableID test="8">Core.Dim - Security Dimension</LogicalTableID>
+			<LogicalTableID test="27">Core.Dim - Primary Owner Business Unit</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Financing Type</LogicalTableID>
+			<LogicalTableID test="3">Core.Dim - Selling Dealers</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Selling Dealer Hierarchy</LogicalTableID>
+			<LogicalTableID test="14">Core.Fact - AT - Vehicle Sales</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Purchased By</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Transaction Type</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Vehicle Fact Attrs</LogicalTableID>
+			<LogicalTableID test="16">Core.Fact - Opportunity</LogicalTableID>
+			<LogicalTableID test="11">Core.Dim - Complex or Project</LogicalTableID>
+			<LogicalTableID test="5">Core.Fact - KPI</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - KPI Aggregate</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Response Date</LogicalTableID>
+			<LogicalTableID test="6">Core.Fact - Combined Asset Opty Activity</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Day Range 2 Dep</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Day Range Dep 2 CXL</LogicalTableID>
+			<LogicalTableID test="16">Core.Fact - Sales Leverage Chart</LogicalTableID>
+			<LogicalTableID test="2">Core.Dim - Day Range Dep 2 Exchange</LogicalTableID>
+			<LogicalTableID test="1">Core.Preliminary 1st Workshop BM </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Usage Tracking</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="1">Usage Tracking.Users</LogicalTableID>
+			<LogicalTableID test="1">Usage Tracking.Topic</LogicalTableID>
+			<LogicalTableID test="1">Usage Tracking.Measures</LogicalTableID>
+			<LogicalTableID test="1">Usage Tracking.Calendar</LogicalTableID>
+			<LogicalTableID test="1">Usage Tracking.Clock </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Real-Time Assets</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="3">Real-Time Assets.Contact</LogicalTableID>
+			<LogicalTableID test="3">Real-Time Assets.Account</LogicalTableID>
+			<LogicalTableID test="3">Real-Time Assets.Product</LogicalTableID>
+			<LogicalTableID test="8">Real-Time Assets.Fact - Transactions</LogicalTableID>
+			<LogicalTableID test="3">Real-Time Assets.Asset</LogicalTableID>
+			<LogicalTableID test="3">Real-Time Assets.Employee</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Assets.Transaction Period</LogicalTableID>
+			<LogicalTableID test="3">Real-Time Assets.Branch</LogicalTableID>
+			<LogicalTableID test="1">Real-Time Assets.Fact - Assets </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Real-Time Opportunity</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="4">Real-Time Opportunity.Contact</LogicalTableID>
+			<LogicalTableID test="4">Real-Time Opportunity.Account</LogicalTableID>
+			<LogicalTableID test="4">Real-Time Opportunity.Product</LogicalTableID>
+			<LogicalTableID test="4">Real-Time Opportunity.Employee</LogicalTableID>
+			<LogicalTableID test="4">Real-Time Opportunity.Opportunity</LogicalTableID>
+			<LogicalTableID test="8">Real-Time Opportunity.Fact - Opportunities</LogicalTableID>
+			<LogicalTableID test="4">Real-Time Opportunity.Competition</LogicalTableID>
+			<LogicalTableID test="4">Real-Time Opportunity.Asset</LogicalTableID>
+			<LogicalTableID test="3">Real-Time Opportunity.Branch</LogicalTableID>
+			<LogicalTableID test="9">Real-Time Opportunity.Fact - Revenue</LogicalTableID>
+			<LogicalTableID test="1">Real-Time Opportunity.Fact - Opty and Revenue </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Real-Time Service Request</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="2">Real-Time Service Request.Contact</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Service Request.Account</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Service Request.Product</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Service Request.Employee</LogicalTableID>
+			<LogicalTableID test="9">Real-Time Service Request.Facts</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Service Request.Service Request</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Service Request.Asset</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Service Request.Insurance Claim</LogicalTableID>
+			<LogicalTableID test="1">Real-Time Service Request.Branch </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Real-Time Activity</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="2">Real-Time Activity.Contact</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Activity.Account</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Activity.Product</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Activity.Employee</LogicalTableID>
+			<LogicalTableID test="9">Real-Time Activity.Facts</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Activity.Service Request</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Activity.Activity</LogicalTableID>
+			<LogicalTableID test="2">Real-Time Activity.Asset</LogicalTableID>
+			<LogicalTableID test="1">Real-Time Activity.Insurance Claim </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Forecasting</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="9">Forecasting.FACTS</LogicalTableID>
+			<LogicalTableID test="2">Forecasting.Positions</LogicalTableID>
+			<LogicalTableID test="2">Forecasting.Quota Plans</LogicalTableID>
+			<LogicalTableID test="2">Forecasting.Forecasts</LogicalTableID>
+			<LogicalTableID test="3">Forecasting.Accounts</LogicalTableID>
+			<LogicalTableID test="2">Forecasting.Products</LogicalTableID>
+			<LogicalTableID test="4">Forecasting.Opportunities</LogicalTableID>
+			<LogicalTableID test="2">Forecasting.Period</LogicalTableID>
+			<LogicalTableID test="3">Forecasting.Orders</LogicalTableID>
+			<LogicalTableID test="2">Forecasting.Opportunity Created Date (W_DAY_D)</LogicalTableID>
+			<LogicalTableID test="2">Forecasting.S_PARTY_RPT_REL (Account Org)</LogicalTableID>
+			<LogicalTableID test="2">Forecasting.S_PARTY_RPT_REL (Opty)</LogicalTableID>
+			<LogicalTableID test="1">Forecasting.S_PARTY_RPT_REL (Order) </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Marketing Contact List</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="4">Marketing Contact List.Contact</LogicalTableID>
+			<LogicalTableID test="2">Marketing Contact List.Account</LogicalTableID>
+			<LogicalTableID test="7">Marketing Contact List.Fact - Contact</LogicalTableID>
+			<LogicalTableID test="2">Marketing Contact List.Fact - Service Request</LogicalTableID>
+			<LogicalTableID test="2">Marketing Contact List.Service Request</LogicalTableID>
+			<LogicalTableID test="2">Marketing Contact List.Ordered Product</LogicalTableID>
+			<LogicalTableID test="2">Marketing Contact List.Order</LogicalTableID>
+			<LogicalTableID test="2">Marketing Contact List.Order Item Attr</LogicalTableID>
+			<LogicalTableID test="4">Marketing Contact List.OLTP Campaign Promotion</LogicalTableID>
+			<LogicalTableID test="2">Marketing Contact List.OLTP Contacts</LogicalTableID>
+			<LogicalTableID test="1">Marketing Contact List.OLTP Prospects </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Marketing Account List</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="2">Marketing Account List.Contact</LogicalTableID>
+			<LogicalTableID test="3">Marketing Account List.Account</LogicalTableID>
+			<LogicalTableID test="2">Marketing Account List.Asset</LogicalTableID>
+			<LogicalTableID test="4">Marketing Account List.Fact - Account</LogicalTableID>
+			<LogicalTableID test="5">Marketing Account List.OLTP Campaign Promotion</LogicalTableID>
+			<LogicalTableID test="2">Marketing Account List.OLTP Contacts</LogicalTableID>
+			<LogicalTableID test="2">Marketing Account List.OLTP Prospects</LogicalTableID>
+			<LogicalTableID test="1">Marketing Account List.OLTP Accounts </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Usage Accelerator</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="9">Usage Accelerator.Dim - Account</LogicalTableID>
+			<LogicalTableID test="24">Usage Accelerator.Fact - Account Action Plan</LogicalTableID>
+			<LogicalTableID test="17">Usage Accelerator.Dim - Account Status</LogicalTableID>
+			<LogicalTableID test="17">Usage Accelerator.Dim - Account Type</LogicalTableID>
+			<LogicalTableID test="12">Usage Accelerator.Fact - Account Summary</LogicalTableID>
+			<LogicalTableID test="12">Usage Accelerator.Fact - Account Usage</LogicalTableID>
+			<LogicalTableID test="11">Usage Accelerator.Dim - Activity Type</LogicalTableID>
+			<LogicalTableID test="11">Usage Accelerator.Fact - Activity Usage</LogicalTableID>
+			<LogicalTableID test="5">Usage Accelerator.Dim - Associated Date (Last Contact)</LogicalTableID>
+			<LogicalTableID test="9">Usage Accelerator.Dim - Contact</LogicalTableID>
+			<LogicalTableID test="17">Usage Accelerator.Fact - Contact Action Plan</LogicalTableID>
+			<LogicalTableID test="8">Usage Accelerator.Fact - Contact Summary</LogicalTableID>
+			<LogicalTableID test="8">Usage Accelerator.Fact - Contact Usage</LogicalTableID>
+			<LogicalTableID test="9">Usage Accelerator.Dim - Created Date (Last Activity)</LogicalTableID>
+			<LogicalTableID test="9">Usage Accelerator.Dim - Created Date</LogicalTableID>
+			<LogicalTableID test="9">Usage Accelerator.Dim - Employee (Last Activity Creator)</LogicalTableID>
+			<LogicalTableID test="5">Usage Accelerator.Dim - Employee (Last Contact Associator)</LogicalTableID>
+			<LogicalTableID test="31">Usage Accelerator.Dim - Employee</LogicalTableID>
+			<LogicalTableID test="9">Usage Accelerator.Dim - End Date (Last Activity)</LogicalTableID>
+			<LogicalTableID test="17">Usage Accelerator.Dim - Geography State</LogicalTableID>
+			<LogicalTableID test="17">Usage Accelerator.Dim - Industry</LogicalTableID>
+			<LogicalTableID test="9">Usage Accelerator.Dim - Last Updated Date</LogicalTableID>
+			<LogicalTableID test="26">Usage Accelerator.Fact - Opportunity Action Plan</LogicalTableID>
+			<LogicalTableID test="13">Usage Accelerator.Fact - Opportunity Summary</LogicalTableID>
+			<LogicalTableID test="9">Usage Accelerator.Fact - Opportunity Usage</LogicalTableID>
+			<LogicalTableID test="31">Usage Accelerator.Dim - Organization</LogicalTableID>
+			<LogicalTableID test="31">Usage Accelerator.Dim - Position (Old)</LogicalTableID>
+			<LogicalTableID test="13">Usage Accelerator.Fact - Quote Usage</LogicalTableID>
+			<LogicalTableID test="31">Usage Accelerator.Dim - Date</LogicalTableID>
+			<LogicalTableID test="10">Usage Accelerator.Fact - User Adoption</LogicalTableID>
+			<LogicalTableID test="9">Usage Accelerator.Dim - Opportunity</LogicalTableID>
+			<LogicalTableID test="11">Usage Accelerator.Dim - Activity Priority</LogicalTableID>
+			<LogicalTableID test="1">Usage Accelerator.Fact for Presentation Foldering</LogicalTableID>
+			<LogicalTableID test="11">Usage Accelerator.Dim - Activity Status</LogicalTableID>
+			<LogicalTableID test="31">Usage Accelerator.Dim - Security Dimension (Old)</LogicalTableID>
+			<LogicalTableID test="3">Usage Accelerator.Dim - Close Date</LogicalTableID>
+			<LogicalTableID test="3">Usage Accelerator.Dim - Last Login Date</LogicalTableID>
+			<LogicalTableID test="3">Usage Accelerator.Dim - Last Sync Date</LogicalTableID>
+			<LogicalTableID test="22">Usage Accelerator.Fact - Account Action Plan (Rollup)</LogicalTableID>
+			<LogicalTableID test="10">Usage Accelerator.Fact - Account Summary (Rollup)</LogicalTableID>
+			<LogicalTableID test="16">Usage Accelerator.Fact - Contact Action Plan (Rollup)</LogicalTableID>
+			<LogicalTableID test="6">Usage Accelerator.Fact - Contact Summary (Rollup)</LogicalTableID>
+			<LogicalTableID test="24">Usage Accelerator.Fact - Opportunity Action Plan (Rollup)</LogicalTableID>
+			<LogicalTableID test="11">Usage Accelerator.Fact - Opportunity Summary (Rollup)</LogicalTableID>
+			<LogicalTableID test="10">Usage Accelerator.Fact - Account Usage (Rollup)</LogicalTableID>
+			<LogicalTableID test="9">Usage Accelerator.Fact - Activity Usage (Rollup)</LogicalTableID>
+			<LogicalTableID test="6">Usage Accelerator.Fact - Contact Usage (Rollup)</LogicalTableID>
+			<LogicalTableID test="7">Usage Accelerator.Fact - Opportunity Usage (Rollup)</LogicalTableID>
+			<LogicalTableID test="11">Usage Accelerator.Fact - Quote Usage (Rollup)</LogicalTableID>
+			<LogicalTableID test="8">Usage Accelerator.Fact - User Adoption (Rollup)</LogicalTableID>
+			<LogicalTableID test="3">Usage Accelerator.Dim - Asset</LogicalTableID>
+			<LogicalTableID test="3">Usage Accelerator.Dim - Asset Product</LogicalTableID>
+			<LogicalTableID test="7">Usage Accelerator.Dim - Asset Status</LogicalTableID>
+			<LogicalTableID test="7">Usage Accelerator.Dim - Asset Sub-type</LogicalTableID>
+			<LogicalTableID test="7">Usage Accelerator.Dim - Asset Type</LogicalTableID>
+			<LogicalTableID test="28">Usage Accelerator.Fact - Asset Action Plan</LogicalTableID>
+			<LogicalTableID test="12">Usage Accelerator.Fact - Asset Usage</LogicalTableID>
+			<LogicalTableID test="7">Usage Accelerator.Dim - Asset LOB</LogicalTableID>
+			<LogicalTableID test="26">Usage Accelerator.Fact - Asset Action Plan (Rollup)</LogicalTableID>
+			<LogicalTableID test="10">Usage Accelerator.Fact - Asset Usage (Rollup)</LogicalTableID>
+			<LogicalTableID test="17">Usage Accelerator.Fact - Asset Summary</LogicalTableID>
+			<LogicalTableID test="15">Usage Accelerator.Fact - Asset Summary (Rollup)</LogicalTableID>
+			<LogicalTableID test="3">Usage Accelerator.Dim - Asset Product Line</LogicalTableID>
+			<LogicalTableID test="16">Usage Accelerator.Dim - Position</LogicalTableID>
+			<LogicalTableID test="1">Usage Accelerator.Dim - Security Dimension </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>SA System</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="2">SA System.Group</LogicalTableID>
+			<LogicalTableID test="3">SA System.User Group Association</LogicalTableID>
+			<LogicalTableID test="1">SA System.User </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>Real-Time Solutions</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="2">Real-Time Solutions.Employee</LogicalTableID>
+			<LogicalTableID test="3">Real-Time Solutions.Facts</LogicalTableID>
+			<LogicalTableID test="1">Real-Time Solutions.Solutions </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+	<BusinessCatalog>
+		<BusinessCatalogID>SGP_WRITEBACK</BusinessCatalogID>
+		<LogicalTableIDList>
+			<LogicalTableID test="2">SGP_WRITEBACK.W_DAY_D</LogicalTableID>
+			<LogicalTableID test="2">SGP_WRITEBACK.W_PRODUCT_D</LogicalTableID>
+			<LogicalTableID test="4">SGP_WRITEBACK.WC_KPI_TARGET_F</LogicalTableID>
+			<LogicalTableID test="1">SGP_WRITEBACK.WC_COMJECT_DH </LogicalTableID>
+		</LogicalTableIDList>
+	</BusinessCatalog>
+</busMatrix>
