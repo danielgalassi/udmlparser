@@ -19,7 +19,6 @@
 		<LogicalTableIDList>
 			<xsl:for-each select="..//LogicalTableIDList/LogicalTableID">
 				<xsl:copy>
-<!-- Core.Dim - Parent Product -->
 					<xsl:variable name="LgclTblID" select="."/>
 					<!--xsl:attribute name="test"><xsl:value-of select="count(../../../..//LogicalTableID[@type='DIM'] [text() = $LgclTblID])"/></xsl:attribute-->
 					<xsl:attribute name="test"><xsl:value-of select="count(../../../..//LogicalTableID [text() = $LgclTblID])"/></xsl:attribute>
