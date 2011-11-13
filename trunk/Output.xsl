@@ -55,9 +55,11 @@
 					<xsl:variable name="dimTbl" select="."/>
 					<td align="center" style="font-family: Arial;">
 					<!-- Finding logical join -->
-					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type = 'DIM'] [text() = $dimTbl]">
-						<!-- "Join found" tick -->
-						<li/>
+					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT'] [text()=$factTbl]">
+						<xsl:if test="../LogicalTableID[@type='DIM'] [text()=$dimTbl]">
+							<!-- "Join found" tick -->
+							<li/>
+						</xsl:if>
 					</xsl:for-each>
 					</td>
 				</xsl:for-each>
