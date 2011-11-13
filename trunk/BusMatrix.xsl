@@ -7,11 +7,13 @@
 	<BusinessCatalog>
 		<xsl:copy-of select="."/>
 		<xsl:variable name="BMMLID" select="."/>
+		<!-- copying all subject areas using this business model as source -->
 		<PresentationCatalogIDList>
 			<xsl:for-each select="../..//PresentationCatalog/PresentationCatalogMappingID [text() = $BMMLID]">
 				<xsl:copy-of select="../PresentationCatalogID"/>
 			</xsl:for-each>
 		</PresentationCatalogIDList>
+		<!-- counting the number of joins of logical dimension tables -->
 		<LogicalTableIDList>
 			<xsl:for-each select="..//LogicalTableIDList/LogicalTableID">
 				<xsl:copy>
@@ -23,6 +25,7 @@
 		</LogicalTableIDList>
 	</BusinessCatalog>
 	</xsl:for-each>
+	<!-- copying all logical joins (simplified view) -->
 	<xsl:for-each select="//LogicalJoin/LogicalTableIDList">
 	<LogicalJoin>
 		<xsl:for-each select="./LogicalTableID">
