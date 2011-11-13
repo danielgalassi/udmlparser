@@ -55,7 +55,14 @@
 			<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins = 0]">
 				<tr>
 				<!-- Fact Table Name -->
-				<td style="font-family: Arial;"><font size="2"><xsl:value-of select="."/></font></td>
+				<xsl:choose>
+					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED')">
+						<td style="font-family: Arial; background-color: rgb(255, 255, 153)"><font size="2"><xsl:value-of select="."/></font></td>
+					</xsl:when>
+					<xsl:otherwise>
+						<td style="font-family: Arial;"><font size="2"><xsl:value-of select="."/></font></td>
+					</xsl:otherwise>
+				</xsl:choose>
 				<xsl:variable name="factTbl" select="."/>
 				<!-- Matching each logical dimension table -->
 				<xsl:for-each select="../../LogicalTableIDList/LogicalTableID [@joins > 0]">
