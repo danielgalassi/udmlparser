@@ -11,6 +11,7 @@
 		<!-- Business Model Header Section -->
 		<big style="font-family: Arial;"><font size="+3"><big><span
 		style="font-weight: bold;"><xsl:value-of select="."/></span></big></font></big>
+		<xsl:variable name="bmlength" select="string-length(.)"/>
 		<br style="font-family: Arial;"/>
 		<br style="font-family: Arial;"/>
 		<br style="font-family: Arial;"/>
@@ -43,10 +44,10 @@
 				<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins > 0]">
 				<xsl:choose>
 					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED')">
-						<td style="font-family: Arial; background-color: rgb(255, 255, 153)"><font size="2"><xsl:value-of select="."/></font></td>
+						<td style="font-family: Arial; background-color: rgb(255, 255, 153)"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:when>
 					<xsl:otherwise>
-						<td style="font-family: Arial;"><font size="2"><xsl:value-of select="."/></font></td>
+						<td style="font-family: Arial;"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:otherwise>
 				</xsl:choose>
 				</xsl:for-each>
@@ -57,10 +58,10 @@
 				<!-- Fact Table Name -->
 				<xsl:choose>
 					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED')">
-						<td style="font-family: Arial; background-color: rgb(255, 255, 153)"><font size="2"><xsl:value-of select="."/></font></td>
+						<td style="font-family: Arial; background-color: rgb(255, 255, 153)"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:when>
 					<xsl:otherwise>
-						<td style="font-family: Arial;"><font size="2"><xsl:value-of select="."/></font></td>
+						<td style="font-family: Arial;"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:variable name="factTbl" select="."/>
