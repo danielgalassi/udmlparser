@@ -21,6 +21,7 @@
 			<span style="font-weight: bold;">Subject Areas</span></font>
 			<br style="font-family: Arial;"/>
 			<ul style="font-family: Arial;">
+			<!-- Creating the subject areas list -->
 			<xsl:for-each select="PresentationCatalogID">
 			<li><xsl:copy-of select="."/></li>
 			</xsl:for-each>
@@ -43,13 +44,23 @@
 				<td style="font-family: Arial;"><font size="2"><xsl:copy-of select="."/></font></td>
 				</xsl:for-each>
 			</tr>
-			<!-- Fact tables list -->
+			<!-- Fact tables list and ticks -->
 			<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins = 0]">
 				<tr>
 				<!-- Fact Table Name -->
 				<td style="font-family: Arial;"><font size="2"><xsl:copy-of select="."/></font></td>
-				<!-- "Join found" tick -->
-				<td align="center" style="font-family: Arial;"><li/></td>
+				<xsl:variable name="factTbl" select="."/>
+				<!-- Matching each logical dimension table -->
+				<xsl:for-each select="../../LogicalTableIDList/LogicalTableID [@joins > 0]">
+					<xsl:variable name="dimTbl" select="."/>
+					<td align="center" style="font-family: Arial;">
+					<!-- Finding logical join -->
+					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type = 'DIM'] [text() = $dimTbl]">
+						<!-- "Join found" tick -->
+						<li/>
+					</xsl:for-each>
+					</td>
+				</xsl:for-each>
 			</tr>
 			</xsl:for-each>
 		</tbody>
