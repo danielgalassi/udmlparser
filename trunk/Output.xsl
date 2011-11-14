@@ -8,6 +8,20 @@
 	</head>
 	<body>
 	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">
+		<!-- Business Models list Section -->
+		<font style="font-family: Arial;" size="+1">
+		<span style="font-weight: bold;">Business Models List</span></font>
+		<br style="font-family: Arial;"/>
+		<ul style="font-family: Arial;">
+		<!-- Creating the subject areas list -->
+		<xsl:for-each select="PresentationCatalogID">
+			<li><xsl:value-of select="."/></li>
+		</xsl:for-each>
+		</ul>
+	</xsl:for-each>
+
+
+	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">			
 		<!-- Business Model Header Section -->
 		<big style="font-family: Arial;"><font size="+3"><big><span
 		style="font-weight: bold;"><xsl:value-of select="."/></span></big></font></big>
@@ -68,13 +82,11 @@
 				<!-- Matching each logical dimension table -->
 				<xsl:for-each select="../../LogicalTableIDList/LogicalTableID [@joins > 0]">
 					<xsl:variable name="dimTbl" select="."/>
-					<td align="center" style="font-family: Arial;">
+					<td align="center" style="font-family: Arial;">&#160;
 					<!-- Finding logical join -->
-					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT'] [text()=$factTbl]">
-						<xsl:if test="../LogicalTableID[@type='DIM'] [text()=$dimTbl]">
+					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [text()=$dimTbl]] [text()=$factTbl]">
 							<!-- "Join found" tick -->
 							<li/>
-						</xsl:if>
 					</xsl:for-each>
 					</td>
 				</xsl:for-each>
