@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output method="html"/>
 	<xsl:template match="/">
@@ -7,6 +8,23 @@
 	<title>Oracle Business Intelligence Metadata Documentation</title>
 	</head>
 	<body>
+		<style type="text/css">
+		table
+		{
+		border-collapse:collapse;
+		width:100%;
+		}
+		table, td, th
+		{
+		border:1px solid black;
+		}
+		tr {
+		height:60px;
+		}
+		td {
+		width:200px;
+		}
+		</style>
 	<!-- Business Models list Section -->
 	<font style="font-family: Arial;" size="+1">
 	<span style="font-weight: bold;">Business Models List</span></font>
