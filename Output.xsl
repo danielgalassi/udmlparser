@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output method="html"/>
 	<xsl:template match="/">
@@ -8,23 +7,6 @@
 	<title>Oracle Business Intelligence Metadata Documentation</title>
 	</head>
 	<body>
-		<style type="text/css">
-		table
-		{
-		border-collapse:collapse;
-		width:100%;
-		}
-		table, td, th
-		{
-		border:1px solid black;
-		}
-		tr {
-		height:60px;
-		}
-		td {
-		width:200px;
-		}
-		</style>
 	<!-- Business Models list Section -->
 	<font style="font-family: Arial;" size="+1">
 	<span style="font-weight: bold;">Business Models List</span></font>
@@ -75,6 +57,7 @@
 				<td style="font-family: Arial;"><font size="2">Fact tables (below) / Dimensions (right)</font></td>
 				<!-- Dimension tables list -->
 				<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins > 0]">
+				<xsl:sort data-type="number" select="@joins" order="descending"/>
 				<xsl:choose>
 					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED')">
 						<td style="font-family: Arial; background-color: rgb(255, 255, 153)"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
@@ -100,6 +83,7 @@
 				<xsl:variable name="factTbl" select="."/>
 				<!-- Matching each logical dimension table -->
 				<xsl:for-each select="../../LogicalTableIDList/LogicalTableID [@joins > 0]">
+					<xsl:sort data-type="number" select="@joins" order="descending"/>
 					<xsl:variable name="dimTbl" select="."/>
 					<td align="center" style="font-family: Arial;">&#160;
 					<!-- Finding logical join -->
