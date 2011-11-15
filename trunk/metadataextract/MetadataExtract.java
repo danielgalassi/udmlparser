@@ -19,6 +19,9 @@ public class MetadataExtract {
 	private static Vector <String>	vsUDMLxml	= null;
 	private static Vector <String>	vsUDMLxsl	= null;
 	private static Vector <String>	vsUDMLtgt	= null;
+	private static String			sUDMLxml1	= null;
+	private static String			sUDMLxsl1	= null;
+	private static String			sUDMLtgt1	= null;
 	private static Document			dBatch		= null;
 	private static boolean			bBusMatrix	= false;
 
@@ -88,6 +91,9 @@ public class MetadataExtract {
 		vsUDMLxml =	new Vector<String>();
 		vsUDMLxsl =	new Vector<String>();
 		vsUDMLtgt =	new Vector<String>();
+		sUDMLxml1 = new String();
+		sUDMLxsl1 = new String();
+		sUDMLtgt1 = new String();
 
 		for(int i=0; i<args.length; i++) {
 			if (args[i].startsWith("-udml="))
@@ -101,6 +107,15 @@ public class MetadataExtract {
 
 			if (args[i].startsWith("-udmltgt="))
 				vsUDMLtgt.add(	args[i].replaceFirst("-udmltgt=",""));
+			
+			if (args[i].startsWith("-rpdxml1="))
+				sUDMLxml1 = args[i].replaceFirst("-rpdxml1=", "");
+
+			if (args[i].startsWith("-udmlxsl1="))
+				sUDMLxsl1 = args[i].replaceFirst("-udmlxsl1=","");
+
+			if (args[i].startsWith("-udmltgt1="))
+				sUDMLtgt1 = args[i].replaceFirst("-udmltgt1=","");
 			
 			if (args[i].equals("-cmd=busmatrix"))
 				bBusMatrix = true;
@@ -176,6 +191,10 @@ public class MetadataExtract {
 				XMLUtils.xsl4Files(vsUDMLxml.get(b),
 									vsUDMLxsl.get(b),
 									vsUDMLtgt.get(b));
+
+			if (bBusMatrix)
+				XMLUtils.xsl4Files(sUDMLxml1, sUDMLxsl1, sUDMLtgt1);
+
 		}
 		//REPOSITORY METADATA EXTRACTION (END)
 
