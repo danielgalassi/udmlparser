@@ -205,12 +205,12 @@ public class MetadataExtract {
 	}
 }
 /*
--udml=test/st.udml 
--rpdxml=test/RPD.XML 
--cmd=busmatrix 
--udmlxsl=BusMatrix.xsl 
--udmltgt=test/RPD1.XML 
--rpdxml1=test/RPD1.XML 
--udmlxsl1=Output.xsl 
--udmltgt1=test/OBIEE.html
+ -udml=test/st.udml 
+ -rpdxml=test/RPD.XML 
+ -cmd=busmatrix 
+ -udmlxsl=BusMatrix.xsl 
+ -udmltgt=test/RPD1.XML 
+ -rpdxml1=test/RPD1.XML 
+ -udmlxsl1=Output.xsl 
+ -udmltgt1=test/OBIEE.html
 */
