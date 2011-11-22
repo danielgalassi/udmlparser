@@ -54,16 +54,16 @@
 		<table border="1">
 		<tbody>
 			<tr valign="bottom">
-				<td style="font-family: Arial;"><font size="2">Fact tables (below) / Dimensions (right)</font></td>
+				<td style="font-family: Arial;" width="300"><font size="2">Fact tables (below) / Dimensions (right)</font></td>
 				<!-- Dimension tables list -->
 				<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins > 0]">
 				<xsl:sort data-type="number" select="@joins" order="descending"/>
 				<xsl:choose>
 					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED')">
-						<td style="font-family: Arial; background-color: rgb(255, 255, 153)"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
+						<td style="font-family: Arial; background-color: rgb(255, 255, 153)" width="115"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:when>
 					<xsl:otherwise>
-						<td style="font-family: Arial;"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
+						<td style="font-family: Arial;" width="115"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:otherwise>
 				</xsl:choose>
 				</xsl:for-each>
@@ -74,10 +74,10 @@
 				<!-- Fact Table Name -->
 				<xsl:choose>
 					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED')">
-						<td style="font-family: Arial; background-color: rgb(255, 255, 153)"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
+						<td style="font-family: Arial; background-color: rgb(255, 255, 153)" width="300"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:when>
 					<xsl:otherwise>
-						<td style="font-family: Arial;"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
+						<td style="font-family: Arial;" width="300"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:variable name="factTbl" select="."/>
@@ -85,7 +85,7 @@
 				<xsl:for-each select="../../LogicalTableIDList/LogicalTableID [@joins > 0]">
 					<xsl:sort data-type="number" select="@joins" order="descending"/>
 					<xsl:variable name="dimTbl" select="."/>
-					<td align="center" style="font-family: Arial;">&#160;
+					<td align="center" style="font-family: Arial;" width="115">&#160;
 					<!-- Finding logical join -->
 					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [text()=$dimTbl]] [text()=$factTbl]">
 						<!-- "Join found" tick -->
