@@ -89,7 +89,13 @@ public class LogicalTable {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
+		if (sLogTblID == null) {
+			sLogTblID = "";
+		}
 		Node nLogicalTableID = xmldoc.createTextNode(sLogTblID);
+		if (sLogTblName == null) {
+			sLogTblName = "";
+		}
 		Node nLogicalTableName = xmldoc.createTextNode(sLogTblName);
 
 		Element eLogicalTable = xmldoc.createElement("LogicalTable");
@@ -123,9 +129,23 @@ public class LogicalTable {
 				eLogicalColumnName = xmldoc.createElement("LogicalColumnName");
 				eLogicalColumnDerivedExpression = xmldoc.createElement("LogicalColumnDerivedExpression");
 
-				nLogicalColumnID = xmldoc.createTextNode(vLogicalColumnID.get(i));
-				nLogicalColumnName = xmldoc.createTextNode(vLogicalColumnName.get(i));
-				nLogicalColumnDerivedExpression = xmldoc.createTextNode((vDerivedLogicalColumnExpression.get(i)).replaceAll("\"", ""));
+				if (vLogicalColumnID.get(i) == null) {
+					nLogicalColumnID = xmldoc.createTextNode("");
+				} else {
+					nLogicalColumnID = xmldoc.createTextNode(vLogicalColumnID.get(i));
+				}
+
+				if (vLogicalColumnName.get(i) == null) {
+					nLogicalColumnName = xmldoc.createTextNode("");
+				} else {
+					nLogicalColumnName = xmldoc.createTextNode(vLogicalColumnName.get(i));
+				}
+
+				if ((vDerivedLogicalColumnExpression.get(i)).replaceAll("\"", "") == null) {
+					nLogicalColumnDerivedExpression = xmldoc.createTextNode("");
+				} else {
+					nLogicalColumnDerivedExpression = xmldoc.createTextNode((vDerivedLogicalColumnExpression.get(i)).replaceAll("\"", ""));
+				}
 
 				eLogicalColumnID.appendChild(nLogicalColumnID);
 				eLogicalColumnName.appendChild(nLogicalColumnName);
@@ -140,7 +160,11 @@ public class LogicalTable {
 				if(vBiz2BizColumnMappingList != null) {
 					for(int j=0; j< vBiz2BizColumnMappingList.size(); j++) {
 						eBiz2BizColumnMappingID = xmldoc.createElement("LogicalColumnDerivedMappingID");
-						nBiz2BizColumnMappingID = xmldoc.createTextNode(vBiz2BizColumnMappingList.get(j));
+						if (vBiz2BizColumnMappingList.get(j) == null) {
+							nBiz2BizColumnMappingID = xmldoc.createTextNode("");
+						} else {
+							nBiz2BizColumnMappingID = xmldoc.createTextNode(vBiz2BizColumnMappingList.get(j));
+						}
 						eBiz2BizColumnMappingID.appendChild(nBiz2BizColumnMappingID);
 						eLogicalColumnDerivedMappingList.appendChild(eBiz2BizColumnMappingID);
 					}
