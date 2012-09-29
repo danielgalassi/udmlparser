@@ -2,15 +2,19 @@ package udmlparser;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import metadataextract.MetadataExtract;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import xmlutils.XMLUtils;
+
 
 /**
  * Universal Database Markup Language (UDML for short) Parser class
@@ -22,8 +26,8 @@ public class UDMLParser {
 	private Document		docUDML;
 	private Element			root;
 	private File			fNQ_UDML;
-	private FileReader		frNQ_UDML;
-	private BufferedReader	brUDML;
+	//private FileReader		frNQ_UDML;
+	//private BufferedReader	brUDML;
 	//UDML declaration statement's first token
 	private String			sCatalogFolder		= "DECLARE CATALOG FOLDER ";
 	private String			sEntityFolder		= "DECLARE ENTITY FOLDER ";
@@ -66,8 +70,9 @@ public class UDMLParser {
 	private boolean isUDML() {
 		boolean bIsUDML = false;
 		try {
-			FileReader frNQ_UDML = new FileReader (fNQ_UDML);
-			BufferedReader brUDML = new BufferedReader (frNQ_UDML);
+			Reader frNQ_UDML = new InputStreamReader(new FileInputStream(fNQ_UDML), "UTF-8");
+			BufferedReader brUDML = new BufferedReader(frNQ_UDML);
+			//Reader in = new InputStreamReader(new FileInputStream("file"), "UTF-8"));
 			if(brUDML.readLine().indexOf("DECLARE ") == 0)
 				bIsUDML = true;
 			brUDML.close();
@@ -89,8 +94,8 @@ public class UDMLParser {
 
 		try {
 			// Create a FileReader and then wrap it with BufferedReader.
-			frNQ_UDML = new FileReader (fNQ_UDML);
-			brUDML = new BufferedReader (frNQ_UDML);
+			Reader frNQ_UDML = new InputStreamReader(new FileInputStream(fNQ_UDML), "UTF-8");
+			BufferedReader brUDML = new BufferedReader (frNQ_UDML);
 
 			CatalogFolder c;
 			EntityFolder e;
@@ -132,7 +137,16 @@ public class UDMLParser {
 					if (line.indexOf(sFolderAttribute) != -1) { //pres column
 						System.out.println("Processing Presentation Column...");
 						f = new FolderAttribute(line, sFolderAttribute, brUDML);
-						root.appendChild(f.serialize(docUDML));
+						try
+						{
+							Node node = f.serialize(docUDML);
+							root.appendChild(node);
+						}
+						catch(Exception ex)
+						{
+							System.out.println("Presentation Column error");
+						}
+						
 					}
 					if (line.indexOf(sLogicalTable) != -1 &&
 							line.indexOf(sLogicalTableSrc) == -1) { //logl tbl
@@ -149,7 +163,15 @@ public class UDMLParser {
 							line.indexOf(sPhysicalTableKey) == -1) { //physical tbl
 						System.out.println("Processing Physical Table...");
 						p = new PhysicalTable(line, sPhysicalTable, brUDML);
-						root.appendChild(p.serialize(docUDML));
+						try
+						{
+							Node node = p.serialize(docUDML);
+							root.appendChild(node);
+						}
+						catch(Exception ex)
+						{
+							System.out.println("PhysicalTable block error");
+						}
 					}
 					if (line.indexOf(sDimensionLevel) != -1) { //hier. dim. level
 						System.out.println("Processing Hierarchy Dim Level...");
