@@ -30,6 +30,9 @@ public class CatalogFolder {
 	private String			sCatFolderMappingID;
 //	@XStreamAlias("PresentationTableIDList")
 	private Vector <String>	vEntityFolderID = null;
+	
+	private String			sPressDispayName;
+	private String			sPressDescription;
 
 	public CatalogFolder(String sDeclareStmt,
 						 String sCatFolder,
@@ -74,6 +77,30 @@ public class CatalogFolder {
 					saCatFolderAliases = line.substring(line.
 							indexOf("ALIASES (")+9, line.lastIndexOf(")")).
 							trim().replaceAll("\"", "").split(",");
+				
+				//DISPLAY NAME
+				if (line.indexOf("DISPLAY NAME ") != -1){
+					int i1 = line.indexOf("DISPLAY NAME ")+13;
+					int i2 = line.lastIndexOf(" ON");
+					sPressDispayName = line.trim().substring(
+										i1,
+										i2).
+										trim().replaceAll("\"", "");
+				}
+				
+				//DESCRIPTION
+				if (line.indexOf("DESCRIPTION ") != -1){
+					sPressDescription = line.trim().substring(
+							line.indexOf("{")+1,
+							line.length()).
+							trim().replaceAll("}", "");
+					//LARGE TEXT
+					while (line.indexOf("}") == -1){
+						line = brUDML.readLine().trim();
+						sPressDescription += "\n";
+						sPressDescription += line.trim().replaceAll("}", "");
+					}
+				}
 			} while (line.indexOf(";") == -1);
 
 		} catch (IOException e) {
@@ -90,22 +117,51 @@ public class CatalogFolder {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
+		if (sCatFolderID == null) {
+			sCatFolderID = "";
+		}
 		Node nPresentationCatalogID = xmldoc.createTextNode(sCatFolderID);
+
+		if (sCatFolderName == null) {
+			sCatFolderName = "";
+		}
 		Node nPresentationCatalogName = xmldoc.createTextNode(sCatFolderName);
+
+		if (sCatFolderMappingID == null) {
+			sCatFolderMappingID = "";
+		}
 		Node nCatalogFolderMappingID = xmldoc.createTextNode(sCatFolderMappingID);
+		//added DISPLAY NAME and DESCRIPTION nodes
+
+		if (sPressDispayName == null) {
+			sPressDispayName = "";
+		}
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(sPressDispayName);
+
+		if (sPressDescription == null) {
+			sPressDescription = "";
+		}
+		Node nPresentationColumnDescription = xmldoc.createTextNode(sPressDescription);
 
 		Element ePresentationCatalog = xmldoc.createElement("PresentationCatalog");
 		Element ePresentationCatalogID = xmldoc.createElement("PresentationCatalogID");
 		Element ePresentationCatalogName = xmldoc.createElement("PresentationCatalogName");
 		Element eCatalogFolderMappingID = xmldoc.createElement("PresentationCatalogMappingID");
+		//added DISPLAY NAME and DESCRIPTION elements
+		Element ePresentationDisplayName = xmldoc.createElement("displayName");
+		Element ePresentationDescription = xmldoc.createElement("description");
 
 		ePresentationCatalogID.appendChild(nPresentationCatalogID);
 		ePresentationCatalogName.appendChild(nPresentationCatalogName);
 		eCatalogFolderMappingID.appendChild(nCatalogFolderMappingID);
+		ePresentationDisplayName.appendChild(nPresentationColumnDisplayName);
+		ePresentationDescription.appendChild(nPresentationColumnDescription);
 
 		ePresentationCatalog.appendChild(ePresentationCatalogID);
 		ePresentationCatalog.appendChild(ePresentationCatalogName);
 		ePresentationCatalog.appendChild(eCatalogFolderMappingID);
+		ePresentationCatalog.appendChild(ePresentationDisplayName);
+		ePresentationCatalog.appendChild(ePresentationDescription);
 
 		Element eCatalogFolderAliasList = xmldoc.createElement("PresentationCatalogAliasList");
 		Element eCatalogFolderAlias = null;
@@ -114,7 +170,11 @@ public class CatalogFolder {
 		if(saCatFolderAliases != null)
 			for (int i=0; i< saCatFolderAliases.length; i++) {
 				eCatalogFolderAlias = xmldoc.createElement("PresentationCatalogAlias");
-				nCatalogFolderAlias = xmldoc.createTextNode(saCatFolderAliases[i]);
+				if (saCatFolderAliases[i] == null) {
+					nCatalogFolderAlias = xmldoc.createTextNode("");
+				} else {
+					nCatalogFolderAlias = xmldoc.createTextNode(saCatFolderAliases[i]);
+				}
 				eCatalogFolderAlias.appendChild(nCatalogFolderAlias);
 				eCatalogFolderAliasList.appendChild(eCatalogFolderAlias);
 			}
@@ -128,7 +188,11 @@ public class CatalogFolder {
 		if(vEntityFolderID != null)
 			for (int i=0; i< vEntityFolderID.size(); i++) {
 				ePresentationFolder = xmldoc.createElement("PresentationTableID");
-				nPresentationFolder = xmldoc.createTextNode(vEntityFolderID.get(i));
+				if (vEntityFolderID.get(i) == null) {
+					nPresentationFolder = xmldoc.createTextNode("");
+				} else {
+					nPresentationFolder = xmldoc.createTextNode(vEntityFolderID.get(i));
+				}
 				ePresentationFolder.appendChild(nPresentationFolder);
 				ePresentationFolderList.appendChild(ePresentationFolder);
 			}
