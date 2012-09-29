@@ -23,8 +23,7 @@ import org.w3c.dom.Document;
 public class XMLUtils {
 
 	public static void publishException(Exception errMsg){
-		System.out.println("Error: " + errMsg.getClass() +
-				"\tDescription: " + errMsg.getMessage());
+		System.out.println("Error: " + errMsg.getClass() + "\tDescription: " + errMsg.getMessage());
 	}
 
 	/**
@@ -35,10 +34,10 @@ public class XMLUtils {
 		DocumentBuilder builder = null;
 		Document doc = null;
 		try {
-			builder = DocumentBuilderFactory.newInstance().
-										newDocumentBuilder();
+			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			doc = builder.newDocument();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return doc;
 	}
@@ -53,11 +52,18 @@ public class XMLUtils {
 		DocumentBuilder docBXML = null;
 		Document docXML = null;
 
-		try {docBXML = dBFXML.newDocumentBuilder();
-		} catch(Exception e) {publishException(e);}
+		try {
+			docBXML = dBFXML.newDocumentBuilder();
+		} catch(Exception e) {
+			publishException(e);
+		}
 
-		try {docXML = docBXML.parse(filename);
-		} catch(Exception e) {publishException(e);}
+		try {
+			docXML = docBXML.parse(filename);
+		} catch(Exception e) {
+			publishException(e);
+		}
+
 		return docXML;
 	}
 
@@ -67,14 +73,13 @@ public class XMLUtils {
 	 * @param filename
 	 */
 	public static void Document2File(Document doc, String filename) {
+		Source source = new DOMSource(doc);
+
+		File XMLFile = new File(filename);
+		Result result = new StreamResult(XMLFile);
 		try {
-			Source source = new DOMSource(doc);
 
-			File XMLFile = new File(filename);
-			Result result = new StreamResult(XMLFile);
-
-			Transformer xformer = TransformerFactory.newInstance().
-													newTransformer();
+			Transformer xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
 			System.out.println(e);
@@ -101,8 +106,8 @@ public class XMLUtils {
 		Result result = new javax.xml.transform.stream.StreamResult(fResult);
 		TransformerFactory transFact = javax.xml.transform.TransformerFactory.newInstance();
 		try {trans = transFact.newTransformer(xsltSource);
-		} catch (TransformerConfigurationException tcE) {publishException(tcE);}
+		} catch (TransformerConfigurationException tcE) {System.out.println("3"); publishException(tcE);}
 		try {trans.transform(xmlSource, result);
-		} catch (TransformerException tE) {publishException(tE);}
+		} catch (TransformerException tE) {System.out.println("4"); publishException(tE);}
 	}
 }
