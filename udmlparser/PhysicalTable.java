@@ -3,10 +3,13 @@ package udmlparser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Vector;
+//import java.util.regex.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+//import com.sun.org.apache.xalan.internal.xsltc.dom.MatchingIterator;
 
 /**
  * Physical Table Parser class
@@ -37,9 +40,11 @@ public class PhysicalTable {
 											sPhysTbl.length(),
 											iIndexAS).
 											trim().replaceAll("\"", "");
+		int iIndexHaving = sDeclareStmt.indexOf(" HAVING");
+		if (iIndexHaving != -1)
 		sPhysTblName = sTrimmedDS.substring(
 											iIndexAS+4, 
-											sDeclareStmt.indexOf(" HAVING")).
+											iIndexHaving).
 											trim().replaceAll("\"", "");
 		bIsPhysicalAlias = false;
 
@@ -69,20 +74,41 @@ public class PhysicalTable {
 					//PHYSCOLNAME
 					iIndexColName = line.indexOf(" TYPE ");
 					if (line.indexOf(" EXTERNAL ") != -1 &&
-						line.indexOf(" EXTERNAL ") < iIndexColName)
+						line.indexOf(" EXTERNAL ") < iIndexColName){
 						iIndexColName = line.indexOf(" EXTERNAL ");
-					vPhysColName.add(line.substring(line.indexOf(" AS ")+4, 
-													iIndexColName).trim().
-													replaceAll("\"", ""));
+					}
+					
+					if (specialCaseTYPE(line))
+					{
+						vPhysColName.add("TYPE");
+					}
+					else
+					{
+						String str = line.substring(line.indexOf(" AS ")+4, 
+								iIndexColName).trim().
+								replaceAll("\"", "");
+						vPhysColName.add(str);
+					}
+					
+					
+					
 					//DATA TYPE
 					vPhysColDataType.add(line.substring(
 												line.indexOf(" TYPE ")+6, 
 												line.indexOf(" PRECISION ")).
 												trim().replaceAll("\"", ""));
 					//SIZE
+					int iIndexSCALE = line.indexOf(" SCALE ");
+					int iIndexPRECISION = line.indexOf(" PRECISION ")+11;
+					
+					if (specialCaseSCALE(line))
+					{
+						vPhysColSize.add("SCALE");
+					}
+					else
 					vPhysColSize.add(line.substring(
-												line.indexOf(" PRECISION ")+11, 
-												line.indexOf(" SCALE ")).
+												iIndexPRECISION, 
+												iIndexSCALE).
 												trim().replaceAll("\"", ""));
 					//SCALE & NULLABLE
 					if (line.indexOf(" NOT NULLABLE") != -1) {
@@ -123,7 +149,13 @@ public class PhysicalTable {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
+		if (sPhysTblID == null) {
+			sPhysTblID = "";
+		}
 		Node nPhysicalTableID = xmldoc.createTextNode(sPhysTblID);
+		if (sPhysTblName == null) {
+			sPhysTblName = "";
+		}
 		Node nPhysicalTableName = xmldoc.createTextNode(sPhysTblName);
 
 		Element ePhysicalTable = xmldoc.createElement("PhysicalTable");
@@ -172,12 +204,41 @@ public class PhysicalTable {
 				ePhColScale		= xmldoc.createElement("PhysicalColumnScale");
 				ePhColNullable	= xmldoc.createElement("PhysicalColumnNullable");
 
-				nPhColID		= xmldoc.createTextNode(vPhysColID.get(i));
-				nPhColName		= xmldoc.createTextNode(vPhysColName.get(i));
-				nPhColDatatype	= xmldoc.createTextNode(vPhysColDataType.get(i));
-				nPhColSize		= xmldoc.createTextNode(vPhysColSize.get(i));
-				nPhColScale		= xmldoc.createTextNode(vPhysColScale.get(i));
-				nPhColNullable	= xmldoc.createTextNode(vPhysColNullable.get(i));
+				if (vPhysColID.get(i) == null) {
+					nPhColID = xmldoc.createTextNode("");
+				} else {
+					nPhColID = xmldoc.createTextNode(vPhysColID.get(i));
+				}
+
+				if (vPhysColName.get(i) == null) {
+					nPhColName = xmldoc.createTextNode("");
+				} else {
+					nPhColName = xmldoc.createTextNode(vPhysColName.get(i));
+				}
+
+				if (vPhysColDataType.get(i) == null) {
+					nPhColDatatype = xmldoc.createTextNode("");
+				} else {
+					nPhColDatatype = xmldoc.createTextNode(vPhysColDataType.get(i));
+				}
+
+				if (vPhysColSize.get(i) == null) {
+					nPhColSize = xmldoc.createTextNode("");
+				} else {
+					nPhColSize = xmldoc.createTextNode(vPhysColSize.get(i));
+				}
+
+				if (vPhysColScale.get(i) == null) {
+					nPhColScale = xmldoc.createTextNode("");
+				} else {
+					nPhColScale = xmldoc.createTextNode(vPhysColScale.get(i));
+				}
+
+				if (vPhysColNullable.get(i) == null) {
+					nPhColNullable = xmldoc.createTextNode("");
+				} else {
+					nPhColNullable = xmldoc.createTextNode(vPhysColNullable.get(i));
+				}
 
 				ePhColID.appendChild(nPhColID);
 				ePhColName.appendChild(nPhColName);
@@ -199,6 +260,32 @@ public class PhysicalTable {
 		ePhysicalTable.appendChild(ePhysicalColumnList);
 		return ePhysicalTable;
 	}
+	
+private boolean specialCaseTYPE(String inputStr)
+{
+	int first = inputStr.indexOf(" TYPE ");
+	String last = inputStr.substring(first+5, inputStr.length());
+	
+	if (last.indexOf(" TYPE ") != -1) return true;
+	
+	//Pattern pattern = Pattern.compile("");
+	//Matcher m = pattern.matcher(inputStr);
+	//boolean b = m.matches();
+	return false;
+}
+
+private boolean specialCaseSCALE(String inputStr)
+{
+	int first = inputStr.indexOf(" SCALE ");
+	String last = inputStr.substring(first+6, inputStr.length());
+	
+	if (last.indexOf(" SCALE ") != -1) return true;
+	
+	//Pattern pattern = Pattern.compile("");
+	//Matcher m = pattern.matcher(inputStr);
+	//boolean b = m.matches();
+	return false;
+}
 }
 /*
  * DECLARE TABLE <FQ table name> AS <table name> HAVING

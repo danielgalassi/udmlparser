@@ -77,7 +77,13 @@ public class LogicalTableSource {
 	 */
 	public Element serialize(Document xmldoc) {
 		String sTemp = null;
+		if (sLogTblSourceID == null) {
+			sLogTblSourceID = "";
+		}
 		Node nLogicalTableSourceID = xmldoc.createTextNode(sLogTblSourceID);
+		if (sLogTblSourceName == null) {
+			sLogTblSourceName = "";
+		}
 		Node nLogicalTableSourceName = xmldoc.createTextNode(sLogTblSourceName);
 
 		Element eLogicalTableSource = xmldoc.createElement("LogicalTableSource");
@@ -107,11 +113,19 @@ public class LogicalTableSource {
 			for (int i=0; i< vLogicalColumnID.size(); i++) {
 				eLogicalColumn = xmldoc.createElement("LogicalColumn");
 				eLogicalColumnID = xmldoc.createElement("LogicalColumnID");
-				nLogicalColumnID = xmldoc.createTextNode(vLogicalColumnID.get(i));
+				if (vLogicalColumnID.get(i) == null) {
+					nLogicalColumnID = xmldoc.createTextNode("");
+				} else {
+					nLogicalColumnID = xmldoc.createTextNode(vLogicalColumnID.get(i));
+				}
 				eLogicalColumnID.appendChild(nLogicalColumnID);
 				eLogicalColumnCalculation = xmldoc.createElement("LogicalColumnCalculation");
 				sTemp = vLogicalColumnCalculation.get(i);
-				nLogicalColumnCalculation = xmldoc.createTextNode(sTemp.replaceAll("\"", ""));
+				if (sTemp.replaceAll("\"", "") == null) {
+					nLogicalColumnCalculation = xmldoc.createTextNode("");
+				} else {
+					nLogicalColumnCalculation = xmldoc.createTextNode(sTemp.replaceAll("\"", ""));
+				}
 				eLogicalColumnCalculation.appendChild(nLogicalColumnCalculation);
 
 				eLogicalColumn.appendChild(eLogicalColumnID);
@@ -122,7 +136,11 @@ public class LogicalTableSource {
 				if(vPhysicalColumnMappingList != null) {
 					for(int j=0; j< vPhysicalColumnMappingList.size(); j++) {
 						ePhysicalColumnID = xmldoc.createElement("PhysicalColumnID");
-						nPhysicalColumnID = xmldoc.createTextNode(vPhysicalColumnMappingList.get(j));
+						if (vPhysicalColumnMappingList.get(j) == null) {
+							nPhysicalColumnID = xmldoc.createTextNode("");
+						} else {
+							nPhysicalColumnID = xmldoc.createTextNode(vPhysicalColumnMappingList.get(j));
+						}
 						ePhysicalColumnID.appendChild(nPhysicalColumnID);
 						ePhysicalColumnMapping.appendChild(ePhysicalColumnID);
 					}

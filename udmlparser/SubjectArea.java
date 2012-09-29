@@ -90,7 +90,13 @@ public class SubjectArea {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
+		if (sSubjectAreaID == null) {
+			sSubjectAreaID = "";
+		}
 		Node nBusinessCatalogID = xmldoc.createTextNode(sSubjectAreaID);
+		if (sSubjectAreaName == null) {
+			sSubjectAreaName = "";
+		}
 		Node nBusinessCatalogName = xmldoc.createTextNode(sSubjectAreaName);
 
 		Element eBusinessCatalog = xmldoc.createElement("BusinessCatalog");
@@ -110,7 +116,11 @@ public class SubjectArea {
 		if (vHierDimensionsID != null)
 			for (int i=0; i< vHierDimensionsID.size(); i++) {
 				eHierDim = xmldoc.createElement("HierarchyDimensionID");
-				nHierDim = xmldoc.createTextNode(vHierDimensionsID.get(i));
+				if (vHierDimensionsID.get(i) == null) {
+					nHierDim = xmldoc.createTextNode("");
+				} else {
+					nHierDim = xmldoc.createTextNode(vHierDimensionsID.get(i));
+				}
 				eHierDim.appendChild(nHierDim);
 				eHierDimensionList.appendChild(eHierDim);
 			}
@@ -124,7 +134,11 @@ public class SubjectArea {
 		if (vLogicalTablesID != null)
 			for (int i=0; i< vLogicalTablesID.size(); i++) {
 				eLogicalTable = xmldoc.createElement("LogicalTableID");
-				nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));
+				if (vLogicalTablesID.get(i) == null) {
+					nLogicalTable = xmldoc.createTextNode("");
+				} else {
+					nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));
+				}
 				eLogicalTable.appendChild(nLogicalTable);
 				eLogicalTableList.appendChild(eLogicalTable);
 			}
