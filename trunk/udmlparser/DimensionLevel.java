@@ -114,7 +114,13 @@ public class DimensionLevel {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
+		if (sDimensionLevelID == null) {
+			sDimensionLevelID = "";
+		}
 		Node nDimensionLevelID = xmldoc.createTextNode(sDimensionLevelID);
+		if (sDimensionLevelName == null) {
+			sDimensionLevelName = "";
+		}
 		Node nDimensionLevelName = xmldoc.createTextNode(sDimensionLevelName);
 
 		Element eDimensionLevel = xmldoc.createElement("DimensionLevel");
@@ -133,7 +139,11 @@ public class DimensionLevel {
 		if(vLogicalColumnID != null)
 			for (int i=0; i< vLogicalColumnID.size(); i++) {
 				eLogicalTable = xmldoc.createElement("LogicalColumnID");
-				nLogicalTable = xmldoc.createTextNode(vLogicalColumnID.get(i));
+				if (vLogicalColumnID.get(i) == null) {
+					nLogicalTable = xmldoc.createTextNode("");
+				} else {
+					nLogicalTable = xmldoc.createTextNode(vLogicalColumnID.get(i));
+				}
 				eLogicalTable.appendChild(nLogicalTable);
 				eLogicalTableList.appendChild(eLogicalTable);
 			}

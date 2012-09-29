@@ -68,6 +68,9 @@ public class LogicalJoin {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
+		if (sLogicalJoinID == null) {
+			sLogicalJoinID = "";
+		}
 		Node nLogicalJoinID = xmldoc.createTextNode(sLogicalJoinID);
 
 		Element eLogicalJoin = xmldoc.createElement("LogicalJoin");
@@ -84,7 +87,11 @@ public class LogicalJoin {
 		if (vLogicalTablesID != null)
 			for (int i=0; i< vLogicalTablesID.size(); i++) {
 				eLogicalTable = xmldoc.createElement("LogicalTableID");
-				nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));
+				if (vLogicalTablesID.get(i) == null) {
+					nLogicalTable = xmldoc.createTextNode("");
+				} else {
+					nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));
+				}
 				eLogicalTable.appendChild(nLogicalTable);
 				if (vLogicalTablesID.get(i).indexOf("Fact -") != -1)
 					eLogicalTable.setAttribute("type", "FACT");

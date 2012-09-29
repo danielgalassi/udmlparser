@@ -52,7 +52,13 @@ public class HierarchyDimension {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
+		if (sHierDimID == null) {
+			sHierDimID = "";
+		}
 		Node nHierarchyDimensionID = xmldoc.createTextNode(sHierDimID);
+		if (sHierDimName == null) {
+			sHierDimName = "";
+		}
 		Node nHierarchyDimensionName = xmldoc.createTextNode(sHierDimName);
 
 		Element eHierDim = xmldoc.createElement("HierarchyDimension");

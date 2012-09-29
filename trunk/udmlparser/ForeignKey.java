@@ -8,6 +8,7 @@ import java.util.ListIterator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 /**
  * Foreign Key parser class
@@ -73,7 +74,13 @@ public class ForeignKey {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
+		if (sForKeyID == null) {
+			sForKeyID = "";
+		}
 		Node nForeignKeyID = xmldoc.createTextNode(sForKeyID);
+		if (sForKeyName == null) {
+			sForKeyName = "";
+		}
 		Node nForeignKeyName = xmldoc.createTextNode(sForKeyName);
 
 		Element eForeignKey = xmldoc.createElement("ForeignKey");
@@ -95,12 +102,20 @@ public class ForeignKey {
 		ListIterator <String> liPhysCols = alsPhysicalColumns.listIterator();
 		while (liPhysCols.hasNext()) {
 			eFKColumn = xmldoc.createElement("FKColumnID");
-			nFKColumn = xmldoc.createTextNode(liPhysCols.next());
+			String s = liPhysCols.next();
+			if (s == null){
+				nFKColumn = xmldoc.createTextNode("");
+			} else {
+				nFKColumn = xmldoc.createTextNode(s);
+			}
 			eFKColumn.appendChild(nFKColumn);
 			eFKColumnList.appendChild(eFKColumn);
 		}
 
 		eFKColumn2 = xmldoc.createElement("ReferencedFK");
+		if (sReferencedKey == null) {
+			sReferencedKey = "";
+		}
 		nFKColumn2 = xmldoc.createTextNode(sReferencedKey);
 
 		eFKColumn2.appendChild(nFKColumn2);

@@ -18,6 +18,8 @@ public class EntityFolder {
 	private String			sPresTableID;
 	private String			sPresTableName;
 	private String			sPresTableMappingID;
+	private String			sPressDispayName;
+	private String			sPressDescription;
 	private Vector <String>	vFolderAttributesID = null;
 	private String[]		saPresentationTableAliases = null;
 
@@ -70,8 +72,32 @@ public class EntityFolder {
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 &&
-					line.indexOf(";") == -1)
+					line.indexOf(";") == -1){
 				line = brUDML.readLine();
+				//DISPLAY NAME
+				if (line.indexOf("DISPLAY NAME ") != -1){
+					sPressDispayName = line.trim().substring(
+										line.indexOf("DISPLAY NAME ")+13,
+										line.lastIndexOf(" ON")).
+										trim().replaceAll("\"", "");
+				}
+				
+				//DESCRIPTION
+				if (line.indexOf("DESCRIPTION ") != -1){
+					int iIdexOpen = line.indexOf("{")+1;
+					int length = line.length();
+					sPressDescription = line.substring(
+							iIdexOpen,
+							length).
+							replaceAll("}", "").trim();
+					//LARGE TEXT
+					while (line.indexOf("}") == -1){
+						line = brUDML.readLine().trim();
+						sPressDescription += "\n";
+						sPressDescription += line.trim().replaceAll("}", "");
+					}
+				}
+			}
 
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
@@ -87,22 +113,49 @@ public class EntityFolder {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
+		if (sPresTableID == null) {
+			sPresTableID = "";
+		}
 		Node nPresentationTableID = xmldoc.createTextNode(sPresTableID);
+
+		if (sPresTableName == null) {
+			sPresTableName = "";
+		}
 		Node nPresentationTableName = xmldoc.createTextNode(sPresTableName);
+
+		if (sPresTableMappingID == null) {
+			sPresTableMappingID = "";
+		}
 		Node nPresentationTableMappingID = xmldoc.createTextNode(sPresTableMappingID);
+		//added DISPLAY NAME and DESCRIPTION nodes
+		if (sPressDispayName == null) {
+			sPressDispayName = "";
+		}
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(sPressDispayName);
+		if (sPressDescription == null) {
+			sPressDescription = "";
+		}
+		Node nPresentationColumnDescription = xmldoc.createTextNode(sPressDescription);
 
 		Element ePresentationTable = xmldoc.createElement("PresentationTable");
 		Element ePresentationTableID = xmldoc.createElement("PresentationTableID");
 		Element ePresentationTableName = xmldoc.createElement("PresentationTableName");
 		Element ePresentationTableMappingID = xmldoc.createElement("PresentationTableMappingID");
+		//added DISPLAY NAME and DESCRIPTION elements
+		Element ePresentationDisplayName = xmldoc.createElement("displayName");
+		Element ePresentationDescription = xmldoc.createElement("description");
 
 		ePresentationTableID.appendChild(nPresentationTableID);
 		ePresentationTableName.appendChild(nPresentationTableName);
 		ePresentationTableMappingID.appendChild(nPresentationTableMappingID);
+		ePresentationDisplayName.appendChild(nPresentationColumnDisplayName);
+		ePresentationDescription.appendChild(nPresentationColumnDescription);
 
 		ePresentationTable.appendChild(ePresentationTableID);
 		ePresentationTable.appendChild(ePresentationTableName);
 		ePresentationTable.appendChild(ePresentationTableMappingID);
+		ePresentationTable.appendChild(ePresentationDisplayName);
+		ePresentationTable.appendChild(ePresentationDescription);
 
 		Element ePresentationTableAliasList = xmldoc.createElement("PresentationTableAliasList");
 		Element ePresentationTableAlias = null;
@@ -111,7 +164,11 @@ public class EntityFolder {
 		if(saPresentationTableAliases != null)
 			for (int i=0; i< saPresentationTableAliases.length; i++) {
 				ePresentationTableAlias = xmldoc.createElement("PresentationTableAlias");
-				nCatalogFolderAlias = xmldoc.createTextNode(saPresentationTableAliases[i]);
+				if (saPresentationTableAliases[i] == null) {
+					nCatalogFolderAlias = xmldoc.createTextNode("");
+				} else {
+					nCatalogFolderAlias = xmldoc.createTextNode(saPresentationTableAliases[i]);
+				}
 				ePresentationTableAlias.appendChild(nCatalogFolderAlias);
 				ePresentationTableAliasList.appendChild(ePresentationTableAlias);
 			}
@@ -125,7 +182,11 @@ public class EntityFolder {
 		if(vFolderAttributesID != null)
 			for (int i=0; i< vFolderAttributesID.size(); i++) {
 				ePresentationAttributeID = xmldoc.createElement("PresentationAttributeID");
-				nPresentationAttributeID = xmldoc.createTextNode(vFolderAttributesID.get(i));
+				if (vFolderAttributesID.get(i) == null) {
+					nPresentationAttributeID = xmldoc.createTextNode("");
+				} else {
+					nPresentationAttributeID = xmldoc.createTextNode(vFolderAttributesID.get(i));
+				}
 				ePresentationAttributeID.appendChild(nPresentationAttributeID);
 				ePresentationAttributeIDList.appendChild(ePresentationAttributeID);
 			}
