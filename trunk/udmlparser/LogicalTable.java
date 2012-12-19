@@ -21,6 +21,7 @@ public class LogicalTable {
 	private String			sLogTblName;
 	private Vector <String>	vLogicalColumnID = null;
 	private Vector <String>	vLogicalColumnName = null;
+	private Vector <String> vLogicalColumnDescription = null;
 	private Vector <String>	vDerivedLogicalColumnExpression = null;
 	private Vector <String>	vBiz2BizColumnMappingList = null;
 
@@ -40,6 +41,7 @@ public class LogicalTable {
 			line = brUDML.readLine();
 			vLogicalColumnID = new Vector<String>();
 			vLogicalColumnName = new Vector<String>();
+			vLogicalColumnDescription = new Vector<String>();
 			vDerivedLogicalColumnExpression = new Vector<String>();
 			do {
 				line = brUDML.readLine().trim();
@@ -58,6 +60,13 @@ public class LogicalTable {
 						vLogicalColumnName.add(line.substring(
 											line.indexOf(" AS ")+4).
 											trim().replaceAll("\"", ""));
+					if (line.indexOf(" DESCRIPTION") != -1)
+						vLogicalColumnDescription.add(line.substring(
+							line.indexOf(" {")+2,
+							line.indexOf("} ")).
+							trim());
+					else
+						vLogicalColumnDescription.add("");
 					//DERIVED EXPRESSION
 					if (line.indexOf(" DERIVED") != -1)
 						vDerivedLogicalColumnExpression.add(line.substring(
@@ -112,6 +121,7 @@ public class LogicalTable {
 		Element eLogicalColumn = null;
 		Element eLogicalColumnID = null;
 		Element eLogicalColumnName = null;
+		Element eLogicalColumnDescription = null;
 		Element eLogicalColumnDerivedExpression = null;
 
 		Element eLogicalColumnDerivedMappingList = null;
@@ -120,6 +130,7 @@ public class LogicalTable {
 
 		Node nLogicalColumnID = null;
 		Node nLogicalColumnName = null;
+		Node nLogicalColumnDescription = null;
 		Node nLogicalColumnDerivedExpression = null;
 
 		if(vLogicalColumnID != null)
@@ -127,6 +138,7 @@ public class LogicalTable {
 				eLogicalColumn = xmldoc.createElement("LogicalColumn");
 				eLogicalColumnID = xmldoc.createElement("LogicalColumnID");
 				eLogicalColumnName = xmldoc.createElement("LogicalColumnName");
+				eLogicalColumnDescription = xmldoc.createElement("LogicalColumnDescription");
 				eLogicalColumnDerivedExpression = xmldoc.createElement("LogicalColumnDerivedExpression");
 
 				if (vLogicalColumnID.get(i) == null) {
@@ -140,7 +152,9 @@ public class LogicalTable {
 				} else {
 					nLogicalColumnName = xmldoc.createTextNode(vLogicalColumnName.get(i));
 				}
-
+				
+				nLogicalColumnDescription = xmldoc.createTextNode((vLogicalColumnDescription.get(i)).replace("\"", ""));
+				
 				if ((vDerivedLogicalColumnExpression.get(i)).replaceAll("\"", "") == null) {
 					nLogicalColumnDerivedExpression = xmldoc.createTextNode("");
 				} else {
@@ -149,10 +163,12 @@ public class LogicalTable {
 
 				eLogicalColumnID.appendChild(nLogicalColumnID);
 				eLogicalColumnName.appendChild(nLogicalColumnName);
+				eLogicalColumnDescription.appendChild(nLogicalColumnDescription);
 				eLogicalColumnDerivedExpression.appendChild(nLogicalColumnDerivedExpression);
 
 				eLogicalColumn.appendChild(eLogicalColumnID);
 				eLogicalColumn.appendChild(eLogicalColumnName);
+				eLogicalColumn.appendChild(eLogicalColumnDescription);
 				eLogicalColumn.appendChild(eLogicalColumnDerivedExpression);
 
 				eLogicalColumnDerivedMappingList = xmldoc.createElement("LogicalColumnDerivedMappingList");
