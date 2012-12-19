@@ -28,6 +28,7 @@ public class LogicalTableSource {
 		String line;
 		String sTrimmedDS = sDeclareStmt.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		int eol;
 		sLogTblSourceID = sTrimmedDS.substring( sLogTblSource.length(), 
 												iIndexAS).
 												trim().replaceAll("\"", "");
@@ -51,9 +52,16 @@ public class LogicalTableSource {
 														line.indexOf("{") + 1,
 														line.indexOf("}")).
 														replaceAll("\"", ""));
+						//"end-of-line" in case } is missing. Issue # 6.
+						eol = line.lastIndexOf("}");
+						if (eol < line.lastIndexOf("{")-1)
+							eol = line.length()-1;
 						vLogicalColumnCalculation.add(line.substring(
-													line.lastIndexOf("{") + 1, 
-													line.lastIndexOf("}")));
+													line.lastIndexOf("{") + 1,
+													eol));
+													//issue #6 - fixed
+													//cause: missing }. Maybe some CR...
+													//line.lastIndexOf("}")));
 					}
 				} while (line.indexOf("FROM") == -1);
 			}
