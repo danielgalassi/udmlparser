@@ -30,10 +30,13 @@ public class ForeignKey {
 		int iIndexREFERENCES = 0;
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		sForKeyID = sTrimmedDS.substring( sForKey.length(), iIndexAS).
-												trim().replaceAll("\"", "");
-		sForKeyName = sTrimmedDS.substring( iIndexAS + 4, 
-											sTrimmedDS.indexOf(" HAVING")).
-											trim().replaceAll("\"", "");
+												trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
+		int iNextToken = sTrimmedDS.indexOf(" HAVING");
+		if (iNextToken > sTrimmedDS.indexOf(" UPGRADE ID ") &&
+				sTrimmedDS.indexOf(" UPGRADE ID ") > -1)
+			iNextToken = sTrimmedDS.indexOf(" UPGRADE ID ");
+		sForKeyName = sTrimmedDS.substring( iIndexAS + 4, iNextToken).
+											trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
 		alsPhysicalColumns = new ArrayList <String> ();
 		try {
 			line = brUDML.readLine();
@@ -43,9 +46,9 @@ public class ForeignKey {
 				iIndexREFERENCES = line.indexOf(") REFERENCES ");
 				if (iIndexREFERENCES != -1) {
 					alsPhysicalColumns.add(sTrimmedDS.substring(0, iIndexREFERENCES).
-											trim().replaceAll("\"", ""));
+											trim().replaceAll("\"", "").replaceAll("\\p{C}", "?"));
 					sReferencedKey = sTrimmedDS.substring(iIndexREFERENCES + 13).
-												trim().replaceAll("\"", "");
+												trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
 				}
 				else {
 					alsPhysicalColumns.add(sTrimmedDS.
