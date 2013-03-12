@@ -29,6 +29,7 @@ public class LogicalTableSource {
 		String sTrimmedDS = sDeclareStmt.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		int eol;
+		int cbr;
 		sLogTblSourceID = sTrimmedDS.substring( sLogTblSource.length(), 
 												iIndexAS).
 												trim().replaceAll("\"", "");
@@ -47,7 +48,8 @@ public class LogicalTableSource {
 				vLogicalColumnCalculation = new Vector<String>();
 				do {
 					line = brUDML.readLine().trim();
-					if (line.indexOf(" AS ") != -1) {
+					if (line.indexOf(" AS ") != -1 && 
+							line.indexOf(" CAST") == -1) {
 						vLogicalColumnID.add(line.substring(
 														line.indexOf("{") + 1,
 														line.indexOf("}")).
@@ -56,12 +58,16 @@ public class LogicalTableSource {
 						eol = line.lastIndexOf("}");
 						if (eol < line.lastIndexOf("{")-1)
 							eol = line.length()-1;
+						cbr = line.lastIndexOf("{")+1;
+						if (cbr >= line.length())
+							cbr = line.lastIndexOf("{");
 						vLogicalColumnCalculation.add(line.substring(
-													line.lastIndexOf("{") + 1,
+													cbr,
 													eol));
 													//issue #6 - fixed
 													//cause: missing }. Maybe some CR...
 													//line.lastIndexOf("}")));
+													//line.lastIndexOf("{") + 1, //replaced by cbr
 					}
 				} while (line.indexOf("FROM") == -1);
 			}
