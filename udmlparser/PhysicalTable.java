@@ -60,7 +60,8 @@ public class PhysicalTable {
 
 			do {
 				line = brUDML.readLine().trim().replaceAll("\"", "");
-				
+
+				//This is a marker used in Opaque Views.
 				if (line.indexOf("TABLE TYPE SELECT DATABASE MAP") != -1)
 					do {
 						line = brUDML.readLine().trim().replaceAll("\"", "");
@@ -265,12 +266,9 @@ private boolean specialCaseTYPE(String inputStr)
 {
 	int first = inputStr.indexOf(" TYPE ");
 	String last = inputStr.substring(first+5, inputStr.length());
-	
+
 	if (last.indexOf(" TYPE ") != -1) return true;
-	
-	//Pattern pattern = Pattern.compile("");
-	//Matcher m = pattern.matcher(inputStr);
-	//boolean b = m.matches();
+
 	return false;
 }
 
@@ -278,21 +276,18 @@ private boolean specialCaseSCALE(String inputStr)
 {
 	int first = inputStr.indexOf(" SCALE ");
 	String last = inputStr.substring(first+6, inputStr.length());
-	
+
 	if (last.indexOf(" SCALE ") != -1) return true;
-	
-	//Pattern pattern = Pattern.compile("");
-	//Matcher m = pattern.matcher(inputStr);
-	//boolean b = m.matches();
+
 	return false;
 }
 }
 /*
  * DECLARE TABLE <FQ table name> AS <table name> HAVING
  * (
- * <FQ phys col name1> TYPE <datatype> PRECISION <int> SCALE <int>  <[NOT] NULLABLE> COUNT <distinct count> LAST UPDATED <date>
+ * <FQ phys col name1> AS <phys col name1> TYPE <datatype> PRECISION <int> SCALE <int>  <[NOT] NULLABLE> COUNT <distinct count> LAST UPDATED <date>
  * PRIVILEGES ( READ),
- * <FQ phys col name2> TYPE <datatype> PRECISION <int> SCALE <int>  <[NOT] NULLABLE> COUNT <distinct count> LAST UPDATED <date>
+ * <FQ phys col name2> AS <phys col name2>  TYPE <datatype> PRECISION <int> SCALE <int>  <[NOT] NULLABLE> COUNT <distinct count> LAST UPDATED <date>
  * PRIVILEGES ( READ)
  * ) DIAGRAM POSITION (<int>, <int>) ROW COUNT <records#> LAST UPDATED <date>
  * PRIVILEGES ( READ);
