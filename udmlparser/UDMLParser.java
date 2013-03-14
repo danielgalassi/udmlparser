@@ -26,8 +26,6 @@ public class UDMLParser {
 	private Document		docUDML;
 	private Element			root;
 	private File			fNQ_UDML;
-	//private FileReader		frNQ_UDML;
-	//private BufferedReader	brUDML;
 	//UDML declaration statement's first token
 	private String			sCatalogFolder		= "DECLARE CATALOG FOLDER ";
 	private String			sEntityFolder		= "DECLARE ENTITY FOLDER ";
@@ -72,7 +70,6 @@ public class UDMLParser {
 		try {
 			Reader frNQ_UDML = new InputStreamReader(new FileInputStream(fNQ_UDML), "UTF-8");
 			BufferedReader brUDML = new BufferedReader(frNQ_UDML);
-			//Reader in = new InputStreamReader(new FileInputStream("file"), "UTF-8"));
 			if(brUDML.readLine().indexOf("DECLARE ") == 0)
 				bIsUDML = true;
 			brUDML.close();
