@@ -59,8 +59,8 @@
 				<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins > 0]">
 				<xsl:sort data-type="number" select="@joins" order="descending"/>
 				<xsl:choose>
-					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED')">
-						<td style="font-family: Arial; background-color: rgb(255, 255, 153)" width="115"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
+					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
+						<td style="font-family: Arial; background-color: rgb(255, 255, 153)" width="115"><font size="2" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:when>
 					<xsl:otherwise>
 						<td style="font-family: Arial;" width="115"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
@@ -73,8 +73,8 @@
 				<tr>
 				<!-- Fact Table Name -->
 				<xsl:choose>
-					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED')">
-						<td style="font-family: Arial; background-color: rgb(255, 255, 153)" width="300"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
+					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
+						<td style="font-family: Arial; background-color: rgb(255, 255, 153)" width="300"><font size="2" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:when>
 					<xsl:otherwise>
 						<td style="font-family: Arial;" width="300"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
@@ -84,7 +84,7 @@
 				<!-- Matching each logical dimension table -->
 				<xsl:for-each select="../../LogicalTableIDList/LogicalTableID [@joins > 0]">
 					<xsl:sort data-type="number" select="@joins" order="descending"/>
-					<xsl:variable name="dimTbl" select="."/>
+					<xsl:variable name="dimTbl" select="normalize-space(text())"/>
 					<td align="center" style="font-family: Arial;" width="115">&#160;
 					<!-- Finding logical join -->
 					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [text()=$dimTbl]] [text()=$factTbl]">
