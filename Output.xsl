@@ -103,6 +103,9 @@
 		<hr style="width: 100%; height: 1px;"/>
 
 	</xsl:for-each>
+	<br style="font-family: Arial;"/>
+	<br style="font-family: Arial;"/>
+	<div style="text-align: right; color: rgb(128, 128, 128); font-family: Helvetica,Arial,sans-serif;"><small>by Daniel Galassi - 2013</small></div>
 	</body>
 	</html>
 	</xsl:template>
