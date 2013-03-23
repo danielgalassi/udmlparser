@@ -1,6 +1,7 @@
 package xmlutils;
 
 import java.io.File;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -109,5 +110,34 @@ public class XMLUtils {
 		} catch (TransformerConfigurationException tcE) {System.out.println("3"); publishException(tcE);}
 		try {trans.transform(xmlSource, result);
 		} catch (TransformerException tE) {System.out.println("4"); publishException(tE);}
+	}
+
+	/**
+	 * Transform an XML file using an XSL file stored within the jar file
+	 * @param strXMLFile
+	 * @param inputsXSLFile
+	 * @param strRESFile
+	 */
+	public static void xsl4Files(String strXMLFile,
+								InputStream inputsXSLFile,
+								String strRESFile){
+		File fXMLFile = new File(strXMLFile);
+		File fResult = new File(strRESFile);
+		Source xmlSource = null;
+		Source xsltSource = null;
+		Transformer trans = null;
+		TransformerFactory transFact = null;
+		Result result = null;
+
+		xmlSource = new javax.xml.transform.stream.StreamSource(fXMLFile);
+		xsltSource = new javax.xml.transform.stream.StreamSource(inputsXSLFile);
+		result = new javax.xml.transform.stream.StreamResult(fResult);
+		transFact = javax.xml.transform.TransformerFactory.newInstance();
+		try {trans = transFact.newTransformer(xsltSource);
+		} catch (TransformerConfigurationException tcE) {
+			System.out.println("3"); publishException(tcE);}
+		try {trans.transform(xmlSource, result);
+		} catch (TransformerException tE) {
+			System.out.println("4"); publishException(tE);}
 	}
 }
