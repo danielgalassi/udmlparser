@@ -1,6 +1,7 @@
 package metadataextract;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
@@ -19,14 +20,34 @@ public class MetadataExtract {
 	private static Vector <String>	vsUDMLxml	= null;
 	private static Vector <String>	vsUDMLxsl	= null;
 	private static Vector <String>	vsUDMLtgt	= null;
-	private static String			sUDMLxml1	= null;
-	private static String			sUDMLxsl1	= null;
 	private static String			sUDMLtgt1	= null;
 	private static Document			dBatch		= null;
-	private static boolean			bBusMatrix	= false;
+	private static boolean			isBusMatrixInvoked	= false;
+	private static InputStream insXSL1 = null;
+	private static InputStream insXSL2 = null;
 
+	/**
+	 * Indicates whether the Bus Matrix generation app has been invoked
+	 * @return
+	 */
 	public static boolean isBusMatrixInvoked () {
-		return bBusMatrix;
+		return isBusMatrixInvoked;
+	}
+
+	/**
+	 * Loads a resource bundled in the jar file. Used for apps-related files.
+	 * @param rsc the file path (within the jar file)
+	 * @return
+	 */
+	private InputStream istrInternalResource(String rsc) {
+		InputStream isRsc = null;
+		try {
+			isRsc = getClass().getClassLoader().getResourceAsStream(rsc);
+		} catch (Exception e) {
+			System.out.println("uXSL: " + rsc);
+			e.printStackTrace();
+		}
+		return isRsc;
 	}
 
 	/**
@@ -81,7 +102,6 @@ public class MetadataExtract {
 		fBatch = null;
 	}
 
-
 	/**
 	 * Method processing command line arguments
 	 * @param args command line arguments
@@ -91,37 +111,32 @@ public class MetadataExtract {
 		vsUDMLxml =	new Vector<String>();
 		vsUDMLxsl =	new Vector<String>();
 		vsUDMLtgt =	new Vector<String>();
-		sUDMLxml1 = new String();
-		sUDMLxsl1 = new String();
 		sUDMLtgt1 = new String();
 
 		for(int i=0; i<args.length; i++) {
 			if (args[i].startsWith("-udml="))
-				vsUDMLtxt.add(	args[i].replaceFirst("-udml=",   ""));
+				vsUDMLtxt.add(args[i].replaceFirst("-udml=",""));
 
 			if (args[i].startsWith("-rpdxml="))
-				vsUDMLxml.add(	args[i].replaceFirst("-rpdxml=", ""));
+				vsUDMLxml.add(args[i].replaceFirst("-rpdxml=",""));
 
 			if (args[i].startsWith("-udmlxsl="))
-				vsUDMLxsl.add(	args[i].replaceFirst("-udmlxsl=",""));
+				vsUDMLxsl.add(args[i].replaceFirst("-udmlxsl=",""));
 
 			if (args[i].startsWith("-udmltgt="))
-				vsUDMLtgt.add(	args[i].replaceFirst("-udmltgt=",""));
-			
-			if (args[i].startsWith("-rpdxml1="))
-				sUDMLxml1 = args[i].replaceFirst("-rpdxml1=", "");
-
-			if (args[i].startsWith("-udmlxsl1="))
-				sUDMLxsl1 = args[i].replaceFirst("-udmlxsl1=","");
+				vsUDMLtgt.add(args[i].replaceFirst("-udmltgt=",""));
 
 			if (args[i].startsWith("-udmltgt1="))
 				sUDMLtgt1 = args[i].replaceFirst("-udmltgt1=","");
 			
-			if (args[i].equals("-cmd=busmatrix"))
-				bBusMatrix = true;
+			if (args[i].equals("-cmd=busmatrix")) {
+				isBusMatrixInvoked = true;
+				MetadataExtract me = new MetadataExtract();
+				insXSL1 = me.istrInternalResource("bundledApps/BusMatrix.xsl");
+				insXSL2 = me.istrInternalResource("bundledApps/Output.xsl");
+			}
 		}
 	}
-
 
 	/**
 	 * Available help
@@ -135,8 +150,7 @@ public class MetadataExtract {
 		System.out.println("Repository extract parameters:");
 		System.out.println("-udml=\t\tRepository UDML file");
 		System.out.println("-rpdxml=\tFull XML extract");
-		System.out.println("-udmlxsl=\tXSL file for optional " +
-		"transformation");
+		System.out.println("-udmlxsl=\tXSL file for optional transformation");
 		System.out.println("-udmltgt=\tXML file resulting " +
 		"from XSL transformation\n");
 		System.out.println("Batch mode available:");
@@ -144,7 +158,6 @@ public class MetadataExtract {
 		System.out.println("UNIX path form: /dir1/../dirN/file");
 		System.out.println("WIN path form: drive\\dir1\\..\\dirN\\file");
 	}
-
 
 	/**
 	 * Constructor, validation of parameters and 
@@ -163,7 +176,7 @@ public class MetadataExtract {
 		}
 		else 
 			//help requests or missing arguments HERE
-			if (args.length < 2 || args[0].startsWith("-h") 
+			if (args.length < 1 || args[0].startsWith("-h") 
 					|| args[0].startsWith("-?")) {
 				displayHelp();
 				return;
@@ -173,27 +186,47 @@ public class MetadataExtract {
 				if (args.length >= 2)
 					commandLine(args);
 
-
 		//REPOSITORY METADATA EXTRACTION
 		for (int b = 0; b<vsUDMLtxt.size(); b++) {
-			//required parameters check
+			
+			//setting a default output file
+			//If the Bus Matrix app is invoked and the output filename is not
+			//specified, a default "rpd.xml" file is used.
+			if (vsUDMLxml.size() == 0 && isBusMatrixInvoked)
+				vsUDMLxml.add("rpd.xml");
+			
+			//Parameters check...
+			//And the UDML file is parsed
 			if (vsUDMLtxt.size() > 0 &&
 				vsUDMLxml.size() > 0 &&
 				vsUDMLtxt.get(b).length() > 0 &&
 				vsUDMLxml.get(b).length() > 0)
 				new UDMLParser(vsUDMLtxt.get(b),
 								vsUDMLxml.get(b));
+
 			//Custom XML
 			if (vsUDMLxsl.size() > 0 &&
 				vsUDMLtgt.size() > 0 &&
 				vsUDMLxsl.get(b).length() > 0 &&
-				vsUDMLtgt.get(b).length() > 0)
+				vsUDMLtgt.get(b).length() > 0 &&
+				!isBusMatrixInvoked)
 				XMLUtils.xsl4Files(vsUDMLxml.get(b),
 									vsUDMLxsl.get(b),
 									vsUDMLtgt.get(b));
 
-			if (bBusMatrix)
-				XMLUtils.xsl4Files(sUDMLxml1, sUDMLxsl1, sUDMLtgt1);
+			if (isBusMatrixInvoked) {
+				//picks up the XML file generated by the parser and
+				//applies BusMatrix.xsl to it
+				XMLUtils.xsl4Files(vsUDMLxml.get(b), insXSL1, "temp.xml");
+				//creates the HTML page presenting results
+				XMLUtils.xsl4Files("temp.xml", insXSL2, sUDMLtgt1);
+				
+				File f = new File ("temp.xml");
+				System.out.println("Cleaning up temporary file: " + 
+												f.getAbsolutePath());
+				f.deleteOnExit();
+				f = null;
+			}
 
 		}
 		//REPOSITORY METADATA EXTRACTION (END)
@@ -205,12 +238,14 @@ public class MetadataExtract {
 	}
 }
 /*
+ * udml -> rpdxml.
+ * rpdxml + udmlxsl = udmltgt
+ * rpdxml1 (=udmltgt) + udmlxsl1 = udmltgt1 (HTML)
+
+java -jar udmlparser.jar -udml=p6only.udml -cmd=busmatrix -udmltgt1=ShowMeTheMatrix.html 
+
  -udml=test/st.udml 
  -rpdxml=test/RPD.XML 
  -cmd=busmatrix 
- -udmlxsl=BusMatrix.xsl 
- -udmltgt=test/RPD1.XML 
- -rpdxml1=test/RPD1.XML 
- -udmlxsl1=Output.xsl 
  -udmltgt1=test/OBIEE.html
 */
