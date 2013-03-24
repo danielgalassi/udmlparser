@@ -23,26 +23,26 @@ import xmlutils.XMLUtils;
  */
 public class UDMLParser {
 
-	private Document		docUDML;
-	private Element			root;
-	private File			fNQ_UDML;
+	private Document docUDML;
+	private Element root;
+	/** is the reference to the file containing the UDML code.*/
+	private File fNQ_UDML;
 	//UDML declaration statement's first token
-	private String			sCatalogFolder		= "DECLARE CATALOG FOLDER ";
-	private String			sEntityFolder		= "DECLARE ENTITY FOLDER ";
-	private String			sFolderAttribute	= "DECLARE FOLDER ATTRIBUTE ";
-	private String			sSubjectArea		= "DECLARE SUBJECT AREA ";
-	private String			sLogicalTable		= "DECLARE LOGICAL TABLE ";
-	private String			sLogicalTableSrc	= "DECLARE LOGICAL TABLE SOURCE ";
-	private String			sPhysicalTable		= "DECLARE TABLE ";
-	private String			sPhysicalTableKey	= "DECLARE TABLE KEY ";
-	private String			sDimensionLevel		= "DECLARE LEVEL ";
-	private String			sHierarchyDim		= "DECLARE DIMENSION ";
-	private String			sForeignKey			= "DECLARE FOREIGN KEY ";
-	private String			sLogicalJoin		= "DECLARE ROLE RELATIONSHIP ";
-
+	private final String sCatalogFolder		= "DECLARE CATALOG FOLDER ";
+	private final String sEntityFolder		= "DECLARE ENTITY FOLDER ";
+	private final String sFolderAttribute	= "DECLARE FOLDER ATTRIBUTE ";
+	private final String sSubjectArea		= "DECLARE SUBJECT AREA ";
+	private final String sLogicalTable		= "DECLARE LOGICAL TABLE ";
+	private final String sLogicalTableSrc	= "DECLARE LOGICAL TABLE SOURCE ";
+	private final String sPhysicalTable		= "DECLARE TABLE ";
+	private final String sPhysicalTableKey	= "DECLARE TABLE KEY ";
+	private final String sDimensionLevel	= "DECLARE LEVEL ";
+	private final String sHierarchyDim		= "DECLARE DIMENSION ";
+	private final String sForeignKey		= "DECLARE FOREIGN KEY ";
+	private final String sLogicalJoin		= "DECLARE ROLE RELATIONSHIP ";
 
 	/**
-	 * Constructor
+	 * 
 	 * @param sInput source UDML file
 	 * @param sOutput target XML file
 	 */
@@ -62,7 +62,7 @@ public class UDMLParser {
 	}
 
 	/**
-	 * Validates the file's UDML content
+	 * Validates the file actually contains UDML statements
 	 * @return true if the source contains UDML code 
 	 */
 	private boolean isUDML() {
