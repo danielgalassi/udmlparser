@@ -10,23 +10,36 @@ import udmlparser.UDMLParser;
 import xmlutils.XMLUtils;
 
 /**
- * Extract tool getting UDML stmts parsed into an XML tree
+ * The semantic layer used by Oracle Business Intelligence 11g (and 10g before)
+ * can be exported to a proprietary declarative language called UDML.
+ * UDML statements, while providing a wealth of information, cannot be easily
+ * parsed by ETL tools or other metadata management applications.
+ * This tool, the MetadataExtract application, parses UDML statements into
+ * a more readable format. The output is then saved into an XML file.
+ * 
+ * Note: in 11g, repository metadata XML exports are fully supported (XUDML.)
  * @author danielgalassi@gmail.com
  *
  */
 public class MetadataExtract {
 
+	/** one or more files containing OBIEE UDML code.*/
 	private static Vector <String>	vsUDMLtxt	= null;
+	/** one or more files containing parsed metadata in XML format.*/
 	private static Vector <String>	vsUDMLxml	= null;
+	/** one or more XSL files to transform the XML (parsed) results.*/
 	private static Vector <String>	vsUDMLxsl	= null;
-	private static Vector <String>	vsUDMLtgt	= null;
-	private static String			sUDMLtgt1	= null;
-	private static Document			dBatch		= null;
-	/**
-	 * Stores whether the BusMatrix bundled app has been invoked or not
+	/** one or more files resulting from applying XSL transformations.
+	 * Most common formats: CSV, HTML, XML.
 	 */
+	private static Vector <String>	vsUDMLtgt	= null;
+	/** DOM reference to the file storing a job set for batch processing.*/
+	private static Document			dBatch		= null;
+	/** stores whether the BusMatrix bundled app has been invoked or not.*/
 	private static boolean			isBusMatrixInvoked = false;
+	/**	is the reference to the first XSL file for bundled applications.*/
 	private static InputStream		insXSL1 = null;
+	/** is the reference to the second XSL file for bundled applications.*/
 	private static InputStream		insXSL2 = null;
 
 	/**
@@ -41,7 +54,8 @@ public class MetadataExtract {
 	 * Loads a resource bundled in the jar file. Used for apps-related files.
 	 * @param rsc the relative file path (within the jar file)
 	 * @return a reference to the XSL file used to transform XML files
-	 * @see InputStream
+	 * @see java.io.InputStream
+	 * @see xmlutils.xsl4files(String, InputStream, String)
 	 */
 	private InputStream istrInternalResource(String rsc) {
 		InputStream isRsc = null;
@@ -115,7 +129,6 @@ public class MetadataExtract {
 		vsUDMLxml =	new Vector<String>();
 		vsUDMLxsl =	new Vector<String>();
 		vsUDMLtgt =	new Vector<String>();
-		sUDMLtgt1 = new String();
 
 		for(int i=0; i<args.length; i++) {
 			if (args[i].startsWith("-udml="))
@@ -130,9 +143,6 @@ public class MetadataExtract {
 			if (args[i].startsWith("-udmltgt="))
 				vsUDMLtgt.add(args[i].replaceFirst("-udmltgt=",""));
 
-			if (args[i].startsWith("-udmltgt1="))
-				sUDMLtgt1 = args[i].replaceFirst("-udmltgt1=","");
-			
 			if (args[i].equals("-cmd=busmatrix")) {
 				isBusMatrixInvoked = true;
 				MetadataExtract me = new MetadataExtract();
@@ -163,7 +173,7 @@ public class MetadataExtract {
 		System.out.println("WIN path form: drive\\dir1\\..\\dirN\\file");
 		System.out.println("\nTo parse UDML code and produce bus matrices:");
 		System.out.println("java -jar udmlparser###.jar -udml=(path UDML file) " + 
-				"-cmd=busmatrix -udmltgt1=(path resulting HTML file)");
+				"-cmd=busmatrix -udmltgt=(path resulting HTML file)");
 	}
 
 	/**
@@ -225,7 +235,7 @@ public class MetadataExtract {
 				//applies BusMatrix.xsl to it
 				XMLUtils.xsl4Files(vsUDMLxml.get(b), insXSL1, "temp.xml");
 				//creates the HTML page presenting results
-				XMLUtils.xsl4Files("temp.xml", insXSL2, sUDMLtgt1);
+				XMLUtils.xsl4Files("temp.xml", insXSL2, vsUDMLtgt.get(b));
 				
 				File f = new File ("temp.xml");
 				System.out.println("Cleaning up temporary file: " + 
