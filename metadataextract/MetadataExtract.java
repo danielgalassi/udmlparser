@@ -22,13 +22,16 @@ public class MetadataExtract {
 	private static Vector <String>	vsUDMLtgt	= null;
 	private static String			sUDMLtgt1	= null;
 	private static Document			dBatch		= null;
-	private static boolean			isBusMatrixInvoked	= false;
-	private static InputStream insXSL1 = null;
-	private static InputStream insXSL2 = null;
+	/**
+	 * Stores whether the BusMatrix bundled app has been invoked or not
+	 */
+	private static boolean			isBusMatrixInvoked = false;
+	private static InputStream		insXSL1 = null;
+	private static InputStream		insXSL2 = null;
 
 	/**
 	 * Indicates whether the Bus Matrix generation app has been invoked
-	 * @return
+	 * @return true if the BusMatrix app has been invoked, false otherwise.
 	 */
 	public static boolean isBusMatrixInvoked () {
 		return isBusMatrixInvoked;
@@ -36,23 +39,24 @@ public class MetadataExtract {
 
 	/**
 	 * Loads a resource bundled in the jar file. Used for apps-related files.
-	 * @param rsc the file path (within the jar file)
-	 * @return
+	 * @param rsc the relative file path (within the jar file)
+	 * @return a reference to the XSL file used to transform XML files
+	 * @see InputStream
 	 */
 	private InputStream istrInternalResource(String rsc) {
 		InputStream isRsc = null;
 		try {
 			isRsc = getClass().getClassLoader().getResourceAsStream(rsc);
 		} catch (Exception e) {
-			System.out.println("uXSL: " + rsc);
+			System.out.println("istrInternalResource: " + rsc);
 			e.printStackTrace();
 		}
 		return isRsc;
 	}
 
 	/**
-	 * Method processing XML file containing batch params
-	 * @param sBatch batch params file
+	 * Method processing XML file containing batch parameters
+	 * @param sBatch path to the file containing batch job sets
 	 */
 	private static void batch(String sBatch) {
 		File fBatch;
@@ -139,7 +143,7 @@ public class MetadataExtract {
 	}
 
 	/**
-	 * Available help
+	 * Displays available help
 	 *
 	 */
 	private static void displayHelp() {
@@ -157,12 +161,14 @@ public class MetadataExtract {
 		System.out.println("-batch=\t\tConfiguration file\n");
 		System.out.println("UNIX path form: /dir1/../dirN/file");
 		System.out.println("WIN path form: drive\\dir1\\..\\dirN\\file");
+		System.out.println("\nTo parse UDML code and produce bus matrices:");
+		System.out.println("java -jar udmlparser###.jar -udml=(path UDML file) " + 
+				"-cmd=busmatrix -udmltgt1=(path resulting HTML file)");
 	}
 
 	/**
-	 * Constructor, validation of parameters and 
-	 * execution control of the extraction process
-	 * @param args web catalog and repository extract process parameters
+	 * Controls the metadata extraction process flow
+	 * @param args repository extract process parameters
 	 */
 	public static void main(String[] args) {
 
