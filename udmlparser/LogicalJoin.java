@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 
 /**
  * Logical Join Parser class
- * @author dgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public class LogicalJoin {
