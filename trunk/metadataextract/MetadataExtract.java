@@ -246,10 +246,10 @@ public class MetadataExtract {
 		}
 		//REPOSITORY METADATA EXTRACTION (END)
 
-		vsUDMLtxt	= null;
-		vsUDMLxml	= null;
-		vsUDMLxsl	= null;
-		vsUDMLtgt	= null;
+		vsUDMLtxt = null;
+		vsUDMLxml = null;
+		vsUDMLxsl = null;
+		vsUDMLtgt = null;
 	}
 }
 /*
