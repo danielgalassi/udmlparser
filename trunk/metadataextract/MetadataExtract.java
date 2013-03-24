@@ -55,7 +55,6 @@ public class MetadataExtract {
 	 * @param rsc the relative file path (within the jar file)
 	 * @return a reference to the XSL file used to transform XML files
 	 * @see java.io.InputStream
-	 * @see xmlutils.xsl4files(String, InputStream, String)
 	 */
 	private InputStream istrInternalResource(String rsc) {
 		InputStream isRsc = null;
