@@ -19,15 +19,15 @@
 
 ===Parsing a UDML file===
 
+In OBI 10g, you can export the UDML version of the repository metadata using the nqUDMLgen tool. This tool is provided with OBIEE and it is located under {{{OBIHOME/server/Bin}}} (run it using -n -q -8 flags.)
+
+
   # confirm the name and location of the UDML file
   # choose the name and location of the resulting XML file
-  # run: {{{java -jar udmlparserXYZ.jar -udml=<UDMLfile> -rpdxml=<resulting File>}}}
+  # in command line execute: {{{java -jar udmlparserXYZ.jar -udml=<UDMLfile> -rpdxml=<resulting File>}}}
 
-Now you need to extract UDML code out of your repository file, do that using nqUDMLgen tool (provided OOTB with OBIEE, check {{{OBIHOME/server/Bin}}} (run it using -n -q -8 flags).
 
-  * run the application, append required parameters.
-eg: {{{java -jar udmlparser0_4.jar -udml=paintUDML.txt -rpdxml=paintUDML.xml}}}
-
+nqUDMLgen application is also available in OBI 11g, just find the location and use it applying the same parameters. However, remember that an XML version of UDML (XUDML) is now supported by Oracle (google OBIEE 11g UDML for more details.)
 
 
 ===Step by Step===
