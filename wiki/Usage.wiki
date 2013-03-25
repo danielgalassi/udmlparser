@@ -12,12 +12,16 @@
   * Path: both relative and absolute path forms can be used, be sure you use "\\" (instead of a single backslash) when running the application on Windows OS.
 
 
-===How to make it run===
+===First things first===
 
-  # download the JAR file, from _*Downloads*_ tab.
-  # move it to a target directory
-  # run: {{{java -jar udmlparser0_5.jar}}}
-  # check the required parameters
+  # Download the JAR file from _*Downloads*_.
+
+
+===Parsing UDML===
+
+  # run: {{{java -jar udmlparserXYZ.jar}}}
+  # Just trying to parse your UDML file? 
+  # udml 
 
 Now you need to extract UDML code out of your repository file, do that using nqUDMLgen tool (provided OOTB with OBIEE, check {{{OBIHOME/server/Bin}}} (run it using -n -q -8 flags).
 
