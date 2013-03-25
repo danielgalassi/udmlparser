@@ -14,7 +14,7 @@
 
 ===First things first===
 
-  * Download the JAR file from _[https://code.google.com/p/udmlparser/downloads/list Downloads]_.
+  * Download the JAR file from the [https://code.google.com/p/udmlparser/downloads/list Downloads] section.
 
 
 ===Parsing a UDML file===
@@ -33,6 +33,20 @@ nqUDMLgen application is also available in OBI 11g, just find the location and u
 ===Step by Step===
 
 You can find a step by step guide [http://it.toolbox.com/wiki/index.php/Oracle_BI_EE_-_Encoding_Repository_metadata_in_XML here].
+
+
+=== Do you want to generate a bus matrix for each business model? ===
+
+Yes, little documentation, over 50 fact tables and a myriad of dimensions are a common scenario. Sad but true. Now... how can we get a bus matrix of a business model and find common dimensions across facts? Easy pease. I bundled an application in this parser to generate a bus matrix (it's BMML-based, there one BMML = one bus matrix)
+
+
+  # confirm the name and location of the UDML file
+  # choose the name and location of the resulting XML file
+  # in command line execute: {{{java -jar udmlparserXYZ.jar -udml=<UDMLfile> -udmltgt=<resulting File> -cmd=busmatrix}}}
+  # check the resulting HTML page :)
+
+
+Hey mate, wouldn't you send an email if you find this feature interesting?
 
 
 ----
