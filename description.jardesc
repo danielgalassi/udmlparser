@@ -1,29 +1,32 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
-    <jar path="/home/daniel/Downloads/udmlparser07.jar"/>
+    <jar path="c:/danielgalassi/workspace/udmlparser/udmlparser0.8.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/udmlparser/description.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="true" mainClassHandleIdentifier="=udmlparser/&lt;metadataextract{MetadataExtract.java[MetadataExtract" manifestLocation="/udmlparser/manifest.xml" manifestVersion="1.0" reuseManifest="false" saveManifest="true" usesManifest="true">
         <sealing sealJar="false">
             <packagesToSeal/>
-            <packagesToUnSeal/>
+            <packagesToUnSeal>
+                <package handleIdentifier="=udmlparser/&lt;metadataextract"/>
+                <package handleIdentifier="=udmlparser/&lt;udmlparser"/>
+                <package handleIdentifier="=udmlparser/&lt;utils"/>
+                <package handleIdentifier="=udmlparser/&lt;xmlutils"/>
+            </packagesToUnSeal>
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <javaElement handleIdentifier="=udmlparser/&lt;xmlutils"/>
         <file path="/udmlparser/UDML.jpg"/>
         <file path="/udmlparser/.project"/>
-        <file path="/udmlparser/OBIEEBusMatrix.html"/>
         <file path="/udmlparser/config.xml"/>
         <file path="/udmlparser/foaf.rdf"/>
-        <file path="/udmlparser/Output.xsl~"/>
-        <file path="/udmlparser/BusMatrix.xsl"/>
+        <javaElement handleIdentifier="=udmlparser/&lt;bundledApps"/>
         <file path="/udmlparser/.classpath"/>
         <javaElement handleIdentifier="=udmlparser/&lt;doc"/>
         <javaElement handleIdentifier="=udmlparser/&lt;doc.utils"/>
-        <file path="/udmlparser/manifest.xml"/>
         <file path="/udmlparser/doap.rdf"/>
+        <file path="/udmlparser/manifest.xml"/>
         <javaElement handleIdentifier="=udmlparser/&lt;metadataextract"/>
         <javaElement handleIdentifier="=udmlparser/&lt;doc.udmlparser"/>
         <javaElement handleIdentifier="=udmlparser/&lt;doc.xmlutils"/>
@@ -31,7 +34,6 @@
         <javaElement handleIdentifier="=udmlparser/&lt;doc.resources"/>
         <javaElement handleIdentifier="=udmlparser/&lt;udmlparser"/>
         <file path="/udmlparser/description.jardesc"/>
-        <file path="/udmlparser/Output.xsl"/>
         <javaElement handleIdentifier="=udmlparser/&lt;doc.metadataextract"/>
         <javaElement handleIdentifier="=udmlparser/&lt;utils"/>
     </selectedElements>
