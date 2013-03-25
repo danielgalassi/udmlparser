@@ -10,14 +10,14 @@ import udmlparser.UDMLParser;
 import xmlutils.XMLUtils;
 
 /**
- * The semantic layer used by Oracle Business Intelligence 11g (and 10g before)
- * can be exported to a proprietary declarative language called UDML.
+ * The semantic layer used by Oracle Business Intelligence 11g (and 10g before
+ * that) can be exported to a proprietary declarative language called UDML.
  * UDML statements, while providing a wealth of information, cannot be easily
  * parsed by ETL tools or other metadata management applications.
  * This tool, the MetadataExtract application, parses UDML statements into
  * a more readable format. The output is then saved into an XML file.
  * 
- * Note: in 11g, repository metadata XML exports are fully supported (XUDML.)
+ * Note: in 11g repository metadata XML exports are fully supported (XUDML.)
  * @author danielgalassi@gmail.com
  *
  */
