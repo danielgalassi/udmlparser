@@ -191,8 +191,10 @@ public class MetadataExtract {
 		}
 		else 
 			//help requests or missing arguments HERE
-			if (args.length < 1 || args[0].startsWith("-h") 
-					|| args[0].startsWith("-?")) {
+			if (args.length < 1 || 
+				args[0].startsWith("-h") || 
+				args[0].startsWith("-?") || 
+				args[0].startsWith("-help")) {
 				displayHelp();
 				return;
 			}
