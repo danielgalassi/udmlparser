@@ -14,14 +14,14 @@
 
 ===First things first===
 
-  # Download the JAR file from _*Downloads*_.
+  * Download the JAR file from _[https://code.google.com/p/udmlparser/downloads/list Downloads]_.
 
 
-===Parsing UDML===
+===Parsing a UDML file===
 
-  # run: {{{java -jar udmlparserXYZ.jar}}}
-  # Just trying to parse your UDML file? 
-  # udml 
+  # confirm the name and location of the UDML file
+  # choose the name and location of the resulting XML file
+  # run: {{{java -jar udmlparserXYZ.jar -udml=_<UDMLfile>_ -rpdxml=_<resulting File>_}}}
 
 Now you need to extract UDML code out of your repository file, do that using nqUDMLgen tool (provided OOTB with OBIEE, check {{{OBIHOME/server/Bin}}} (run it using -n -q -8 flags).
 
