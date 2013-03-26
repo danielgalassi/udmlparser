@@ -32,7 +32,7 @@ nqUDMLgen application is also available in OBI 11g, just find the location and u
 
 ===Step by Step===
 
-You can find a step by step guide [http://it.toolbox.com/wiki/index.php/Oracle_BI_EE_-_Encoding_Repository_metadata_in_XML here].
+You can find a step by step guide (written in the days of OBI 10g, most ) [http://it.toolbox.com/wiki/index.php/Oracle_BI_EE_-_Encoding_Repository_metadata_in_XML here].
 
 
 === Do you want to generate a bus matrix for each business model? ===
