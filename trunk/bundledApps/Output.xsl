@@ -4,27 +4,32 @@
 	<xsl:template match="/">
 	<html>
 	<head>
-	
+
 	<style type='text/css'>
 		h1 {font-family: Helvetica, sans-serif; font-weight: bold; font-size: 24pt; color: 111111;}
 		h2 {font-family: Helvetica, sans-serif; font-weight: bold; font-size: 20pt; color: 333333;}
-		h3 {font-family: Helvetica, sans-serif; font-size: 16; color: 333333;}
-		h4 {font-family: Helvetica, sans-serif; font-size: 16; color: 333333;}
-		li {font-family: Helvetica, sans-serif; font-size: 11pt; color: 000000;}
-		* { font-family: Helvetica, sans-serif; }
-		table { border-spacing: 0 0;
+		h3 {font-family: Helvetica, sans-serif; font-size: 14pt; color: 555555;}
+		h4 {font-family: Helvetica, sans-serif; font-size: 14pt; color: 888888;}
+		li {font-family: Helvetica, sans-serif; font-size: 10pt; color: 000000;}
+		a  {font-family: Helvetica, sans-serif; font-size: 10pt; color: 444444;}
+		*  {font-family: Helvetica, sans-serif; font-size: 8pt; color: 000000;}
+		tr {height:30; font-size: 8.5pt;}
+		table {
+				border-spacing: 0 0;
 				margin: 1px;
-				border-right: 1px solid #CCCCCC;}
+				border-right: 1px solid #CCCCCC;
+				font-family: Helvetica, sans-serif; font-size: 8.5pt;}
 		thead th {
-            background: #EFEFEF;
-            border-left: 1px solid #CCCCCC;
-            border-top: 1px solid #CCCCCC;}
+				font-family: Helvetica, sans-serif; font-size: 8pt;
+				background: #EFEFEF;
+				border-left: 1px solid #CCCCCC;
+				border-top: 1px solid #CCCCCC;}
         tbody td {
-            border-bottom: 1px solid #E3E3E3;
-            border-left: 1px solid #E3E3E3;
-        }
+        		font-family: Helvetica, sans-serif; font-size: 8.5pt;
+				border-bottom: 1px solid #E3E3E3;
+				border-left: 1px solid #E3E3E3;}
 	</style>
-	
+
 	<title>Oracle Business Intelligence Metadata</title>
 	</head>
 	<body>
@@ -36,7 +41,7 @@
 	<li><a href="#{.}"><xsl:value-of select="."/></a></li>
 	</xsl:for-each>
 	</ul>
-	<br style="font-family: Helvetica;"/>
+	<br/>
 	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">			
 		<!-- Business Model Header Section -->
 		<h2><a name="{.}" id="{.}"></a><xsl:value-of select="."/></h2>
@@ -51,37 +56,39 @@
 			</xsl:for-each>
 			</ul>
 		</xsl:for-each>
-		<br style="font-family: Helvetica;"/>
+		<br/>
 		<!-- Matrix Section -->
 		<h4>Business Model Bus Matrix</h4>
-		<br style="font-family: Helvetica;"/>
 		<table>
 		<tbody>
-			<tr valign="bottom">
-				<td style="font-family: Arial;" width="300"><font size="2">Fact tables (below) / Dimensions (right)</font></td>
-				<!-- Dimension tables list -->
-				<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins > 0]">
-				<xsl:sort data-type="number" select="@joins" order="descending"/>
-				<xsl:choose>
-					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
-						<td style="font-family: Arial; background-color: rgb(255, 255, 153)" width="115"><font size="2" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
-					</xsl:when>
-					<xsl:otherwise>
-						<td style="font-family: Arial;" width="115"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
-					</xsl:otherwise>
-				</xsl:choose>
-				</xsl:for-each>
-			</tr>
+		<thead>
+		<tr>
+			<td style="text-align:center;
+			font-family: Helvetica, sans-serif; font-size: 8pt; border-bottom: 1px solid #E3E3E3;">Fact tables (below) / Dimensions (right)</td>
+			<!-- Dimension tables list -->
+			<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins > 0]">
+			<xsl:sort data-type="number" select="@joins" order="descending"/>
+			<xsl:choose>
+				<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
+					<th style="font-family: Helvetica, sans-serif; font-size: 8pt; color: 000000; background-color: rgb(255, 255, 153)" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></th>
+				</xsl:when>
+				<xsl:otherwise>
+					<th><xsl:value-of select="substring(., $bmlength+2)"/></th>
+				</xsl:otherwise>
+			</xsl:choose>
+			</xsl:for-each>
+		</tr>
+		</thead>
 			<!-- Fact tables list and ticks -->
 			<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins = 0]">
 				<tr>
 				<!-- Fact Table Name -->
 				<xsl:choose>
 					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
-						<td style="font-family: Arial; background-color: rgb(255, 255, 153)" width="300"><font size="2" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
+						<td style="font-family: Helvetica, sans-serif; font-size: 8pt; color: 000000; background-color: rgb(255, 255, 153)" width="300"><font size="2" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
 					</xsl:when>
 					<xsl:otherwise>
-						<td style="font-family: Arial;" width="300"><font size="2"><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
+						<td><xsl:value-of select="substring(., $bmlength+2)"/></td>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:variable name="factTbl" select="."/>
@@ -102,9 +109,8 @@
 		</tbody>
 		</table>
 		
-		<br style="font-family: Arial;"/>
-		<br style="font-family: Arial;"/>
-		<hr style="width: 100%; height: 1px;"/>
+		<br/><br/>
+		<hr style="height: 1px; border: 0; background-color: #aaaaaa; width: 80%;"/>
 
 	</xsl:for-each>
 	<br style="font-family: Arial;"/>
