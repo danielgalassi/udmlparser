@@ -93,9 +93,12 @@ public class LogicalJoin {
 					nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));
 				}
 				eLogicalTable.appendChild(nLogicalTable);
-				if (vLogicalTablesID.get(i).indexOf("Fact -") != -1)
+				if (vLogicalTablesID.get(i).indexOf("Fact -") != -1 || 
+						vLogicalTablesID.get(i).toLowerCase().indexOf("fact") != -1)
 					eLogicalTable.setAttribute("type", "FACT");
-				if (vLogicalTablesID.get(i).indexOf("Dim -") != -1)
+				if (vLogicalTablesID.get(i).indexOf("Dim -") != -1 || 
+						(vLogicalTablesID.get(i).indexOf("Fact -") == -1 && 
+						vLogicalTablesID.get(i).toLowerCase().indexOf("fact") == -1))
 					eLogicalTable.setAttribute("type", "DIM");
 				eLogicalTableList.appendChild(eLogicalTable);
 			}
