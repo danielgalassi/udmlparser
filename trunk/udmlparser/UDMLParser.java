@@ -40,6 +40,7 @@ public class UDMLParser {
 	private final String sHierarchyDim		= "DECLARE DIMENSION ";
 	private final String sForeignKey		= "DECLARE FOREIGN KEY ";
 	private final String sLogicalJoin		= "DECLARE ROLE RELATIONSHIP ";
+	private final String sLogicalForeignKey = "DECLARE LOGICAL FOREIGN KEY ";
 
 	/**
 	 * 
@@ -105,6 +106,7 @@ public class UDMLParser {
 			HierarchyDimension h;
 			ForeignKey j;
 			LogicalJoin lj;
+			LogicalForeignKey lfk;
 
 			do {
 				line = brUDML.readLine();
@@ -124,6 +126,11 @@ public class UDMLParser {
 					System.out.println("Processing Logical Join...");
 					lj = new LogicalJoin(line, sLogicalJoin, brUDML);
 					root.appendChild(lj.serialize(docUDML));
+				}
+				if (line.indexOf(sLogicalForeignKey) != -1) { //logical join (BMM)
+					System.out.println("Processing Logical Join (OBI 10g)...");
+					lfk = new LogicalForeignKey(line, sLogicalForeignKey, brUDML);
+					root.appendChild(lfk.serialize(docUDML));
 				}
 				if (!MetadataExtract.isBusMatrixInvoked()) {
 					if (line.indexOf(sEntityFolder) != -1) { //pres folder
