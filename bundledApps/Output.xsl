@@ -4,54 +4,58 @@
 	<xsl:template match="/">
 	<html>
 	<head>
-	<title>Oracle Business Intelligence Metadata Documentation</title>
+	
+	<style type='text/css'>
+		h1 {font-family: Helvetica, sans-serif; font-weight: bold; font-size: 24pt; color: 111111;}
+		h2 {font-family: Helvetica, sans-serif; font-weight: bold; font-size: 20pt; color: 333333;}
+		h3 {font-family: Helvetica, sans-serif; font-size: 16; color: 333333;}
+		h4 {font-family: Helvetica, sans-serif; font-size: 16; color: 333333;}
+		li {font-family: Helvetica, sans-serif; font-size: 11pt; color: 000000;}
+		* { font-family: Helvetica, sans-serif; }
+		table { border-spacing: 0 0;
+				margin: 1px;
+				border-right: 1px solid #CCCCCC;}
+		thead th {
+            background: #EFEFEF;
+            border-left: 1px solid #CCCCCC;
+            border-top: 1px solid #CCCCCC;}
+        tbody td {
+            border-bottom: 1px solid #E3E3E3;
+            border-left: 1px solid #E3E3E3;
+        }
+	</style>
+	
+	<title>Oracle Business Intelligence Metadata</title>
 	</head>
 	<body>
 	<!-- Business Models list Section -->
-	<font style="font-family: Arial;" size="+1">
-	<span style="font-weight: bold;">Business Models List</span></font>
-	<br style="font-family: Arial;"/>
-	<ul style="font-family: Arial;">
+	<h1>OBIEE Business Models</h1>
+	<ul>
 	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">
-		<!-- Creating the Business Models list -->
-		<li><a href="#{.}"><xsl:value-of select="."/></a></li>
+	<!-- Creating the Business Models list -->
+	<li><a href="#{.}"><xsl:value-of select="."/></a></li>
 	</xsl:for-each>
 	</ul>
-	<br style="font-family: Arial;"/>
-	<br style="font-family: Arial;"/>
-	<br style="font-family: Arial;"/>
-
-
+	<br style="font-family: Helvetica;"/>
 	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">			
 		<!-- Business Model Header Section -->
-		<big style="font-family: Arial;"><font size="+3"><big><span
-		style="font-weight: bold;"><a name="{.}" id="{.}"></a><xsl:value-of select="."/></span></big></font></big>
+		<h2><a name="{.}" id="{.}"></a><xsl:value-of select="."/></h2>
 		<xsl:variable name="bmlength" select="string-length(.)"/>
-		<br style="font-family: Arial;"/>
-		<br style="font-family: Arial;"/>
-		<br style="font-family: Arial;"/>
-		
 		<!-- Subject Area Section -->
 		<xsl:for-each select="../PresentationCatalogIDList">
-			<font style="font-family: Arial;" size="+1">
-			<span style="font-weight: bold;">Subject Areas</span></font>
-			<br style="font-family: Arial;"/>
-			<ul style="font-family: Arial;">
+			<h3>Subject Areas</h3>
+			<ul>
 			<!-- Creating the subject areas list -->
 			<xsl:for-each select="PresentationCatalogID">
 			<li><xsl:value-of select="."/></li>
 			</xsl:for-each>
 			</ul>
 		</xsl:for-each>
-		<br style="font-family: Arial;"/>
-		<br style="font-family: Arial;"/>
-
+		<br style="font-family: Helvetica;"/>
 		<!-- Matrix Section -->
-		<font style="font-family: Arial;" size="+1"><span style="font-weight: bold;">Dimensional Model logical relationships</span></font>
-		<br style="font-family: Arial;"/>
-		<br style="font-family: Arial;"/>
-		
-		<table border="1">
+		<h4>Business Model Bus Matrix</h4>
+		<br style="font-family: Helvetica;"/>
+		<table>
 		<tbody>
 			<tr valign="bottom">
 				<td style="font-family: Arial;" width="300"><font size="2">Fact tables (below) / Dimensions (right)</font></td>
