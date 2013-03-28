@@ -93,6 +93,7 @@ public class LogicalForeignKey {
 			}
 
 		eLogicalJoin.appendChild(eLogicalTableList);
+		eLogicalJoin.setAttribute("type", "LogicalForeignKey-based");
 		return eLogicalJoin;
 	}
 }
