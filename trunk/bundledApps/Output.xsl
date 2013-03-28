@@ -57,20 +57,20 @@
 			</ul>
 		</xsl:for-each>
 		<br/>
+
 		<!-- Matrix Section -->
 		<h4>Business Model Bus Matrix</h4>
 		<table>
 		<tbody>
 		<thead>
 		<tr>
-			<td style="text-align:center;
-			font-family: Helvetica, sans-serif; font-size: 8pt; border-bottom: 1px solid #E3E3E3;">Fact tables (below) / Dimensions (right)</td>
+			<td style="text-align:center; font-family: Helvetica, sans-serif; font-size: 8pt; border-bottom: 1px solid #E3E3E3; background-color: rgb(247,247,247);">Fact tables (below) / Dimensions (right)</td>
 			<!-- Dimension tables list -->
 			<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins > 0]">
 			<xsl:sort data-type="number" select="@joins" order="descending"/>
 			<xsl:choose>
 				<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
-					<th style="font-family: Helvetica, sans-serif; font-size: 8pt; color: 000000; background-color: rgb(255, 255, 153)" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></th>
+					<th style="font-family: Helvetica, sans-serif; font-size: 8pt; color: 000000; background-color: rgb(255, 255, 153);" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></th>
 				</xsl:when>
 				<xsl:otherwise>
 					<th><xsl:value-of select="substring(., $bmlength+2)"/></th>
@@ -85,10 +85,10 @@
 				<!-- Fact Table Name -->
 				<xsl:choose>
 					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
-						<td style="font-family: Helvetica, sans-serif; font-size: 8pt; color: 000000; background-color: rgb(255, 255, 153)" width="300"><font size="2" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></font></td>
+						<td style="font-family: Helvetica, sans-serif; font-weight: bold; font-size: 8pt; color: 000000; background-color: rgb(255, 255, 153)" width="300" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></td>
 					</xsl:when>
 					<xsl:otherwise>
-						<td><xsl:value-of select="substring(., $bmlength+2)"/></td>
+						<td style="background: #EFEFEF; font-family: Helvetica, sans-serif; font-size: 8pt; font-weight: bold; color: 000000;"><xsl:value-of select="substring(., $bmlength+2)"/></td>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:variable name="factTbl" select="."/>
@@ -96,7 +96,7 @@
 				<xsl:for-each select="../../LogicalTableIDList/LogicalTableID [@joins > 0]">
 					<xsl:sort data-type="number" select="@joins" order="descending"/>
 					<xsl:variable name="dimTbl" select="normalize-space(text())"/>
-					<td align="center" style="font-family: Arial;" width="115">&#160;
+					<td align="center" style="font-family: Helvetica, sans-serif;" width="115">&#160;
 					<!-- Finding logical join -->
 					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [text()=$dimTbl]] [text()=$factTbl]">
 						<!-- "Join found" tick -->
