@@ -85,10 +85,10 @@
 				<!-- Fact Table Name -->
 				<xsl:choose>
 					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
-						<td style="font-family: Helvetica, sans-serif; font-weight: bold; font-size: 8pt; color: 000000; background-color: rgb(255, 255, 153)" width="300" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></td>
+						<td style="font-family: Helvetica, sans-serif; font-weight: bold; font-size: 8pt; color: #000000; background-color: rgb(255, 255, 153)" width="300" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></td>
 					</xsl:when>
 					<xsl:otherwise>
-						<td style="background: #EFEFEF; font-family: Helvetica, sans-serif; font-size: 8pt; font-weight: bold; color: 000000;"><xsl:value-of select="substring(., $bmlength+2)"/></td>
+						<td style="background: #EFEFEF; font-family: Helvetica, sans-serif; font-size: 8pt; font-weight: bold; color: #000000;"><xsl:value-of select="substring(., $bmlength+2)"/></td>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:variable name="factTbl" select="."/>
@@ -99,9 +99,9 @@
 					<td align="center" style="font-family: Helvetica, sans-serif;" width="115">&#160;
 					<!-- Finding logical join -->
 					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [text()=$dimTbl]] [text()=$factTbl]">
-						<!-- "Join found" tick -->
-						<li/>
-					</xsl:for-each>
+						<!-- "Join found" tick, the for-each loop flags (deprecated) logical FK-based -->
+						<li><xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [text()=$dimTbl]] [text()=$factTbl][../@type='LogicalForeignKey-based']"><a style="font-family: Helvetica, sans-serif; font-size: 9pt; color: red" title="Suggestion: Consider using a standard logical join instead.">*</a></xsl:for-each></li>
+						</xsl:for-each>
 					</td>
 				</xsl:for-each>
 				</tr>
@@ -110,12 +110,12 @@
 		</table>
 		
 		<br/><br/>
-		<hr style="height: 1px; border: 0; background-color: #aaaaaa; width: 80%;"/>
+		<hr style="height: 1px; border: 0; background-color: #AAAAAA; width: 70%;"/>
 
 	</xsl:for-each>
 	<br style="font-family: Arial;"/>
 	<br style="font-family: Arial;"/>
-	<div style="text-align: right; color: rgb(128, 128, 128); font-family: Helvetica,Arial,sans-serif;"><small>Generated using UDMLParser / Bus Matrix application.</small></div>
+	<div style="text-align: right; color: rgb(128, 128, 128); font-family: Helvetica,Arial,sans-serif;">Generated using UDMLParser / Bus Matrix application.</div>
 	</body>
 	</html>
 	</xsl:template>
