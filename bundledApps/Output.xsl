@@ -64,7 +64,7 @@
 		<tbody>
 		<thead>
 		<tr>
-			<td style="text-align:center; font-family: Helvetica, sans-serif; font-size: 8pt; border-bottom: 1px solid #E3E3E3; background-color: rgb(247,247,247);">Fact tables (below) / Dimensions (right)</td>
+			<td style="text-align:center; font-family: Helvetica, sans-serif; font-size: 8pt; border-top: 1px solid #EFEFEF; border-left: 1px solid #EFEFEF; border-bottom: 1px solid #E3E3E3; background-color: rgb(250,250,250);">Fact tables (below) / Dimensions (right)</td>
 			<!-- Dimension tables list -->
 			<xsl:for-each select="../LogicalTableIDList/LogicalTableID [@joins > 0]">
 			<xsl:sort data-type="number" select="@joins" order="descending"/>
