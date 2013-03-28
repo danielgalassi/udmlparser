@@ -127,8 +127,8 @@ public class UDMLParser {
 					lj = new LogicalJoin(line, sLogicalJoin, brUDML);
 					root.appendChild(lj.serialize(docUDML));
 				}
-				if (line.indexOf(sLogicalForeignKey) != -1) { //logical join (BMM)
-					System.out.println("Processing Logical Join (OBI 10g)...");
+				if (line.indexOf(sLogicalForeignKey) != -1) { //logical foreign key join (BMM)
+					System.out.println("Processing Logical (Foreign Key) Join...");
 					lfk = new LogicalForeignKey(line, sLogicalForeignKey, brUDML);
 					root.appendChild(lfk.serialize(docUDML));
 				}
