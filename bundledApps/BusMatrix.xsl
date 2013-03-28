@@ -28,6 +28,7 @@
 	<!-- copying all logical joins (simplified view) -->
 	<xsl:for-each select="//LogicalJoin/LogicalTableIDList">
 	<LogicalJoin>
+		<xsl:attribute name="type"><xsl:value-of select="../@type"/></xsl:attribute>
 		<xsl:for-each select="./LogicalTableID">
 			<xsl:copy-of select="."/>
 		</xsl:for-each>
