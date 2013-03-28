@@ -241,7 +241,7 @@ public class MetadataExtract {
 				File f = new File ("temp.xml");
 				System.out.println("Cleaning up temporary file: " + 
 												f.getAbsolutePath());
-				//f.deleteOnExit();
+				f.deleteOnExit();
 				f = null;
 			}
 
