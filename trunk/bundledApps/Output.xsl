@@ -96,7 +96,7 @@
 				<xsl:for-each select="../../LogicalTableIDList/LogicalTableID [@joins > 0]">
 					<xsl:sort data-type="number" select="@joins" order="descending"/>
 					<xsl:variable name="dimTbl" select="normalize-space(text())"/>
-					<td align="center" style="font-family: Helvetica, sans-serif;" width="115">&#160;
+					<td align="center" style="font-family: Helvetica, sans-serif;" width="130">&#160;
 					<!-- Finding logical join -->
 					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [text()=$dimTbl]] [text()=$factTbl]">
 						<!-- "Join found" tick, the for-each loop flags (deprecated) logical FK-based -->
