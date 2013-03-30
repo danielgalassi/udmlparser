@@ -6,13 +6,13 @@
 	<head>
 
 	<style type='text/css'>
-		h1 {font-family: Helvetica, sans-serif; font-weight: bold; font-size: 24pt; color: 111111;}
-		h2 {font-family: Helvetica, sans-serif; font-weight: bold; font-size: 20pt; color: 333333;}
-		h3 {font-family: Helvetica, sans-serif; font-size: 14pt; color: 555555;}
-		h4 {font-family: Helvetica, sans-serif; font-size: 14pt; color: 888888;}
-		li {font-family: Helvetica, sans-serif; font-size: 10pt; color: 000000;}
-		a  {font-family: Helvetica, sans-serif; font-size: 10pt; color: 444444;}
-		*  {font-family: Helvetica, sans-serif; font-size: 8pt; color: 000000;}
+		h1 {font-family: Helvetica, sans-serif; font-weight: bold; font-size: 24pt; color: #676767;}
+		h2 {font-family: Helvetica, sans-serif; font-weight: bold; font-size: 20pt; color: #767676;}
+		h3 {font-family: Helvetica, sans-serif; font-size: 14pt; color: #777777;}
+		h4 {font-family: Helvetica, sans-serif; font-size: 14pt; color: #888888;}
+		li {font-family: Helvetica, sans-serif; font-size: 10pt; color: #474747;}
+		a  {font-family: Helvetica, sans-serif; font-size: 10pt; color: #444444;}
+		*  {font-family: Helvetica, sans-serif; font-size: 8pt; color: #333333;}
 		tr {height:30; font-size: 8.5pt;}
 		table {
 				border-spacing: 0 0;
@@ -70,10 +70,10 @@
 			<xsl:sort data-type="number" select="@joins" order="descending"/>
 			<xsl:choose>
 				<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
-					<th style="font-family: Helvetica, sans-serif; font-size: 8pt; color: 000000; background-color: rgb(255, 255, 153);" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></th>
+					<th style="font-family: Helvetica, sans-serif; font-size: 8pt; color: #555555; background-color: rgb(255, 255, 153);" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></th>
 				</xsl:when>
 				<xsl:otherwise>
-					<th><xsl:value-of select="substring(., $bmlength+2)"/></th>
+					<th style="background: #EFEFEF; font-family: Helvetica, sans-serif; font-size: 8pt; font-weight: bold; color: #555555;"><xsl:value-of select="substring(., $bmlength+2)"/></th>
 				</xsl:otherwise>
 			</xsl:choose>
 			</xsl:for-each>
@@ -85,10 +85,10 @@
 				<!-- Fact Table Name -->
 				<xsl:choose>
 					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering')">
-						<td style="font-family: Helvetica, sans-serif; font-weight: bold; font-size: 8pt; color: #000000; background-color: rgb(255, 255, 153)" width="300" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></td>
+						<td style="font-family: Helvetica, sans-serif; font-weight: bold; font-size: 8pt; color: #555555; background-color: rgb(255, 255, 200)" width="300" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></td>
 					</xsl:when>
 					<xsl:otherwise>
-						<td style="background: #EFEFEF; font-family: Helvetica, sans-serif; font-size: 8pt; font-weight: bold; color: #000000;"><xsl:value-of select="substring(., $bmlength+2)"/></td>
+						<td style="background: #EFEFEF; font-family: Helvetica, sans-serif; font-size: 8pt; font-weight: bold; color: #555555;"><xsl:value-of select="substring(., $bmlength+2)"/></td>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:variable name="factTbl" select="."/>
@@ -108,14 +108,12 @@
 			</xsl:for-each>
 		</tbody>
 		</table>
-		
+
 		<br/><br/>
 		<hr style="height: 1px; border: 0; background-color: #AAAAAA; width: 70%;"/>
 
 	</xsl:for-each>
-	<br style="font-family: Arial;"/>
-	<br style="font-family: Arial;"/>
-	<div style="text-align: right; color: rgb(128, 128, 128); font-family: Helvetica,Arial,sans-serif;">Generated using UDMLParser / Bus Matrix application.</div>
+	<div style="padding-top: 20px; text-align: right; color: rgb(128, 128, 128); font-family: Helvetica,Arial,sans-serif;">Generated using UDMLParser / Bus Matrix application.</div>
 	</body>
 	</html>
 	</xsl:template>
