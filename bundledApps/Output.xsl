@@ -14,6 +14,7 @@
 		a  {font-family: Helvetica, sans-serif; font-size: 10pt; color: #444444;}
 		*  {font-family: Helvetica, sans-serif; font-size: 8pt; color: #333333;}
 		tr {height:30; font-size: 8.5pt;}
+		tr:hover {background: rgb(248,248,248);}
 		table {
 				border-spacing: 0 0;
 				margin: 1px;
