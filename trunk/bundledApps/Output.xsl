@@ -60,7 +60,11 @@
 		<br/>
 
 		<!-- Matrix Section -->
-		<h4>Business Model Bus Matrix</h4>
+		<h4>Business Model Bus Matrix
+		<span style="font-size: 14px; color: #888888; -moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); display: inline-block;">
+			&#169;
+		</span>
+		</h4>
 		<table>
 		<tbody>
 		<thead>
@@ -114,7 +118,10 @@
 		<hr style="height: 1px; border: 0; background-color: #AAAAAA; width: 70%;"/>
 
 	</xsl:for-each>
-	<div style="padding-top: 20px; text-align: right; color: rgb(128, 128, 128); font-family: Helvetica,Arial,sans-serif;">Generated using UDMLParser / Bus Matrix application.</div>
+	<div style="padding-top: 20px;">
+		<p style="color: rgb(128, 128, 128); float: left;">Mozilla Firefox&#8482; or Google Chrome&#169; are strongly recommended for best results.</p>
+		<p style="color: rgb(128, 128, 128); float: right;">Generated using UDMLParser / Bus Matrix application.</p>
+	</div>
 	</body>
 	</html>
 	</xsl:template>
