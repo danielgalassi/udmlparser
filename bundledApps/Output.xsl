@@ -35,7 +35,11 @@
 	</head>
 	<body>
 	<!-- Business Models list Section -->
-	<h1>OBIEE Business Models</h1>
+	<h1>OBIEE Business Models
+		<span style="font-size: 24px; color: #676767; -moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); display: inline-block;">
+			&#169;
+		</span>
+	</h1>
 	<ul>
 	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">
 	<!-- Creating the Business Models list -->
@@ -61,9 +65,6 @@
 
 		<!-- Matrix Section -->
 		<h4>Business Model Bus Matrix
-		<span style="font-size: 14px; color: #888888; -moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); display: inline-block;">
-			&#169;
-		</span>
 		</h4>
 		<table>
 		<tbody>
