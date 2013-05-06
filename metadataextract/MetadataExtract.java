@@ -236,6 +236,7 @@ public class MetadataExtract {
 				//applies BusMatrix.xsl to it
 				XMLUtils.xsl4Files(vsUDMLxml.get(b), insXSL1, "temp.xml");
 				//creates the HTML page presenting results
+				System.out.println("Generating Bus Matrix document...");
 				XMLUtils.xsl4Files("temp.xml", insXSL2, vsUDMLtgt.get(b));
 				
 				File f = new File ("temp.xml");
