@@ -104,9 +104,9 @@
 					<xsl:variable name="dimTbl" select="normalize-space(text())"/>
 					<td align="center" style="font-family: Helvetica, sans-serif;" width="130">&#160;
 					<!-- Finding logical join -->
-					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [text()=$dimTbl]] [text()=$factTbl]">
+					<xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [normalize-space(text())=$dimTbl]] [text()=$factTbl]">
 						<!-- "Join found" tick, the for-each loop flags (deprecated) logical FK-based -->
-						<li><xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [text()=$dimTbl]] [text()=$factTbl][../@type='LogicalForeignKey-based']"><a style="font-family: Helvetica, sans-serif; font-size: 9pt; color: red" title="Suggestion: Consider using a standard logical join instead.">*</a></xsl:for-each></li>
+						<li><xsl:for-each select="../../..//LogicalJoin/LogicalTableID[@type='FACT' and ../LogicalTableID[@type='DIM'] [normalize-space(text())=$dimTbl]] [text()=$factTbl][../@type='LogicalForeignKey-based']"><a style="font-family: Helvetica, sans-serif; font-size: 9pt; color: red" title="Suggestion: Consider using a standard logical join instead.">*</a></xsl:for-each></li>
 						</xsl:for-each>
 					</td>
 				</xsl:for-each>
