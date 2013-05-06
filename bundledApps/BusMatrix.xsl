@@ -18,8 +18,8 @@
 			<xsl:for-each select="..//LogicalTableIDList/LogicalTableID">
 				<xsl:copy>
 					<xsl:variable name="LgclTblID" select="normalize-space(text())"/>
-					<xsl:attribute name="joins"><xsl:value-of select="count(../../..//LogicalTableID[@type='DIM'][text() = $LgclTblID])"/></xsl:attribute>
-					<xsl:value-of select="."/>
+					<xsl:attribute name="joins"><xsl:value-of select="count(../../..//LogicalTableID[@type='DIM'][normalize-space(text()) = $LgclTblID])"/></xsl:attribute>
+					<xsl:value-of select="normalize-space(.)"/>
 				</xsl:copy>
 			</xsl:for-each>
 		</LogicalTableIDList>
