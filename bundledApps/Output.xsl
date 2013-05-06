@@ -97,7 +97,7 @@
 						<td style="background: #EFEFEF; font-family: Helvetica, sans-serif; font-size: 8pt; font-weight: bold; color: #555555;"><xsl:value-of select="substring(., $bmlength+2)"/></td>
 					</xsl:otherwise>
 				</xsl:choose>
-				<xsl:variable name="factTbl" select="."/>
+				<xsl:variable name="factTbl" select="normalize-space(.)"/>
 				<!-- Matching each logical dimension table -->
 				<xsl:for-each select="../../LogicalTableIDList/LogicalTableID [@joins > 0]">
 					<xsl:sort data-type="number" select="@joins" order="descending"/>
