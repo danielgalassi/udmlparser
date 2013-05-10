@@ -8,27 +8,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-//import com.thoughtworks.xstream.XStream;
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
  * Catalog Folder Parser Class
  * @author danielgalassi@gmail.com
  *
  */
-/*@XStreamAlias("PresentationCatalog")
-*/
 public class CatalogFolder {
 
-//	@XStreamAlias("PresentationCatalogID")
 	private String			sCatFolderID;
-//	@XStreamAlias("PresentationCatalogName")
 	private String			sCatFolderName;
-//	@XStreamAlias("PresentationCatalogAlias")
 	private String[]		saCatFolderAliases = null;
-//	@XStreamAlias("PresentationCatalogMappingID")
 	private String			sCatFolderMappingID;
-//	@XStreamAlias("PresentationTableIDList")
 	private Vector <String>	vEntityFolderID = null;
 	
 	private String			sPressDispayName;
@@ -201,11 +191,6 @@ public class CatalogFolder {
 		return ePresentationCatalog;
 	}
 
-//	public void toXML () {
-//		XStream x = new XStream();
-//		x.autodetectAnnotations(true);
-//		System.out.println(x.toXML(this));
-//	}
 }
 /*
  * DECLARE CATALOG FOLDER <FQ Catalog Name> AS <Catalog Name>
