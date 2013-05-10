@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 
 /**
  * Subject Area Parser class
- * @author dgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public class SubjectArea {
