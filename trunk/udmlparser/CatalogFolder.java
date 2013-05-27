@@ -107,19 +107,16 @@ public class CatalogFolder {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sCatFolderID == null) {
+		if (sCatFolderID == null)
 			sCatFolderID = "";
-		}
 		Node nPresentationCatalogID = xmldoc.createTextNode(sCatFolderID);
 
-		if (sCatFolderName == null) {
+		if (sCatFolderName == null)
 			sCatFolderName = "";
-		}
 		Node nPresentationCatalogName = xmldoc.createTextNode(sCatFolderName);
 
-		if (sCatFolderMappingID == null) {
+		if (sCatFolderMappingID == null)
 			sCatFolderMappingID = "";
-		}
 		Node nCatalogFolderMappingID = xmldoc.createTextNode(sCatFolderMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
 
