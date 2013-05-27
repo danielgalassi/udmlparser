@@ -174,13 +174,13 @@ public class LogicalTable {
 				eLogicalColumnDerivedMappingList = xmldoc.createElement("LogicalColumnDerivedMappingList");
 				vBiz2BizColumnMappingList = Utils.CalculationParser(sLogTblID, vDerivedLogicalColumnExpression.get(i), true);
 				if(vBiz2BizColumnMappingList != null) {
-					for(int j=0; j< vBiz2BizColumnMappingList.size(); j++) {
+					for (String vBiz2BizColumnMapping : vBiz2BizColumnMappingList) {
 						eBiz2BizColumnMappingID = xmldoc.createElement("LogicalColumnDerivedMappingID");
-						if (vBiz2BizColumnMappingList.get(j) == null) {
+						if (vBiz2BizColumnMapping == null)
 							nBiz2BizColumnMappingID = xmldoc.createTextNode("");
-						} else {
-							nBiz2BizColumnMappingID = xmldoc.createTextNode(vBiz2BizColumnMappingList.get(j));
-						}
+						else
+							nBiz2BizColumnMappingID = xmldoc.createTextNode(vBiz2BizColumnMapping);
+
 						eBiz2BizColumnMappingID.appendChild(nBiz2BizColumnMappingID);
 						eLogicalColumnDerivedMappingList.appendChild(eBiz2BizColumnMappingID);
 					}
