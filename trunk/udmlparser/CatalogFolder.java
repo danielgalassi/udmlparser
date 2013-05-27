@@ -123,14 +123,12 @@ public class CatalogFolder {
 		Node nCatalogFolderMappingID = xmldoc.createTextNode(sCatFolderMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
 
-		if (sPressDispayName == null) {
+		if (sPressDispayName == null)
 			sPressDispayName = "";
-		}
 		Node nPresentationColumnDisplayName = xmldoc.createTextNode(sPressDispayName);
 
-		if (sPressDescription == null) {
+		if (sPressDescription == null)
 			sPressDescription = "";
-		}
 		Node nPresentationColumnDescription = xmldoc.createTextNode(sPressDescription);
 
 		Element ePresentationCatalog = xmldoc.createElement("PresentationCatalog");
