@@ -148,12 +148,12 @@ public class LogicalTableSource {
 				ePhysicalColumnMapping = xmldoc.createElement("PhysicalColumnMapping");
 				vPhysicalColumnMappingList = Utils.CalculationParser(sLogTblSourceID, vLogicalColumnCalculation.get(i), false);
 				if(vPhysicalColumnMappingList != null) {
-					for(int j=0; j< vPhysicalColumnMappingList.size(); j++) {
+					for (String sPhysColMapping : vPhysicalColumnMappingList) {
 						ePhysicalColumnID = xmldoc.createElement("PhysicalColumnID");
-						if (vPhysicalColumnMappingList.get(j) == null) {
+						if (sPhysColMapping == null) {
 							nPhysicalColumnID = xmldoc.createTextNode("");
 						} else {
-							nPhysicalColumnID = xmldoc.createTextNode(vPhysicalColumnMappingList.get(j));
+							nPhysicalColumnID = xmldoc.createTextNode(sPhysColMapping);
 						}
 						ePhysicalColumnID.appendChild(nPhysicalColumnID);
 						ePhysicalColumnMapping.appendChild(ePhysicalColumnID);

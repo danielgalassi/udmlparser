@@ -75,19 +75,19 @@ public class LogicalForeignKey {
 		Element eLogicalTable = null;
 		Node nLogicalTable = null;
 		if (vLogicalTablesID != null)
-			for (int i=0; i< vLogicalTablesID.size(); i++) {
+			for (String sLogicalTableID : vLogicalTablesID) {
 				eLogicalTable = xmldoc.createElement("LogicalTableID");
-				if (vLogicalTablesID.get(i) == null) {
+				if (sLogicalTableID == null)
 					nLogicalTable = xmldoc.createTextNode("");
-				} else {
-					nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));
-				}
+				else
+					nLogicalTable = xmldoc.createTextNode(sLogicalTableID);
+
 				eLogicalTable.appendChild(nLogicalTable);
-				if (vLogicalTablesID.get(i).indexOf("Fact") != -1 || 
-						vLogicalTablesID.get(i).indexOf("Measure") != -1)
+				if (sLogicalTableID.indexOf("Fact") != -1 || 
+						sLogicalTableID.indexOf("Measure") != -1)
 					eLogicalTable.setAttribute("type", "FACT");
-				if (vLogicalTablesID.get(i).indexOf("Fact") == -1 && 
-						vLogicalTablesID.get(i).indexOf("Measure") == -1)
+				if (sLogicalTableID.indexOf("Fact") == -1 && 
+						sLogicalTableID.indexOf("Measure") == -1)
 					eLogicalTable.setAttribute("type", "DIM");
 				eLogicalTableList.appendChild(eLogicalTable);
 			}

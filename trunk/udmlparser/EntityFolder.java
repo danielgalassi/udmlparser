@@ -180,13 +180,13 @@ public class EntityFolder {
 		Node nPresentationAttributeID = null;
 
 		if(vFolderAttributesID != null)
-			for (int i=0; i< vFolderAttributesID.size(); i++) {
+			for (String sFolderAttribID : vFolderAttributesID) {
 				ePresentationAttributeID = xmldoc.createElement("PresentationAttributeID");
-				if (vFolderAttributesID.get(i) == null) {
+				if (sFolderAttribID == null)
 					nPresentationAttributeID = xmldoc.createTextNode("");
-				} else {
-					nPresentationAttributeID = xmldoc.createTextNode(vFolderAttributesID.get(i));
-				}
+				else
+					nPresentationAttributeID = xmldoc.createTextNode(sFolderAttribID);
+
 				ePresentationAttributeID.appendChild(nPresentationAttributeID);
 				ePresentationAttributeIDList.appendChild(ePresentationAttributeID);
 			}

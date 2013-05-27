@@ -137,12 +137,13 @@ public class DimensionLevel {
 		Node nLogicalTable = null;
 
 		if(vLogicalColumnID != null)
-			for (int i=0; i< vLogicalColumnID.size(); i++) {
+			//for (int i=0; i< vLogicalColumnID.size(); i++) {
+			for (String sLogColID : vLogicalColumnID) {
 				eLogicalTable = xmldoc.createElement("LogicalColumnID");
-				if (vLogicalColumnID.get(i) == null) {
+				if (sLogColID == null) {
 					nLogicalTable = xmldoc.createTextNode("");
 				} else {
-					nLogicalTable = xmldoc.createTextNode(vLogicalColumnID.get(i));
+					nLogicalTable = xmldoc.createTextNode(sLogColID);
 				}
 				eLogicalTable.appendChild(nLogicalTable);
 				eLogicalTableList.appendChild(eLogicalTable);
