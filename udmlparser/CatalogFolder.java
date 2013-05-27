@@ -20,34 +20,34 @@ public class CatalogFolder {
 	private String[]		saCatFolderAliases = null;
 	private String			sCatFolderMappingID;
 	private Vector <String>	vEntityFolderID = null;
-	
+
 	private String			sPressDispayName;
 	private String			sPressDescription;
 
 	public CatalogFolder(String sDeclareStmt,
-						 String sCatFolder,
-						 BufferedReader brUDML) {
+			String sCatFolder,
+			BufferedReader brUDML) {
 		String line;
 		String sTrimmedDS = sDeclareStmt.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		//finds custom icons in Subject Areas
 		int iICONIDX = sTrimmedDS.indexOf(" ICON INDEX ");
 		sCatFolderID = sTrimmedDS.substring(sCatFolder.length(), iIndexAS).
-												trim().replaceAll("\"", "");
+				trim().replaceAll("\"", "");
 		if (iICONIDX != -1)
 			sCatFolderName = sTrimmedDS.substring(iIndexAS+4, iICONIDX).
-										trim().replaceAll("\"", "");
+			trim().replaceAll("\"", "");
 		else
 			sCatFolderName = sTrimmedDS.substring(iIndexAS+4).
-										trim().replaceAll("\"", "");
+			trim().replaceAll("\"", "");
 		try {
 			//SUBJECT AREA
 			line = brUDML.readLine().trim().replaceAll("\"", "");
 
 			if (line.indexOf("SUBJECT AREA ") != -1)
 				sCatFolderMappingID = line.substring(line.
-												indexOf("SUBJECT AREA ")+13).
-												trim().replaceAll("\"", "");
+						indexOf("SUBJECT AREA ")+13).
+						trim().replaceAll("\"", "");
 
 			//ENTITY FOLDERS LIST
 			line = brUDML.readLine().trim().replaceAll("\"", "");
@@ -67,17 +67,17 @@ public class CatalogFolder {
 					saCatFolderAliases = line.substring(line.
 							indexOf("ALIASES (")+9, line.lastIndexOf(")")).
 							trim().replaceAll("\"", "").split(",");
-				
+
 				//DISPLAY NAME
 				if (line.indexOf("DISPLAY NAME ") != -1){
 					int i1 = line.indexOf("DISPLAY NAME ")+13;
 					int i2 = line.lastIndexOf(" ON");
 					sPressDispayName = line.trim().substring(
-										i1,
-										i2).
-										trim().replaceAll("\"", "");
+							i1,
+							i2).
+							trim().replaceAll("\"", "");
 				}
-				
+
 				//DESCRIPTION
 				if (line.indexOf("DESCRIPTION ") != -1){
 					sPressDescription = line.trim().substring(
@@ -158,13 +158,13 @@ public class CatalogFolder {
 		Node nCatalogFolderAlias = null;
 
 		if(saCatFolderAliases != null)
-			for (int i=0; i< saCatFolderAliases.length; i++) {
+			for (String sCatFolderAlias : saCatFolderAliases) {
 				eCatalogFolderAlias = xmldoc.createElement("PresentationCatalogAlias");
-				if (saCatFolderAliases[i] == null) {
+				if (sCatFolderAlias == null)
 					nCatalogFolderAlias = xmldoc.createTextNode("");
-				} else {
-					nCatalogFolderAlias = xmldoc.createTextNode(saCatFolderAliases[i]);
-				}
+				else
+					nCatalogFolderAlias = xmldoc.createTextNode(sCatFolderAlias);
+
 				eCatalogFolderAlias.appendChild(nCatalogFolderAlias);
 				eCatalogFolderAliasList.appendChild(eCatalogFolderAlias);
 			}
@@ -176,13 +176,13 @@ public class CatalogFolder {
 		Node nPresentationFolder = null;
 
 		if(vEntityFolderID != null)
-			for (int i=0; i< vEntityFolderID.size(); i++) {
+			for (String sEntityFolderID : vEntityFolderID) {
 				ePresentationFolder = xmldoc.createElement("PresentationTableID");
-				if (vEntityFolderID.get(i) == null) {
+				if (sEntityFolderID == null)
 					nPresentationFolder = xmldoc.createTextNode("");
-				} else {
-					nPresentationFolder = xmldoc.createTextNode(vEntityFolderID.get(i));
-				}
+				else
+					nPresentationFolder = xmldoc.createTextNode(sEntityFolderID);
+
 				ePresentationFolder.appendChild(nPresentationFolder);
 				ePresentationFolderList.appendChild(ePresentationFolder);
 			}
