@@ -19,7 +19,6 @@ public class ForeignKey {
 	private String			sForKeyID;
 	private String			sForKeyName;
 	private ArrayList <String>	alsPhysicalColumns;
-	//private String			sPhysicalColumn1;
 	private String			sReferencedKey;
 
 	public ForeignKey (String sDeclareStmt,
@@ -76,13 +75,12 @@ public class ForeignKey {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sForKeyID == null) {
+		if (sForKeyID == null)
 			sForKeyID = "";
-		}
 		Node nForeignKeyID = xmldoc.createTextNode(sForKeyID);
-		if (sForKeyName == null) {
+		
+		if (sForKeyName == null)
 			sForKeyName = "";
-		}
 		Node nForeignKeyName = xmldoc.createTextNode(sForKeyName);
 
 		Element eForeignKey = xmldoc.createElement("ForeignKey");

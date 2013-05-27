@@ -114,13 +114,13 @@ public class SubjectArea {
 		Node nHierDim = null;
 		
 		if (vHierDimensionsID != null)
-			for (int i=0; i< vHierDimensionsID.size(); i++) {
+			for (String sHierDimID : vHierDimensionsID) {
 				eHierDim = xmldoc.createElement("HierarchyDimensionID");
-				if (vHierDimensionsID.get(i) == null) {
+				if (sHierDimID == null)
 					nHierDim = xmldoc.createTextNode("");
-				} else {
-					nHierDim = xmldoc.createTextNode(vHierDimensionsID.get(i));
-				}
+				else
+					nHierDim = xmldoc.createTextNode(sHierDimID);
+
 				eHierDim.appendChild(nHierDim);
 				eHierDimensionList.appendChild(eHierDim);
 			}
@@ -132,13 +132,13 @@ public class SubjectArea {
 		Node nLogicalTable = null;
 
 		if (vLogicalTablesID != null)
-			for (int i=0; i< vLogicalTablesID.size(); i++) {
+			for (String sLogicalTableID : vLogicalTablesID) {
 				eLogicalTable = xmldoc.createElement("LogicalTableID");
-				if (vLogicalTablesID.get(i) == null) {
+				if (sLogicalTableID == null)
 					nLogicalTable = xmldoc.createTextNode("");
-				} else {
-					nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));
-				}
+				else
+					nLogicalTable = xmldoc.createTextNode(sLogicalTableID);
+
 				eLogicalTable.appendChild(nLogicalTable);
 				eLogicalTableList.appendChild(eLogicalTable);
 			}

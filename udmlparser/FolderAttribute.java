@@ -139,13 +139,13 @@ public class FolderAttribute {
 		Node nCatalogFolderAlias = null;
 
 		if(saPresColAliases != null)
-			for (int i=0; i< saPresColAliases.length; i++) {
+			for (String sPresColAlias : saPresColAliases) {
 				ePresentationColumnAlias = xmldoc.createElement("PresentationColumnAlias");
-				if (saPresColAliases[i] == null) {
+				if (sPresColAlias == null)
 					nCatalogFolderAlias = xmldoc.createTextNode("");
-				} else {
-					nCatalogFolderAlias = xmldoc.createTextNode(saPresColAliases[i]);
-				}
+				else
+					nCatalogFolderAlias = xmldoc.createTextNode(sPresColAlias);
+
 				ePresentationColumnAlias.appendChild(nCatalogFolderAlias);
 				ePresentationColumnAliasList.appendChild(ePresentationColumnAlias);
 			}
