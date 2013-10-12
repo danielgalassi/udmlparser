@@ -1,7 +1,0 @@
-#summary New features or extensions to be added.
-#labels Phase-Design
-
-== code it to the bone! ==
-
-  * W3C's RDF format output
-  * Next-in-line object types
