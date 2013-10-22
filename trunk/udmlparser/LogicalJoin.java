@@ -15,34 +15,34 @@ import org.w3c.dom.Node;
  */
 public class LogicalJoin {
 
-	private String			sLogicalJoinID;
-	private Vector <String>	vLogicalTablesID = null;
+	private String			logicalJoinID;
+	private Vector <String>	logicalTableIDs = null;
 
 	private void parseLogicalJoinSpec(String line) {
 		int iLogicalTable = line.indexOf(" ON ENTITY ") + 12;
 		int iMULTIPLICITY = line.indexOf(" MULTIPLICITY  ");
 		if (iLogicalTable != -1 || iMULTIPLICITY != -1)
-			vLogicalTablesID.add(line.substring(iLogicalTable, iMULTIPLICITY).replace("\"", ""));
+			logicalTableIDs.add(line.substring(iLogicalTable, iMULTIPLICITY).replace("\"", ""));
 		else
-			vLogicalTablesID.add("Review definition for this logical join");
+			logicalTableIDs.add("Review definition for this logical join");
 	}
 
-	public LogicalJoin (String sDeclareStmt,
-			String sSubjectArea,
-			BufferedReader brUDML) {
+	public LogicalJoin (String declare,
+			String subjectArea,
+			BufferedReader udml) {
 		String line = "";
 		int iSpecsFound = 0;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		sLogicalJoinID = sTrimmedDS.substring(sSubjectArea.length(),iIndexAS).
+		logicalJoinID = sTrimmedDS.substring(subjectArea.length(),iIndexAS).
 							trim().replaceAll("\"", "");
 		try {
-			String sLogicalJoinSpec = "DECLARE ROLE \"" + sLogicalJoinID;
-			vLogicalTablesID = new Vector<String>();
+			String logicalJoinSpecification = "DECLARE ROLE \"" + logicalJoinID;
+			logicalTableIDs = new Vector<String>();
 			while (iSpecsFound < 2) {
-				line = brUDML.readLine();
-				while (line.indexOf(sLogicalJoinSpec) == -1)
-					line = brUDML.readLine();
+				line = udml.readLine();
+				while (line.indexOf(logicalJoinSpecification) == -1)
+					line = udml.readLine();
 
 				//table (logical join spec) found
 				parseLogicalJoinSpec(line);
@@ -52,7 +52,7 @@ public class LogicalJoin {
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 &&
 					line.indexOf(";") == -1)
-				line = brUDML.readLine();
+				line = udml.readLine();
 			
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
@@ -68,10 +68,10 @@ public class LogicalJoin {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sLogicalJoinID == null) {
-			sLogicalJoinID = "";
+		if (logicalJoinID == null) {
+			logicalJoinID = "";
 		}
-		Node nLogicalJoinID = xmldoc.createTextNode(sLogicalJoinID);
+		Node nLogicalJoinID = xmldoc.createTextNode(logicalJoinID);
 
 		Element eLogicalJoin = xmldoc.createElement("LogicalJoin");
 		Element eLogicalJoinID = xmldoc.createElement("LogicalJoinID");
@@ -84,21 +84,21 @@ public class LogicalJoin {
 		Element eLogicalTable = null;
 		Node nLogicalTable = null;
 
-		if (vLogicalTablesID != null)
-			for (int i=0; i< vLogicalTablesID.size(); i++) {
+		if (logicalTableIDs != null)
+			for (int i=0; i< logicalTableIDs.size(); i++) {
 				eLogicalTable = xmldoc.createElement("LogicalTableID");
-				if (vLogicalTablesID.get(i) == null) {
+				if (logicalTableIDs.get(i) == null) {
 					nLogicalTable = xmldoc.createTextNode("");
 				} else {
-					nLogicalTable = xmldoc.createTextNode(vLogicalTablesID.get(i));
+					nLogicalTable = xmldoc.createTextNode(logicalTableIDs.get(i));
 				}
 				eLogicalTable.appendChild(nLogicalTable);
-				if (vLogicalTablesID.get(i).indexOf("Fact -") != -1 || 
-						vLogicalTablesID.get(i).toLowerCase().indexOf("fact") != -1)
+				if (logicalTableIDs.get(i).indexOf("Fact -") != -1 || 
+						logicalTableIDs.get(i).toLowerCase().indexOf("fact") != -1)
 					eLogicalTable.setAttribute("type", "FACT");
-				if (vLogicalTablesID.get(i).indexOf("Dim -") != -1 || 
-						(vLogicalTablesID.get(i).indexOf("Fact -") == -1 && 
-						vLogicalTablesID.get(i).toLowerCase().indexOf("fact") == -1))
+				if (logicalTableIDs.get(i).indexOf("Dim -") != -1 || 
+						(logicalTableIDs.get(i).indexOf("Fact -") == -1 && 
+						logicalTableIDs.get(i).toLowerCase().indexOf("fact") == -1))
 					eLogicalTable.setAttribute("type", "DIM");
 				eLogicalTableList.appendChild(eLogicalTable);
 			}

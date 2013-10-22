@@ -15,56 +15,56 @@ import org.w3c.dom.Node;
  */
 public class EntityFolder {
 
-	private String			sPresTableID;
-	private String			sPresTableName;
-	private String			sPresTableMappingID;
-	private String			sPressDispayName;
-	private String			sPressDescription;
-	private Vector <String>	vFolderAttributesID = null;
-	private String[]		saPresentationTableAliases = null;
+	private String			presentationTableID;
+	private String			presentationTableName;
+	private String			presentationTableMappingID;
+	private String			presentationDispayName;
+	private String			presentationDescription;
+	private Vector <String>	folderAttributeIDs = null;
+	private String[]		presentationTableAliases = null;
 
-	public EntityFolder (String sDeclareStmt, 
-						 String sEntityFolder, 
-						 BufferedReader brUDML) {
+	public EntityFolder (String declare, 
+						 String entityFolder, 
+						 BufferedReader udml) {
 		String line;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		sPresTableID = sTrimmedDS.substring(sEntityFolder.length(), iIndexAS).
+		presentationTableID = sTrimmedDS.substring(entityFolder.length(), iIndexAS).
 												trim().replaceAll("\"", "");
 		if (sTrimmedDS.indexOf(" ENTITY ") != -1 && 
 			sTrimmedDS.indexOf(" ENTITY ") != sTrimmedDS.
 												lastIndexOf(" ENTITY ")) {
-			sPresTableName = sTrimmedDS.substring(iIndexAS + 4, 
+			presentationTableName = sTrimmedDS.substring(iIndexAS + 4, 
 									sTrimmedDS.indexOf(" ENTITY ", iIndexAS)).
 									trim().replaceAll("\"", "");
-			sPresTableMappingID = sTrimmedDS.substring(sTrimmedDS.
+			presentationTableMappingID = sTrimmedDS.substring(sTrimmedDS.
 									indexOf(" ENTITY ", iIndexAS + 4) + 8).
 									trim().replaceAll("\"", "");
 		}
 		else {
-			sPresTableName = sTrimmedDS.substring(iIndexAS + 4).
+			presentationTableName = sTrimmedDS.substring(iIndexAS + 4).
 									trim().replaceAll("\"", "");
-			sPresTableMappingID = "";
+			presentationTableMappingID = "";
 		}
 
 		try {
 			//FOLDER ATTRIBUTES LIST
-			line = brUDML.readLine().trim().replaceAll("\"", "");
+			line = udml.readLine().trim().replaceAll("\"", "");
 			if (line.indexOf("FOLDER ATTRIBUTES ") != -1) {
-				vFolderAttributesID = new Vector<String>();
+				folderAttributeIDs = new Vector<String>();
 				do {
-					line = brUDML.readLine().trim().replaceAll("\"", "");
-					vFolderAttributesID.add(line.substring(0,line.length()-1));
+					line = udml.readLine().trim().replaceAll("\"", "");
+					folderAttributeIDs.add(line.substring(0,line.length()-1));
 				} while (line.charAt(line.length()-1) != ')');
 			}
 
 			//ALIASES
 			if (line.indexOf(";") == -1) {
 				do {
-					line = brUDML.readLine().trim().replaceAll("\"", "");
+					line = udml.readLine().trim().replaceAll("\"", "");
 				} while (line.indexOf("ALIASES (") != -1);
 				if (line.indexOf("ALIASES (") != -1)
-					saPresentationTableAliases = line.substring(
+					presentationTableAliases = line.substring(
 										line.indexOf("ALIASES (")+9, 
 										line.lastIndexOf(")")).
 										trim().replaceAll("\"", "").split(",");
@@ -73,10 +73,10 @@ public class EntityFolder {
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 &&
 					line.indexOf(";") == -1){
-				line = brUDML.readLine();
+				line = udml.readLine();
 				//DISPLAY NAME
 				if (line.indexOf("DISPLAY NAME ") != -1){
-					sPressDispayName = line.trim().substring(
+					presentationDispayName = line.trim().substring(
 										line.indexOf("DISPLAY NAME ")+13,
 										line.lastIndexOf(" ON")).
 										trim().replaceAll("\"", "");
@@ -86,15 +86,15 @@ public class EntityFolder {
 				if (line.indexOf("DESCRIPTION ") != -1){
 					int iIdexOpen = line.indexOf("{")+1;
 					int length = line.length();
-					sPressDescription = line.substring(
+					presentationDescription = line.substring(
 							iIdexOpen,
 							length).
 							replaceAll("}", "").trim();
 					//LARGE TEXT
 					while (line.indexOf("}") == -1){
-						line = brUDML.readLine().trim();
-						sPressDescription += "\n";
-						sPressDescription += line.trim().replaceAll("}", "");
+						line = udml.readLine().trim();
+						presentationDescription += "\n";
+						presentationDescription += line.trim().replaceAll("}", "");
 					}
 				}
 			}
@@ -113,29 +113,29 @@ public class EntityFolder {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sPresTableID == null) {
-			sPresTableID = "";
+		if (presentationTableID == null) {
+			presentationTableID = "";
 		}
-		Node nPresentationTableID = xmldoc.createTextNode(sPresTableID);
+		Node nPresentationTableID = xmldoc.createTextNode(presentationTableID);
 
-		if (sPresTableName == null) {
-			sPresTableName = "";
+		if (presentationTableName == null) {
+			presentationTableName = "";
 		}
-		Node nPresentationTableName = xmldoc.createTextNode(sPresTableName);
+		Node nPresentationTableName = xmldoc.createTextNode(presentationTableName);
 
-		if (sPresTableMappingID == null) {
-			sPresTableMappingID = "";
+		if (presentationTableMappingID == null) {
+			presentationTableMappingID = "";
 		}
-		Node nPresentationTableMappingID = xmldoc.createTextNode(sPresTableMappingID);
+		Node nPresentationTableMappingID = xmldoc.createTextNode(presentationTableMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
-		if (sPressDispayName == null) {
-			sPressDispayName = "";
+		if (presentationDispayName == null) {
+			presentationDispayName = "";
 		}
-		Node nPresentationColumnDisplayName = xmldoc.createTextNode(sPressDispayName);
-		if (sPressDescription == null) {
-			sPressDescription = "";
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(presentationDispayName);
+		if (presentationDescription == null) {
+			presentationDescription = "";
 		}
-		Node nPresentationColumnDescription = xmldoc.createTextNode(sPressDescription);
+		Node nPresentationColumnDescription = xmldoc.createTextNode(presentationDescription);
 
 		Element ePresentationTable = xmldoc.createElement("PresentationTable");
 		Element ePresentationTableID = xmldoc.createElement("PresentationTableID");
@@ -161,13 +161,13 @@ public class EntityFolder {
 		Element ePresentationTableAlias = null;
 		Node nCatalogFolderAlias = null;
 
-		if(saPresentationTableAliases != null)
-			for (int i=0; i< saPresentationTableAliases.length; i++) {
+		if(presentationTableAliases != null)
+			for (int i=0; i< presentationTableAliases.length; i++) {
 				ePresentationTableAlias = xmldoc.createElement("PresentationTableAlias");
-				if (saPresentationTableAliases[i] == null) {
+				if (presentationTableAliases[i] == null) {
 					nCatalogFolderAlias = xmldoc.createTextNode("");
 				} else {
-					nCatalogFolderAlias = xmldoc.createTextNode(saPresentationTableAliases[i]);
+					nCatalogFolderAlias = xmldoc.createTextNode(presentationTableAliases[i]);
 				}
 				ePresentationTableAlias.appendChild(nCatalogFolderAlias);
 				ePresentationTableAliasList.appendChild(ePresentationTableAlias);
@@ -179,8 +179,8 @@ public class EntityFolder {
 		Element ePresentationAttributeID = null;
 		Node nPresentationAttributeID = null;
 
-		if(vFolderAttributesID != null)
-			for (String sFolderAttribID : vFolderAttributesID) {
+		if(folderAttributeIDs != null)
+			for (String sFolderAttribID : folderAttributeIDs) {
 				ePresentationAttributeID = xmldoc.createElement("PresentationAttributeID");
 				if (sFolderAttribID == null)
 					nPresentationAttributeID = xmldoc.createTextNode("");

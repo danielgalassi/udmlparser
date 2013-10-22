@@ -15,58 +15,58 @@ import org.w3c.dom.Node;
  */
 public class SubjectArea {
 
-	private String			sSubjectAreaID;
-	private String			sSubjectAreaName;
-	private Vector <String>	vLogicalTablesID = null;
-	private Vector <String> vHierDimensionsID = null;
+	private String			subjectAreaID;
+	private String			subjectAreaName;
+	private Vector <String>	logicalTablesIDs = null;
+	private Vector <String> hierarchyDimensionIDs = null;
 
 	private void parseLogicalTable(String line) {
 		int iIndexSA = line.indexOf(") SUBJECT AREA ");
 		if (line.endsWith(","))
-			vLogicalTablesID.add(line.substring(0, line.length()-1));
+			logicalTablesIDs.add(line.substring(0, line.length()-1));
 		if (iIndexSA != -1)
-			vLogicalTablesID.add(line.substring(0, iIndexSA));
+			logicalTablesIDs.add(line.substring(0, iIndexSA));
 	}
 
 	private void parseHierDim(String line) {
-		vHierDimensionsID.add(line.substring(0, line.length()-1));
+		hierarchyDimensionIDs.add(line.substring(0, line.length()-1));
 	}
 
-	public SubjectArea (String sDeclareStmt,
+	public SubjectArea (String declare,
 						String sSubjectArea,
-						BufferedReader brUDML) {
+						BufferedReader udml) {
 		String line;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		int iICONIDX = sTrimmedDS.indexOf(" ICON INDEX ");
-		sSubjectAreaID = sTrimmedDS.substring(sSubjectArea.length(),iIndexAS).
+		subjectAreaID = sTrimmedDS.substring(sSubjectArea.length(),iIndexAS).
 												trim().replaceAll("\"", "");
 		if (iICONIDX != -1)
-			sSubjectAreaName = sTrimmedDS.substring(iIndexAS+4, iICONIDX).
+			subjectAreaName = sTrimmedDS.substring(iIndexAS+4, iICONIDX).
 										trim().replaceAll("\"", "");
 		else
-			sSubjectAreaName = sTrimmedDS.substring(iIndexAS+4).
+			subjectAreaName = sTrimmedDS.substring(iIndexAS+4).
 										trim().replaceAll("\"", "");
 		try {
-			line = brUDML.readLine();
+			line = udml.readLine();
 			
 			//HIERARCHY DIMENSIONS
 			if (line.endsWith("DIMENSIONS (")) {
-				vHierDimensionsID = new Vector<String>();
-				line = brUDML.readLine().trim().replaceAll("\"", "");
+				hierarchyDimensionIDs = new Vector<String>();
+				line = udml.readLine().trim().replaceAll("\"", "");
 				while (( line.indexOf("LOGICAL TABLES (") == -1) || 
 						(line.indexOf("PRIVILEGES") != -1 && 
 						 line.indexOf(";") != -1)) {
 					parseHierDim(line);
-					line = brUDML.readLine().trim().replaceAll("\"", "");
+					line = udml.readLine().trim().replaceAll("\"", "");
 				};
 			}
 
 			//LOGICAL TABLES LIST
 			if (line.endsWith("LOGICAL TABLES (")) {
-				vLogicalTablesID = new Vector<String>();
+				logicalTablesIDs = new Vector<String>();
 				do {
-					line = brUDML.readLine().trim().replaceAll("\"", "");
+					line = udml.readLine().trim().replaceAll("\"", "");
 					parseLogicalTable(line);
 				} while (line.indexOf(") SUBJECT AREA ") == -1);
 			}
@@ -74,7 +74,7 @@ public class SubjectArea {
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 &&
 					line.indexOf(";") == -1)
-				line = brUDML.readLine();
+				line = udml.readLine();
 
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
@@ -90,14 +90,14 @@ public class SubjectArea {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sSubjectAreaID == null) {
-			sSubjectAreaID = "";
+		if (subjectAreaID == null) {
+			subjectAreaID = "";
 		}
-		Node nBusinessCatalogID = xmldoc.createTextNode(sSubjectAreaID);
-		if (sSubjectAreaName == null) {
-			sSubjectAreaName = "";
+		Node nBusinessCatalogID = xmldoc.createTextNode(subjectAreaID);
+		if (subjectAreaName == null) {
+			subjectAreaName = "";
 		}
-		Node nBusinessCatalogName = xmldoc.createTextNode(sSubjectAreaName);
+		Node nBusinessCatalogName = xmldoc.createTextNode(subjectAreaName);
 
 		Element eBusinessCatalog = xmldoc.createElement("BusinessCatalog");
 		Element eBusinessCatalogID = xmldoc.createElement("BusinessCatalogID");
@@ -113,8 +113,8 @@ public class SubjectArea {
 		Element eHierDim = null;
 		Node nHierDim = null;
 		
-		if (vHierDimensionsID != null)
-			for (String sHierDimID : vHierDimensionsID) {
+		if (hierarchyDimensionIDs != null)
+			for (String sHierDimID : hierarchyDimensionIDs) {
 				eHierDim = xmldoc.createElement("HierarchyDimensionID");
 				if (sHierDimID == null)
 					nHierDim = xmldoc.createTextNode("");
@@ -131,8 +131,8 @@ public class SubjectArea {
 		Element eLogicalTable = null;
 		Node nLogicalTable = null;
 
-		if (vLogicalTablesID != null)
-			for (String sLogicalTableID : vLogicalTablesID) {
+		if (logicalTablesIDs != null)
+			for (String sLogicalTableID : logicalTablesIDs) {
 				eLogicalTable = xmldoc.createElement("LogicalTableID");
 				if (sLogicalTableID == null)
 					nLogicalTable = xmldoc.createTextNode("");

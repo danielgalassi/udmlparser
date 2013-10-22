@@ -23,24 +23,24 @@ import xmlutils.XMLUtils;
  */
 public class UDMLParser {
 
-	private Document docUDML;
+	private Document udml;
 	private Element root;
 	/** is the reference to the file containing the UDML code.*/
 	private File fNQ_UDML;
 	//UDML declaration statement's first token
-	private final String sCatalogFolder		= "DECLARE CATALOG FOLDER ";
-	private final String sEntityFolder		= "DECLARE ENTITY FOLDER ";
-	private final String sFolderAttribute	= "DECLARE FOLDER ATTRIBUTE ";
-	private final String sSubjectArea		= "DECLARE SUBJECT AREA ";
-	private final String sLogicalTable		= "DECLARE LOGICAL TABLE ";
-	private final String sLogicalTableSrc	= "DECLARE LOGICAL TABLE SOURCE ";
-	private final String sPhysicalTable		= "DECLARE TABLE ";
-	private final String sPhysicalTableKey	= "DECLARE TABLE KEY ";
-	private final String sDimensionLevel	= "DECLARE LEVEL ";
-	private final String sHierarchyDim		= "DECLARE DIMENSION ";
-	private final String sForeignKey		= "DECLARE FOREIGN KEY ";
-	private final String sLogicalJoin		= "DECLARE ROLE RELATIONSHIP ";
-	private final String sLogicalForeignKey = "DECLARE LOGICAL FOREIGN KEY ";
+	private final String catalogFolders		= "DECLARE CATALOG FOLDER ";
+	private final String entityFolders		= "DECLARE ENTITY FOLDER ";
+	private final String folderAttributes	= "DECLARE FOLDER ATTRIBUTE ";
+	private final String subjectAreas		= "DECLARE SUBJECT AREA ";
+	private final String logicalTables		= "DECLARE LOGICAL TABLE ";
+	private final String logicalTableSrcs	= "DECLARE LOGICAL TABLE SOURCE ";
+	private final String physicalTables		= "DECLARE TABLE ";
+	private final String physicalTableKeys	= "DECLARE TABLE KEY ";
+	private final String dimensionLevels	= "DECLARE LEVEL ";
+	private final String hierarchyDims		= "DECLARE DIMENSION ";
+	private final String foreignKeys		= "DECLARE FOREIGN KEY ";
+	private final String logicalJoins		= "DECLARE ROLE RELATIONSHIP ";
+	private final String logicalForeignKeys = "DECLARE LOGICAL FOREIGN KEY ";
 
 	/**
 	 * 
@@ -48,18 +48,18 @@ public class UDMLParser {
 	 * @param sOutput target XML file
 	 */
 	public UDMLParser(String sInput, String sOutput) {
-		docUDML		= XMLUtils.createDOMDocument();
-		root		= docUDML.createElement("UDML");
+		udml		= XMLUtils.createDOMDocument();
+		root		= udml.createElement("UDML");
 		fNQ_UDML	= new File (sInput);
 		if(MetadataExtract.isBusMatrixInvoked())
 			System.out.println("BusMatrix feature");
 		if(isUDML())
 			parse();
-		docUDML.appendChild(root);
-		XMLUtils.Document2File(docUDML, sOutput);
+		udml.appendChild(root);
+		XMLUtils.Document2File(udml, sOutput);
 		fNQ_UDML	= null;
 		root		= null;
-		docUDML		= null;
+		udml		= null;
 	}
 
 	/**
@@ -112,38 +112,38 @@ public class UDMLParser {
 				line = brUDML.readLine();
 				if (line == null)
 					break;
-				if (line.indexOf(sCatalogFolder) != -1) { //pres subject area
+				if (line.indexOf(catalogFolders) != -1) { //pres subject area
 					System.out.println( "Processing Subject Area...");
-					c = new CatalogFolder(line, sCatalogFolder, brUDML);
-					root.appendChild(c.serialize(docUDML));
+					c = new CatalogFolder(line, catalogFolders, brUDML);
+					root.appendChild(c.serialize(udml));
 				}
-				if (line.indexOf(sSubjectArea) != -1) { //bmm subject area
+				if (line.indexOf(subjectAreas) != -1) { //bmm subject area
 					System.out.println("Processing Business Model...");
-					s = new SubjectArea(line, sSubjectArea, brUDML);
-					root.appendChild(s.serialize(docUDML));
+					s = new SubjectArea(line, subjectAreas, brUDML);
+					root.appendChild(s.serialize(udml));
 				}
-				if (line.indexOf(sLogicalJoin) != -1) { //logical join (BMM)
+				if (line.indexOf(logicalJoins) != -1) { //logical join (BMM)
 					System.out.println("Processing Logical Join...");
-					lj = new LogicalJoin(line, sLogicalJoin, brUDML);
-					root.appendChild(lj.serialize(docUDML));
+					lj = new LogicalJoin(line, logicalJoins, brUDML);
+					root.appendChild(lj.serialize(udml));
 				}
-				if (line.indexOf(sLogicalForeignKey) != -1) { //logical foreign key join (BMM)
+				if (line.indexOf(logicalForeignKeys) != -1) { //logical foreign key join (BMM)
 					System.out.println("Processing Logical (Foreign Key) Join...");
-					lfk = new LogicalForeignKey(line, sLogicalForeignKey, brUDML);
-					root.appendChild(lfk.serialize(docUDML));
+					lfk = new LogicalForeignKey(line, logicalForeignKeys, brUDML);
+					root.appendChild(lfk.serialize(udml));
 				}
 				if (!MetadataExtract.isBusMatrixInvoked()) {
-					if (line.indexOf(sEntityFolder) != -1) { //pres folder
+					if (line.indexOf(entityFolders) != -1) { //pres folder
 						System.out.println("Processing Presentation Folder...");
-						e = new EntityFolder(line, sEntityFolder, brUDML);
-						root.appendChild(e.serialize(docUDML));
+						e = new EntityFolder(line, entityFolders, brUDML);
+						root.appendChild(e.serialize(udml));
 					}
-					if (line.indexOf(sFolderAttribute) != -1) { //pres column
+					if (line.indexOf(folderAttributes) != -1) { //pres column
 						System.out.println("Processing Presentation Column...");
-						f = new FolderAttribute(line, sFolderAttribute, brUDML);
+						f = new FolderAttribute(line, folderAttributes, brUDML);
 						try
 						{
-							Node node = f.serialize(docUDML);
+							Node node = f.serialize(udml);
 							root.appendChild(node);
 						}
 						catch(Exception ex)
@@ -152,24 +152,24 @@ public class UDMLParser {
 						}
 						
 					}
-					if (line.indexOf(sLogicalTable) != -1 &&
-							line.indexOf(sLogicalTableSrc) == -1) { //logl tbl
+					if (line.indexOf(logicalTables) != -1 &&
+							line.indexOf(logicalTableSrcs) == -1) { //logl tbl
 						System.out.println("Processing Logical Table...");
-						l = new LogicalTable(line, sLogicalTable, brUDML);
-						root.appendChild(l.serialize(docUDML));
+						l = new LogicalTable(line, logicalTables, brUDML);
+						root.appendChild(l.serialize(udml));
 					}
-					if (line.indexOf(sLogicalTableSrc) != -1) { //logl tbl src
+					if (line.indexOf(logicalTableSrcs) != -1) { //logl tbl src
 						System.out.println("Processing Logical Table Source...");
-						lts=new LogicalTableSource(line,sLogicalTableSrc,brUDML);
-						root.appendChild(lts.serialize(docUDML));
+						lts=new LogicalTableSource(line,logicalTableSrcs,brUDML);
+						root.appendChild(lts.serialize(udml));
 					}
-					if (line.indexOf(sPhysicalTable) != -1 && 
-							line.indexOf(sPhysicalTableKey) == -1) { //physical tbl
+					if (line.indexOf(physicalTables) != -1 && 
+							line.indexOf(physicalTableKeys) == -1) { //physical tbl
 						System.out.println("Processing Physical Table...");
-						p = new PhysicalTable(line, sPhysicalTable, brUDML);
+						p = new PhysicalTable(line, physicalTables, brUDML);
 						try
 						{
-							Node node = p.serialize(docUDML);
+							Node node = p.serialize(udml);
 							root.appendChild(node);
 						}
 						catch(Exception ex)
@@ -177,20 +177,20 @@ public class UDMLParser {
 							System.out.println("PhysicalTable block error");
 						}
 					}
-					if (line.indexOf(sDimensionLevel) != -1) { //hier. dim. level
+					if (line.indexOf(dimensionLevels) != -1) { //hier. dim. level
 						System.out.println("Processing Hierarchy Dim Level...");
-						d = new DimensionLevel(line, sDimensionLevel, brUDML);
-						root.appendChild(d.serialize(docUDML));
+						d = new DimensionLevel(line, dimensionLevels, brUDML);
+						root.appendChild(d.serialize(udml));
 					}
-					if (line.indexOf(sHierarchyDim) != -1) { //hier dim
+					if (line.indexOf(hierarchyDims) != -1) { //hier dim
 						System.out.println("Processing Hierarchy Dimension...");
-						h = new HierarchyDimension(line, sHierarchyDim, brUDML);
-						root.appendChild(h.serialize(docUDML));
+						h = new HierarchyDimension(line, hierarchyDims, brUDML);
+						root.appendChild(h.serialize(udml));
 					}
-					if (line.indexOf(sForeignKey) != -1) { //join
+					if (line.indexOf(foreignKeys) != -1) { //join
 						System.out.println("Processing Foreign Key...");
-						j = new ForeignKey(line, sForeignKey, brUDML);
-						root.appendChild(j.serialize(docUDML));
+						j = new ForeignKey(line, foreignKeys, brUDML);
+						root.appendChild(j.serialize(udml));
 					}
 				}
 			} while (true);
