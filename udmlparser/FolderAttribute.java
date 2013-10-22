@@ -14,48 +14,48 @@ import org.w3c.dom.Node;
  */
 public class FolderAttribute {
 
-	private String		sPresColumnID;
-	private String		sPresColumnName;
-	private String		sPresColumnMappingID;
-	private String		sPressDispayName;
-	private String		sPressDescription;
-	private String[] 	saPresColAliases = null;
+	private String		presentationColumnID;
+	private String		presentationColumnName;
+	private String		presentationColumnMappingID;
+	private String		presentationDispayName;
+	private String		presentationDescription;
+	private String[] 	presentationColumnAliases = null;
 	
 
-	public FolderAttribute (String sDeclareStmt, 
-							String sPresColumn,
-							BufferedReader brUDML) {
+	public FolderAttribute (String declare, 
+							String presentationColumn,
+							BufferedReader udml) {
 		String line;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		int iIndexLA = sTrimmedDS.indexOf(" LOGICAL ATTRIBUTE ");
-		sPresColumnID = sTrimmedDS.substring(sPresColumn.length(), iIndexAS).
+		presentationColumnID = sTrimmedDS.substring(presentationColumn.length(), iIndexAS).
 												trim().replaceAll("\"", "");
-		sPresColumnName = sTrimmedDS.substring(iIndexAS+4, 
+		presentationColumnName = sTrimmedDS.substring(iIndexAS+4, 
 						sTrimmedDS.indexOf( " LOGICAL ATTRIBUTE ",iIndexAS)).
 						trim().replaceAll("\"", "");
 
 		if (sTrimmedDS.indexOf(" OVERRIDE LOGICAL NAME") == -1)
-			sPresColumnMappingID = sTrimmedDS.substring(iIndexLA+19).
+			presentationColumnMappingID = sTrimmedDS.substring(iIndexLA+19).
 												trim().replaceAll("\"", "");
 		else
-			sPresColumnMappingID = sTrimmedDS.substring(iIndexLA+19, 
+			presentationColumnMappingID = sTrimmedDS.substring(iIndexLA+19, 
 								sTrimmedDS.indexOf(" OVERRIDE LOGICAL NAME")).
 								trim().replace("\"", "");
 
 		try {
 			//ALIASES
 			do {
-				line = brUDML.readLine().trim().replaceAll("\"", "");
+				line = udml.readLine().trim().replaceAll("\"", "");
 				if(line.indexOf("ALIASES (") != -1)
-					saPresColAliases = line.substring(
+					presentationColumnAliases = line.substring(
 										line.indexOf("ALIASES (")+9, 
 										line.lastIndexOf(")")).
 										trim().replaceAll("\"", "").split(",");
 				
 				//DISPLAY NAME
 				if (line.indexOf("DISPLAY NAME ") != -1){
-					sPressDispayName = line.trim().substring(
+					presentationDispayName = line.trim().substring(
 										line.indexOf("DISPLAY NAME ")+13,
 										line.lastIndexOf(" ON")).
 										trim().replaceAll("\"", "");
@@ -63,15 +63,15 @@ public class FolderAttribute {
 				
 				//DESCRIPTION
 				if (line.indexOf("DESCRIPTION") != -1){
-					sPressDescription = line.trim().substring(
+					presentationDescription = line.trim().substring(
 							line.indexOf("{")+1,
 							line.length()).
 							trim().replaceAll("}", "");
 					//LARGE TEXT
 					while (line.indexOf("}") == -1){
-						line = brUDML.readLine().trim();
-						sPressDescription += "\n";
-						sPressDescription += line.trim().replaceAll("}", "");
+						line = udml.readLine().trim();
+						presentationDescription += "\n";
+						presentationDescription += line.trim().replaceAll("}", "");
 					}
 				}
 					
@@ -92,27 +92,27 @@ public class FolderAttribute {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sPresColumnID == null) {
-			sPresColumnID = "";
+		if (presentationColumnID == null) {
+			presentationColumnID = "";
 		}
-		Node nPresentationColumnID = xmldoc.createTextNode(sPresColumnID);
-		if (sPresColumnName == null) {
-			sPresColumnName = "";
+		Node nPresentationColumnID = xmldoc.createTextNode(presentationColumnID);
+		if (presentationColumnName == null) {
+			presentationColumnName = "";
 		}
-		Node nPresentationColumnName = xmldoc.createTextNode(sPresColumnName);
-		if (sPresColumnMappingID == null) {
-			sPresColumnMappingID = "";
+		Node nPresentationColumnName = xmldoc.createTextNode(presentationColumnName);
+		if (presentationColumnMappingID == null) {
+			presentationColumnMappingID = "";
 		}
-		Node nPresentationColumnMappingID = xmldoc.createTextNode(sPresColumnMappingID);
+		Node nPresentationColumnMappingID = xmldoc.createTextNode(presentationColumnMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
-		if (sPressDispayName == null) {
-			sPressDispayName = "";
+		if (presentationDispayName == null) {
+			presentationDispayName = "";
 		}
-		Node nPresentationColumnDisplayName = xmldoc.createTextNode(sPressDispayName);
-		if (sPressDescription == null) {
-			sPressDescription = "";
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(presentationDispayName);
+		if (presentationDescription == null) {
+			presentationDescription = "";
 		}
-		Node nPresentationColumnDescription = xmldoc.createTextNode(sPressDescription);
+		Node nPresentationColumnDescription = xmldoc.createTextNode(presentationDescription);
 
 		Element ePresentationColumn = xmldoc.createElement("PresentationColumn");
 		Element ePresentationColumnID = xmldoc.createElement("PresentationColumnID");
@@ -138,8 +138,8 @@ public class FolderAttribute {
 		Element ePresentationColumnAlias = null;
 		Node nCatalogFolderAlias = null;
 
-		if(saPresColAliases != null)
-			for (String sPresColAlias : saPresColAliases) {
+		if(presentationColumnAliases != null)
+			for (String sPresColAlias : presentationColumnAliases) {
 				ePresentationColumnAlias = xmldoc.createElement("PresentationColumnAlias");
 				if (sPresColAlias == null)
 					nCatalogFolderAlias = xmldoc.createTextNode("");

@@ -17,64 +17,64 @@ import utils.Utils;
  */
 public class LogicalTable {
 
-	private String			sLogTblID;
-	private String			sLogTblName;
-	private Vector <String>	vLogicalColumnID = null;
-	private Vector <String>	vLogicalColumnName = null;
-	private Vector <String> vLogicalColumnDescription = null;
-	private Vector <String>	vDerivedLogicalColumnExpression = null;
-	private Vector <String>	vBiz2BizColumnMappingList = null;
+	private String			logicalTableID;
+	private String			logicalTableName;
+	private Vector <String>	logicalColumnIDs = null;
+	private Vector <String>	logicalColumnNames = null;
+	private Vector <String> logicalColumnDescriptions = null;
+	private Vector <String>	derivedLogicalColumnExpressions = null;
+	private Vector <String>	biz2BizColumnMappingLists = null;
 
-	public LogicalTable (String sDeclareStmt,
-						 String sLogTbl,
-						 BufferedReader brUDML) {
+	public LogicalTable (String declare,
+						 String logicalTable,
+						 BufferedReader udml) {
 		String line;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		sLogTblID = sTrimmedDS.substring( sLogTbl.length(), iIndexAS).
+		logicalTableID = sTrimmedDS.substring( logicalTable.length(), iIndexAS).
 												trim().replaceAll("\"", "");
-		sLogTblName = sTrimmedDS.substring( iIndexAS + 4, 
+		logicalTableName = sTrimmedDS.substring( iIndexAS + 4, 
 											sTrimmedDS.indexOf(" HAVING")).
 											trim().replaceAll("\"", "");
 
 		try {
-			line = brUDML.readLine();
-			vLogicalColumnID = new Vector<String>();
-			vLogicalColumnName = new Vector<String>();
-			vLogicalColumnDescription = new Vector<String>();
-			vDerivedLogicalColumnExpression = new Vector<String>();
+			line = udml.readLine();
+			logicalColumnIDs = new Vector<String>();
+			logicalColumnNames = new Vector<String>();
+			logicalColumnDescriptions = new Vector<String>();
+			derivedLogicalColumnExpressions = new Vector<String>();
 			do {
-				line = brUDML.readLine().trim();
+				line = udml.readLine().trim();
 				if (line.indexOf(" AS ") != -1) {
 					//FQLOGCOLNAME
-					vLogicalColumnID.add(line.substring(0, 
+					logicalColumnIDs.add(line.substring(0, 
 												line.indexOf(" AS ")).
 												trim().replaceAll("\"", ""));
 					//LOGCOLNAME
 					if (line.indexOf(" {") != -1)
-						vLogicalColumnName.add(line.substring(
+						logicalColumnNames.add(line.substring(
 											line.indexOf(" AS ")+4,
 											line.indexOf(" {")).
 											trim().replaceAll("\"", ""));
 					else
-						vLogicalColumnName.add(line.substring(
+						logicalColumnNames.add(line.substring(
 											line.indexOf(" AS ")+4).
 											trim().replaceAll("\"", ""));
 					if (line.indexOf(" DESCRIPTION") != -1)
-						vLogicalColumnDescription.add(line.substring(
+						logicalColumnDescriptions.add(line.substring(
 							line.indexOf(" {")+2,
 							line.indexOf("} ")).
 							trim());
 					else
-						vLogicalColumnDescription.add("");
+						logicalColumnDescriptions.add("");
 					//DERIVED EXPRESSION
 					if (line.indexOf(" DERIVED") != -1)
-						vDerivedLogicalColumnExpression.add(line.substring(
+						derivedLogicalColumnExpressions.add(line.substring(
 														line.indexOf(" {")+2, 
 														line.indexOf("} ")).
 														trim());
 					else
-						vDerivedLogicalColumnExpression.add("");
+						derivedLogicalColumnExpressions.add("");
 				}
 			} while (line.indexOf("KEYS (") == -1 &&
 					 line.indexOf("SOURCES (") == -1);
@@ -82,7 +82,7 @@ public class LogicalTable {
 			//DISCARD SOURCES, DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 &&
 					line.indexOf(";") == -1)
-				line = brUDML.readLine();
+				line = udml.readLine();
 
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
@@ -98,14 +98,14 @@ public class LogicalTable {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sLogTblID == null) {
-			sLogTblID = "";
+		if (logicalTableID == null) {
+			logicalTableID = "";
 		}
-		Node nLogicalTableID = xmldoc.createTextNode(sLogTblID);
-		if (sLogTblName == null) {
-			sLogTblName = "";
+		Node nLogicalTableID = xmldoc.createTextNode(logicalTableID);
+		if (logicalTableName == null) {
+			logicalTableName = "";
 		}
-		Node nLogicalTableName = xmldoc.createTextNode(sLogTblName);
+		Node nLogicalTableName = xmldoc.createTextNode(logicalTableName);
 
 		Element eLogicalTable = xmldoc.createElement("LogicalTable");
 		Element eLogicalTableID = xmldoc.createElement("LogicalTableID");
@@ -133,32 +133,32 @@ public class LogicalTable {
 		Node nLogicalColumnDescription = null;
 		Node nLogicalColumnDerivedExpression = null;
 
-		if(vLogicalColumnID != null)
-			for (int i=0; i< vLogicalColumnID.size(); i++) {
+		if(logicalColumnIDs != null)
+			for (int i=0; i< logicalColumnIDs.size(); i++) {
 				eLogicalColumn = xmldoc.createElement("LogicalColumn");
 				eLogicalColumnID = xmldoc.createElement("LogicalColumnID");
 				eLogicalColumnName = xmldoc.createElement("LogicalColumnName");
 				eLogicalColumnDescription = xmldoc.createElement("LogicalColumnDescription");
 				eLogicalColumnDerivedExpression = xmldoc.createElement("LogicalColumnDerivedExpression");
 
-				if (vLogicalColumnID.get(i) == null) {
+				if (logicalColumnIDs.get(i) == null) {
 					nLogicalColumnID = xmldoc.createTextNode("");
 				} else {
-					nLogicalColumnID = xmldoc.createTextNode(vLogicalColumnID.get(i));
+					nLogicalColumnID = xmldoc.createTextNode(logicalColumnIDs.get(i));
 				}
 
-				if (vLogicalColumnName.get(i) == null) {
+				if (logicalColumnNames.get(i) == null) {
 					nLogicalColumnName = xmldoc.createTextNode("");
 				} else {
-					nLogicalColumnName = xmldoc.createTextNode(vLogicalColumnName.get(i));
+					nLogicalColumnName = xmldoc.createTextNode(logicalColumnNames.get(i));
 				}
 				
-				nLogicalColumnDescription = xmldoc.createTextNode((vLogicalColumnDescription.get(i)).replace("\"", ""));
+				nLogicalColumnDescription = xmldoc.createTextNode((logicalColumnDescriptions.get(i)).replace("\"", ""));
 				
-				if ((vDerivedLogicalColumnExpression.get(i)).replaceAll("\"", "") == null) {
+				if ((derivedLogicalColumnExpressions.get(i)).replaceAll("\"", "") == null) {
 					nLogicalColumnDerivedExpression = xmldoc.createTextNode("");
 				} else {
-					nLogicalColumnDerivedExpression = xmldoc.createTextNode((vDerivedLogicalColumnExpression.get(i)).replaceAll("\"", ""));
+					nLogicalColumnDerivedExpression = xmldoc.createTextNode((derivedLogicalColumnExpressions.get(i)).replaceAll("\"", ""));
 				}
 
 				eLogicalColumnID.appendChild(nLogicalColumnID);
@@ -172,9 +172,9 @@ public class LogicalTable {
 				eLogicalColumn.appendChild(eLogicalColumnDerivedExpression);
 
 				eLogicalColumnDerivedMappingList = xmldoc.createElement("LogicalColumnDerivedMappingList");
-				vBiz2BizColumnMappingList = Utils.CalculationParser(sLogTblID, vDerivedLogicalColumnExpression.get(i), true);
-				if(vBiz2BizColumnMappingList != null) {
-					for (String vBiz2BizColumnMapping : vBiz2BizColumnMappingList) {
+				biz2BizColumnMappingLists = Utils.CalculationParser(logicalTableID, derivedLogicalColumnExpressions.get(i), true);
+				if(biz2BizColumnMappingLists != null) {
+					for (String vBiz2BizColumnMapping : biz2BizColumnMappingLists) {
 						eBiz2BizColumnMappingID = xmldoc.createElement("LogicalColumnDerivedMappingID");
 						if (vBiz2BizColumnMapping == null)
 							nBiz2BizColumnMappingID = xmldoc.createTextNode("");

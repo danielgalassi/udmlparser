@@ -18,59 +18,59 @@ import org.w3c.dom.Node;
  */
 public class PhysicalTable {
 
-	private String			sPhysTblID;
-	private String			sPhysTblName;
-	private String			sPhysTblSrc;
-	private boolean			bIsPhysicalAlias;
-	private Vector <String>	vPhysColID;
-	private Vector <String>	vPhysColName;
-	private Vector <String>	vPhysColDataType;
-	private Vector <String>	vPhysColSize;
-	private Vector <String>	vPhysColScale;
-	private Vector <String>	vPhysColNullable;
+	private String			physicalTableID;
+	private String			physicalTableName;
+	private String			physicalTableSource;
+	private boolean			isPhysicalAlias;
+	private Vector <String>	physicalumnColumnIDs;
+	private Vector <String>	physicalumnColumnNames;
+	private Vector <String>	physicalColumnDataTypes;
+	private Vector <String>	physicalColumnSizes;
+	private Vector <String>	physicalColumnScales;
+	private Vector <String>	physicalColumnNullables;
 
-	public PhysicalTable (	String sDeclareStmt,
-							String sPhysTbl,
-							BufferedReader brUDML) {
+	public PhysicalTable (	String declare,
+							String physicalTable,
+							BufferedReader udml) {
 		String line;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexColName; 
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		sPhysTblID = sTrimmedDS.substring(
-											sPhysTbl.length(),
+		physicalTableID = sTrimmedDS.substring(
+											physicalTable.length(),
 											iIndexAS).
 											trim().replaceAll("\"", "");
-		int iIndexHaving = sDeclareStmt.indexOf(" HAVING");
+		int iIndexHaving = declare.indexOf(" HAVING");
 		if (iIndexHaving != -1)
-		sPhysTblName = sTrimmedDS.substring(
+		physicalTableName = sTrimmedDS.substring(
 											iIndexAS+4, 
 											iIndexHaving).
 											trim().replaceAll("\"", "");
-		bIsPhysicalAlias = false;
+		isPhysicalAlias = false;
 
 		try {
-			line = brUDML.readLine();
+			line = udml.readLine();
 
-			vPhysColID = new Vector<String>();
-			vPhysColName = new Vector<String>();
-			vPhysColDataType = new Vector<String>();
-			vPhysColSize = new Vector<String>();
-			vPhysColScale = new Vector<String>();
-			vPhysColNullable = new Vector<String>();
+			physicalumnColumnIDs = new Vector<String>();
+			physicalumnColumnNames = new Vector<String>();
+			physicalColumnDataTypes = new Vector<String>();
+			physicalColumnSizes = new Vector<String>();
+			physicalColumnScales = new Vector<String>();
+			physicalColumnNullables = new Vector<String>();
 
 			do {
-				line = brUDML.readLine().trim().replaceAll("\"", "");
+				line = udml.readLine().trim().replaceAll("\"", "");
 
 				//This is a marker used in Opaque Views.
 				if (line.indexOf("TABLE TYPE SELECT DATABASE MAP") != -1)
 					do {
-						line = brUDML.readLine().trim().replaceAll("\"", "");
+						line = udml.readLine().trim().replaceAll("\"", "");
 					} while (!(line.indexOf("PRIVILEGES (") != -1 && line.indexOf(";") != -1));
 
 				if (line.indexOf(" AS ") != -1 &&
 					line.indexOf(" TYPE ") != -1) {
 					//FQPHYSCOLNAME
-					vPhysColID.add(line.substring(0, line.indexOf(" AS ")).
+					physicalumnColumnIDs.add(line.substring(0, line.indexOf(" AS ")).
 												trim().replaceAll("\"", ""));
 					//PHYSCOLNAME
 					iIndexColName = line.indexOf(" TYPE ");
@@ -81,20 +81,20 @@ public class PhysicalTable {
 					
 					if (specialCaseTYPE(line))
 					{
-						vPhysColName.add("TYPE");
+						physicalumnColumnNames.add("TYPE");
 					}
 					else
 					{
 						String str = line.substring(line.indexOf(" AS ")+4, 
 								iIndexColName).trim().
 								replaceAll("\"", "");
-						vPhysColName.add(str);
+						physicalumnColumnNames.add(str);
 					}
 					
 					
 					
 					//DATA TYPE
-					vPhysColDataType.add(line.substring(
+					physicalColumnDataTypes.add(line.substring(
 												line.indexOf(" TYPE ")+6, 
 												line.indexOf(" PRECISION ")).
 												trim().replaceAll("\"", ""));
@@ -104,34 +104,34 @@ public class PhysicalTable {
 					
 					if (specialCaseSCALE(line))
 					{
-						vPhysColSize.add("SCALE");
+						physicalColumnSizes.add("SCALE");
 					}
 					else
-					vPhysColSize.add(line.substring(
+					physicalColumnSizes.add(line.substring(
 												iIndexPRECISION, 
 												iIndexSCALE).
 												trim().replaceAll("\"", ""));
 					//SCALE & NULLABLE
 					if (line.indexOf(" NOT NULLABLE") != -1) {
-						vPhysColScale.add(line.substring(
+						physicalColumnScales.add(line.substring(
 												line.indexOf(" SCALE ")+7, 
 												line.indexOf(" NOT NULLABLE")).
 												trim().replaceAll("\"", ""));
-						vPhysColNullable.add("NOT NULLABLE");
+						physicalColumnNullables.add("NOT NULLABLE");
 					}
 					else {
-						vPhysColScale.add(line.substring(
+						physicalColumnScales.add(line.substring(
 												line.indexOf(" SCALE ")+7, 
 												line.indexOf(" NULLABLE")).
 												trim().replaceAll("\"", ""));
-						vPhysColNullable.add("NULLABLE");
+						physicalColumnNullables.add("NULLABLE");
 					}
 				}
 
 				if (line.indexOf(")") == 0 && 
 					line.indexOf(" SOURCE ") != -1) {
-					sPhysTblSrc = line.substring(line.indexOf(" SOURCE ")+8);
-					bIsPhysicalAlias = true;
+					physicalTableSource = line.substring(line.indexOf(" SOURCE ")+8);
+					isPhysicalAlias = true;
 				}
 			} while (!( line.indexOf("PRIVILEGES (") != -1 && 
 						line.indexOf(";") != -1));
@@ -150,14 +150,14 @@ public class PhysicalTable {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sPhysTblID == null) {
-			sPhysTblID = "";
+		if (physicalTableID == null) {
+			physicalTableID = "";
 		}
-		Node nPhysicalTableID = xmldoc.createTextNode(sPhysTblID);
-		if (sPhysTblName == null) {
-			sPhysTblName = "";
+		Node nPhysicalTableID = xmldoc.createTextNode(physicalTableID);
+		if (physicalTableName == null) {
+			physicalTableName = "";
 		}
-		Node nPhysicalTableName = xmldoc.createTextNode(sPhysTblName);
+		Node nPhysicalTableName = xmldoc.createTextNode(physicalTableName);
 
 		Element ePhysicalTable = xmldoc.createElement("PhysicalTable");
 		Element ePhysicalTableID = xmldoc.createElement("PhysicalTableID");
@@ -165,9 +165,9 @@ public class PhysicalTable {
 
 		ePhysicalTable.setAttribute("isAlias", "false");
 		
-		if (bIsPhysicalAlias) {
+		if (isPhysicalAlias) {
 			ePhysicalTable.setAttribute("isAlias", "true");
-			ePhysicalTable.setAttribute("reference", sPhysTblSrc);
+			ePhysicalTable.setAttribute("reference", physicalTableSource);
 		}
 		else
 			ePhysicalTable.setAttribute("reference", "");
@@ -194,8 +194,8 @@ public class PhysicalTable {
 		Element	ePhColNullable	= null;
 		Node	nPhColNullable	= null;
 
-		if(vPhysColID != null)
-			for (int i=0; i< vPhysColID.size(); i++) {
+		if(physicalumnColumnIDs != null)
+			for (int i=0; i< physicalumnColumnIDs.size(); i++) {
 				ePhysicalColumn = xmldoc.createElement("PhysicalColumn");
 
 				ePhColID		= xmldoc.createElement("PhysicalColumnID");
@@ -205,40 +205,40 @@ public class PhysicalTable {
 				ePhColScale		= xmldoc.createElement("PhysicalColumnScale");
 				ePhColNullable	= xmldoc.createElement("PhysicalColumnNullable");
 
-				if (vPhysColID.get(i) == null) {
+				if (physicalumnColumnIDs.get(i) == null) {
 					nPhColID = xmldoc.createTextNode("");
 				} else {
-					nPhColID = xmldoc.createTextNode(vPhysColID.get(i));
+					nPhColID = xmldoc.createTextNode(physicalumnColumnIDs.get(i));
 				}
 
-				if (vPhysColName.get(i) == null) {
+				if (physicalumnColumnNames.get(i) == null) {
 					nPhColName = xmldoc.createTextNode("");
 				} else {
-					nPhColName = xmldoc.createTextNode(vPhysColName.get(i));
+					nPhColName = xmldoc.createTextNode(physicalumnColumnNames.get(i));
 				}
 
-				if (vPhysColDataType.get(i) == null) {
+				if (physicalColumnDataTypes.get(i) == null) {
 					nPhColDatatype = xmldoc.createTextNode("");
 				} else {
-					nPhColDatatype = xmldoc.createTextNode(vPhysColDataType.get(i));
+					nPhColDatatype = xmldoc.createTextNode(physicalColumnDataTypes.get(i));
 				}
 
-				if (vPhysColSize.get(i) == null) {
+				if (physicalColumnSizes.get(i) == null) {
 					nPhColSize = xmldoc.createTextNode("");
 				} else {
-					nPhColSize = xmldoc.createTextNode(vPhysColSize.get(i));
+					nPhColSize = xmldoc.createTextNode(physicalColumnSizes.get(i));
 				}
 
-				if (vPhysColScale.get(i) == null) {
+				if (physicalColumnScales.get(i) == null) {
 					nPhColScale = xmldoc.createTextNode("");
 				} else {
-					nPhColScale = xmldoc.createTextNode(vPhysColScale.get(i));
+					nPhColScale = xmldoc.createTextNode(physicalColumnScales.get(i));
 				}
 
-				if (vPhysColNullable.get(i) == null) {
+				if (physicalColumnNullables.get(i) == null) {
 					nPhColNullable = xmldoc.createTextNode("");
 				} else {
-					nPhColNullable = xmldoc.createTextNode(vPhysColNullable.get(i));
+					nPhColNullable = xmldoc.createTextNode(physicalColumnNullables.get(i));
 				}
 
 				ePhColID.appendChild(nPhColID);

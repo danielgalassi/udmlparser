@@ -14,30 +14,30 @@ import org.w3c.dom.Node;
  */
 public class HierarchyDimension {
 
-	private String sHierDimID;
-	private String sHierDimName;
+	private String hierarchyDimensionID;
+	private String hierarchyDimensionName;
 
-	public HierarchyDimension (	String sDeclareStmt, 
-								String sHierarchyDimension, 
-								BufferedReader brUDML) {
+	public HierarchyDimension (	String declare, 
+								String hierarchyDimension, 
+								BufferedReader udml) {
 		String line;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 
-		sHierDimID = sTrimmedDS.substring(	sHierarchyDimension.length(), 
+		hierarchyDimensionID = sTrimmedDS.substring(	hierarchyDimension.length(), 
 											iIndexAS).
 											trim().replaceAll("\"", "");
 
-		sHierDimName = sTrimmedDS.substring(iIndexAS+4,
+		hierarchyDimensionName = sTrimmedDS.substring(iIndexAS+4,
 											sTrimmedDS.indexOf(" ON")).
 											trim().replaceAll("\"", "");
 		
 		try {
-			line = brUDML.readLine();
+			line = udml.readLine();
 			//NO FURTHER ACTIONS
 			while ( line.indexOf("PRIVILEGES") == -1 && 
 					line.indexOf(";") == -1)
-				line = brUDML.readLine();
+				line = udml.readLine();
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
@@ -52,14 +52,14 @@ public class HierarchyDimension {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sHierDimID == null) {
-			sHierDimID = "";
+		if (hierarchyDimensionID == null) {
+			hierarchyDimensionID = "";
 		}
-		Node nHierarchyDimensionID = xmldoc.createTextNode(sHierDimID);
-		if (sHierDimName == null) {
-			sHierDimName = "";
+		Node nHierarchyDimensionID = xmldoc.createTextNode(hierarchyDimensionID);
+		if (hierarchyDimensionName == null) {
+			hierarchyDimensionName = "";
 		}
-		Node nHierarchyDimensionName = xmldoc.createTextNode(sHierDimName);
+		Node nHierarchyDimensionName = xmldoc.createTextNode(hierarchyDimensionName);
 
 		Element eHierDim = xmldoc.createElement("HierarchyDimension");
 		Element eHierDimID = xmldoc.createElement("HierarchyDimensionID");

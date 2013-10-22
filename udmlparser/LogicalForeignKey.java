@@ -15,33 +15,33 @@ import org.w3c.dom.Node;
  */
 public class LogicalForeignKey {
 
-	private String			sLogicalFKJoinID;
-	private Vector <String>	vLogicalTablesID = null;
+	private String			logicalForeignKeyJoinID;
+	private Vector <String>	logicalTableIDs = null;
 
-	public LogicalForeignKey (String sDeclareStmt,
-			String sSubjectArea,
-			BufferedReader brUDML) {
+	public LogicalForeignKey (String declare,
+			String subjectArea,
+			BufferedReader udml) {
 		String line = "";
 		String line2 = "";
 		int iLogicalTable = 0;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		sLogicalFKJoinID = sTrimmedDS.substring(sSubjectArea.length(),iIndexAS).
+		logicalForeignKeyJoinID = sTrimmedDS.substring(subjectArea.length(),iIndexAS).
 							trim().replaceAll("\"", "");
 		try {
-			vLogicalTablesID = new Vector<String>();
+			logicalTableIDs = new Vector<String>();
 			while ( line.indexOf(") COUNTERPART KEY ") == -1 && line.indexOf(";") == -1)
-				line = brUDML.readLine().trim();
+				line = udml.readLine().trim();
 			iLogicalTable = line.substring(0, line.indexOf(") COUNTERPART KEY ")).trim().lastIndexOf("\".\"");
-			vLogicalTablesID.add(line.substring(0,  iLogicalTable+1).replace("\"", ""));
+			logicalTableIDs.add(line.substring(0,  iLogicalTable+1).replace("\"", ""));
 			line2 = line.substring(line.indexOf(") COUNTERPART KEY ")+18).trim();
 			iLogicalTable = line2.lastIndexOf("\".\"");
-			vLogicalTablesID.add(line2.substring(0, iLogicalTable).replace("\"", ""));
+			logicalTableIDs.add(line2.substring(0, iLogicalTable).replace("\"", ""));
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 &&
 					line.indexOf(";") == -1)
-				line = brUDML.readLine();
+				line = udml.readLine();
 			
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
@@ -59,10 +59,10 @@ public class LogicalForeignKey {
 	 */
 
 	public Element serialize(Document xmldoc) {
-		if (sLogicalFKJoinID == null) {
-			sLogicalFKJoinID = "";
+		if (logicalForeignKeyJoinID == null) {
+			logicalForeignKeyJoinID = "";
 		}
-		Node nLogicalJoinID = xmldoc.createTextNode(sLogicalFKJoinID);
+		Node nLogicalJoinID = xmldoc.createTextNode(logicalForeignKeyJoinID);
 
 		Element eLogicalJoin = xmldoc.createElement("LogicalJoin");
 		Element eLogicalJoinID = xmldoc.createElement("LogicalJoinID");
@@ -74,8 +74,8 @@ public class LogicalForeignKey {
 		Element eLogicalTableList = xmldoc.createElement("LogicalTableIDList");
 		Element eLogicalTable = null;
 		Node nLogicalTable = null;
-		if (vLogicalTablesID != null)
-			for (String sLogicalTableID : vLogicalTablesID) {
+		if (logicalTableIDs != null)
+			for (String sLogicalTableID : logicalTableIDs) {
 				eLogicalTable = xmldoc.createElement("LogicalTableID");
 				if (sLogicalTableID == null)
 					nLogicalTable = xmldoc.createTextNode("");

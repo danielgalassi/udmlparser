@@ -16,41 +16,41 @@ import org.w3c.dom.Node;
  */
 public class ForeignKey {
 
-	private String			sForKeyID;
-	private String			sForKeyName;
-	private ArrayList <String>	alsPhysicalColumns;
-	private String			sReferencedKey;
+	private String				foreignKeyID;
+	private String				foreignKeyName;
+	private ArrayList <String>	physicalColumns;
+	private String				referencedKey;
 
-	public ForeignKey (String sDeclareStmt,
-			 String sForKey,
-			 BufferedReader brUDML) {
+	public ForeignKey (String declare,
+			 String foreignKey,
+			 BufferedReader udml) {
 		String line;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexREFERENCES = 0;
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		sForKeyID = sTrimmedDS.substring( sForKey.length(), iIndexAS).
+		foreignKeyID = sTrimmedDS.substring( foreignKey.length(), iIndexAS).
 												trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
 		int iNextToken = sTrimmedDS.indexOf(" HAVING");
 		if (iNextToken > sTrimmedDS.indexOf(" UPGRADE ID ") &&
 				sTrimmedDS.indexOf(" UPGRADE ID ") > -1)
 			iNextToken = sTrimmedDS.indexOf(" UPGRADE ID ");
-		sForKeyName = sTrimmedDS.substring( iIndexAS + 4, iNextToken).
+		foreignKeyName = sTrimmedDS.substring( iIndexAS + 4, iNextToken).
 											trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
-		alsPhysicalColumns = new ArrayList <String> ();
+		physicalColumns = new ArrayList <String> ();
 		try {
-			line = brUDML.readLine();
+			line = udml.readLine();
 			do {
-				line = brUDML.readLine().trim();
+				line = udml.readLine().trim();
 				sTrimmedDS = line;
 				iIndexREFERENCES = line.indexOf(") REFERENCES ");
 				if (iIndexREFERENCES != -1) {
-					alsPhysicalColumns.add(sTrimmedDS.substring(0, iIndexREFERENCES).
+					physicalColumns.add(sTrimmedDS.substring(0, iIndexREFERENCES).
 											trim().replaceAll("\"", "").replaceAll("\\p{C}", "?"));
-					sReferencedKey = sTrimmedDS.substring(iIndexREFERENCES + 13).
+					referencedKey = sTrimmedDS.substring(iIndexREFERENCES + 13).
 												trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
 				}
 				else {
-					alsPhysicalColumns.add(sTrimmedDS.
+					physicalColumns.add(sTrimmedDS.
 											substring(0, sTrimmedDS.indexOf("\",")).
 											trim().replaceAll("\"", ""));
 				}
@@ -59,7 +59,7 @@ public class ForeignKey {
 			//DISCARD DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 &&
 					line.indexOf(";") == -1)
-				line = brUDML.readLine();
+				line = udml.readLine();
 
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
@@ -75,13 +75,13 @@ public class ForeignKey {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sForKeyID == null)
-			sForKeyID = "";
-		Node nForeignKeyID = xmldoc.createTextNode(sForKeyID);
+		if (foreignKeyID == null)
+			foreignKeyID = "";
+		Node nForeignKeyID = xmldoc.createTextNode(foreignKeyID);
 		
-		if (sForKeyName == null)
-			sForKeyName = "";
-		Node nForeignKeyName = xmldoc.createTextNode(sForKeyName);
+		if (foreignKeyName == null)
+			foreignKeyName = "";
+		Node nForeignKeyName = xmldoc.createTextNode(foreignKeyName);
 
 		Element eForeignKey = xmldoc.createElement("ForeignKey");
 		Element eForeignKeyID = xmldoc.createElement("ForeignKeyID");
@@ -99,7 +99,7 @@ public class ForeignKey {
 		Node nFKColumn = null;
 		Node nFKColumn2 = null;
 
-		ListIterator <String> liPhysCols = alsPhysicalColumns.listIterator();
+		ListIterator <String> liPhysCols = physicalColumns.listIterator();
 		while (liPhysCols.hasNext()) {
 			eFKColumn = xmldoc.createElement("FKColumnID");
 			String s = liPhysCols.next();
@@ -113,10 +113,10 @@ public class ForeignKey {
 		}
 
 		eFKColumn2 = xmldoc.createElement("ReferencedFK");
-		if (sReferencedKey == null) {
-			sReferencedKey = "";
+		if (referencedKey == null) {
+			referencedKey = "";
 		}
-		nFKColumn2 = xmldoc.createTextNode(sReferencedKey);
+		nFKColumn2 = xmldoc.createTextNode(referencedKey);
 
 		eFKColumn2.appendChild(nFKColumn2);
 		eForeignKey.appendChild(eFKColumn2);

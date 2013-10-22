@@ -15,21 +15,21 @@ import org.w3c.dom.Node;
  */
 public class DimensionLevel {
 	
-	private String 			sDimensionLevelID;
-	private String			sDimensionLevelName;
-	private Vector <String>	vLogicalColumnID = null;
+	private String 			dimensionLevelID;
+	private String			dimensionLevelName;
+	private Vector <String>	logicalColumnIDs = null;
 
-	public DimensionLevel ( String sDeclareStmt, 
-							String sCatalogFolder, 
-							BufferedReader brUDML) {
+	public DimensionLevel ( String declare, 
+							String catalogFolder, 
+							BufferedReader udml) {
 		int iFullDrillCount;
 		int iGrandTotalCount;
 		int iTokenIndex;
 		String line;
 		String tempLogColID;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		sDimensionLevelID = sTrimmedDS.substring(sCatalogFolder.length(), 
+		dimensionLevelID = sTrimmedDS.substring(catalogFolder.length(), 
 												 iIndexAS).
 												 trim().replaceAll("\"", "");
 		
@@ -38,37 +38,37 @@ public class DimensionLevel {
 		
 		if (iGrandTotalCount == -1 && 
 			iFullDrillCount == -1)
-			sDimensionLevelName = sTrimmedDS.substring(iIndexAS+4).
+			dimensionLevelName = sTrimmedDS.substring(iIndexAS+4).
 												trim().replaceAll("\"", "");
 		
 		if (iFullDrillCount != -1 && 
 			iGrandTotalCount == -1)
-			sDimensionLevelName = sTrimmedDS.substring(iIndexAS+4,
+			dimensionLevelName = sTrimmedDS.substring(iIndexAS+4,
 										sTrimmedDS.indexOf(" FULL DRILL ")).
 										trim().replaceAll("\"", "");
 		
 		if (iFullDrillCount == -1 && 
 			iGrandTotalCount != -1)
-			sDimensionLevelName = sTrimmedDS.substring(iIndexAS+4, 
+			dimensionLevelName = sTrimmedDS.substring(iIndexAS+4, 
 										sTrimmedDS.indexOf(" GRAND TOTAL ")).
 										trim().replaceAll("\"", "");
 		
 		if (iFullDrillCount != -1 &&
 			iGrandTotalCount != -1 && 
 			iFullDrillCount > iGrandTotalCount)
-			sDimensionLevelName = sTrimmedDS.substring(iIndexAS+4,
+			dimensionLevelName = sTrimmedDS.substring(iIndexAS+4,
 										sTrimmedDS.indexOf(" GRAND TOTAL ")).
 										trim().replaceAll("\"", "");
 		
 		try {
 			//HAVING STRING
-			line = brUDML.readLine().trim().replaceAll("\"", "");
+			line = udml.readLine().trim().replaceAll("\"", "");
 
 			//LOGICAL COLUMNS LIST
 			if (line.indexOf("HAVING (") != -1) {
-				vLogicalColumnID = new Vector<String>();
+				logicalColumnIDs = new Vector<String>();
 				do {
-					line = brUDML.readLine().trim().replaceAll("\"", "");
+					line = udml.readLine().trim().replaceAll("\"", "");
 					iFullDrillCount = line.indexOf(") FULL DRILL ");
 					iGrandTotalCount = line.indexOf(") GRAND TOTAL ");
 					iTokenIndex = 0;
@@ -89,7 +89,7 @@ public class DimensionLevel {
 					}
 					
 					tempLogColID = line.substring(0, iTokenIndex);
-					vLogicalColumnID.add(tempLogColID.trim());
+					logicalColumnIDs.add(tempLogColID.trim());
 				} while (iFullDrillCount == -1 && 
 						 iGrandTotalCount == -1);
 			}
@@ -97,7 +97,7 @@ public class DimensionLevel {
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 && 
 					line.indexOf(";") == -1)
-				line = brUDML.readLine();
+				line = udml.readLine();
 
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
@@ -114,14 +114,14 @@ public class DimensionLevel {
 	 * @return XML fragment
 	 */
 	public Element serialize(Document xmldoc) {
-		if (sDimensionLevelID == null) {
-			sDimensionLevelID = "";
+		if (dimensionLevelID == null) {
+			dimensionLevelID = "";
 		}
-		Node nDimensionLevelID = xmldoc.createTextNode(sDimensionLevelID);
-		if (sDimensionLevelName == null) {
-			sDimensionLevelName = "";
+		Node nDimensionLevelID = xmldoc.createTextNode(dimensionLevelID);
+		if (dimensionLevelName == null) {
+			dimensionLevelName = "";
 		}
-		Node nDimensionLevelName = xmldoc.createTextNode(sDimensionLevelName);
+		Node nDimensionLevelName = xmldoc.createTextNode(dimensionLevelName);
 
 		Element eDimensionLevel = xmldoc.createElement("DimensionLevel");
 		Element eDimensionLevelID = xmldoc.createElement("DimensionLevelID");
@@ -136,9 +136,9 @@ public class DimensionLevel {
 		Element eLogicalTable = null;
 		Node nLogicalTable = null;
 
-		if(vLogicalColumnID != null)
+		if(logicalColumnIDs != null)
 			//for (int i=0; i< vLogicalColumnID.size(); i++) {
-			for (String sLogColID : vLogicalColumnID) {
+			for (String sLogColID : logicalColumnIDs) {
 				eLogicalTable = xmldoc.createElement("LogicalColumnID");
 				if (sLogColID == null) {
 					nLogicalTable = xmldoc.createTextNode("");

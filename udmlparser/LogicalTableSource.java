@@ -17,29 +17,29 @@ import utils.Utils;
  */
 public class LogicalTableSource {
 
-	private String			sLogTblSourceID;
-	private String			sLogTblSourceName;
+	private String			logicalTableSourceID;
+	private String			logicalTableSourceName;
 	private Vector <String>	vLogicalColumnID;
 	private Vector <String>	vLogicalColumnCalculation;
 
-	public LogicalTableSource ( String sDeclareStmt,
-								String sLogTblSource, 
-								BufferedReader brUDML) {
+	public LogicalTableSource (String declare,
+			String logicalTableSource, 
+			BufferedReader udml) {
 		String line;
-		String sTrimmedDS = sDeclareStmt.trim();
+		String sTrimmedDS = declare.trim();
 		int iIndexAS = sTrimmedDS.indexOf(" AS ");
 		int eol;
 		int cbr;
-		sLogTblSourceID = sTrimmedDS.substring( sLogTblSource.length(), 
-												iIndexAS).
-												trim().replaceAll("\"", "");
-		sLogTblSourceName = sTrimmedDS.substring(iIndexAS + 4).
-												trim().replaceAll("\"", "");
+		this.logicalTableSourceID = sTrimmedDS.substring( logicalTableSource.length(), 
+				iIndexAS).
+				trim().replaceAll("\"", "");
+		this.logicalTableSourceName = sTrimmedDS.substring(iIndexAS + 4).
+				trim().replaceAll("\"", "");
 
 		try {
 			//DISCARD HEADING
 			do {
-				line = brUDML.readLine();
+				line = udml.readLine();
 			} while (line.indexOf("PROJECT (") == -1);
 
 			//LOGICAL COLUMNS
@@ -47,13 +47,13 @@ public class LogicalTableSource {
 				vLogicalColumnID = new Vector<String>();
 				vLogicalColumnCalculation = new Vector<String>();
 				do {
-					line = brUDML.readLine().trim();
+					line = udml.readLine().trim();
 					if (line.indexOf(" AS ") != -1 && 
 							line.indexOf(" CAST") == -1) {
 						vLogicalColumnID.add(line.substring(
-														line.indexOf("{") + 1,
-														line.indexOf("}")).
-														replaceAll("\"", ""));
+								line.indexOf("{") + 1,
+								line.indexOf("}")).
+								replaceAll("\"", ""));
 						//"end-of-line" in case } is missing. Issue # 6.
 						eol = line.lastIndexOf("}");
 						if (eol < line.lastIndexOf("{")-1)
@@ -62,19 +62,15 @@ public class LogicalTableSource {
 						if (cbr >= line.length())
 							cbr = line.lastIndexOf("{");
 						vLogicalColumnCalculation.add(line.substring(
-													cbr,
-													eol));
-													//issue #6 - fixed
-													//cause: missing }. Maybe some CR...
-													//line.lastIndexOf("}")));
-													//line.lastIndexOf("{") + 1, //replaced by cbr
+								cbr,
+								eol));
 					}
 				} while (line.indexOf("FROM") == -1);
 			}
 
 			while ( line.indexOf("PRIVILEGES") == -1 && 
 					line.indexOf(";") == -1)
-				line = brUDML.readLine();
+				line = udml.readLine();
 
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
@@ -91,14 +87,14 @@ public class LogicalTableSource {
 	 */
 	public Element serialize(Document xmldoc) {
 		String sTemp = null;
-		if (sLogTblSourceID == null) {
-			sLogTblSourceID = "";
+		if (logicalTableSourceID == null) {
+			logicalTableSourceID = "";
 		}
-		Node nLogicalTableSourceID = xmldoc.createTextNode(sLogTblSourceID);
-		if (sLogTblSourceName == null) {
-			sLogTblSourceName = "";
+		Node nLogicalTableSourceID = xmldoc.createTextNode(logicalTableSourceID);
+		if (logicalTableSourceName == null) {
+			logicalTableSourceName = "";
 		}
-		Node nLogicalTableSourceName = xmldoc.createTextNode(sLogTblSourceName);
+		Node nLogicalTableSourceName = xmldoc.createTextNode(logicalTableSourceName);
 
 		Element eLogicalTableSource = xmldoc.createElement("LogicalTableSource");
 		Element eLogicalTableSourceID = xmldoc.createElement("LogicalTableSourceID");
@@ -146,7 +142,7 @@ public class LogicalTableSource {
 				eLogicalColumn.appendChild(eLogicalColumnCalculation);
 
 				ePhysicalColumnMapping = xmldoc.createElement("PhysicalColumnMapping");
-				vPhysicalColumnMappingList = Utils.CalculationParser(sLogTblSourceID, vLogicalColumnCalculation.get(i), false);
+				vPhysicalColumnMappingList = Utils.CalculationParser(logicalTableSourceID, vLogicalColumnCalculation.get(i), false);
 				if(vPhysicalColumnMappingList != null) {
 					for (String sPhysColMapping : vPhysicalColumnMappingList) {
 						ePhysicalColumnID = xmldoc.createElement("PhysicalColumnID");
