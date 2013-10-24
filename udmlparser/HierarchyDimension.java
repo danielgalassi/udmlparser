@@ -21,15 +21,15 @@ public class HierarchyDimension {
 								String hierarchyDimension, 
 								BufferedReader udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		String trimmedDeclareStatement = declare.trim();
+		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
 
-		hierarchyDimensionID = sTrimmedDS.substring(	hierarchyDimension.length(), 
+		hierarchyDimensionID = trimmedDeclareStatement.substring(	hierarchyDimension.length(), 
 											iIndexAS).
 											trim().replaceAll("\"", "");
 
-		hierarchyDimensionName = sTrimmedDS.substring(iIndexAS+4,
-											sTrimmedDS.indexOf(" ON")).
+		hierarchyDimensionName = trimmedDeclareStatement.substring(iIndexAS+4,
+											trimmedDeclareStatement.indexOf(" ON")).
 											trim().replaceAll("\"", "");
 		
 		try {
@@ -42,7 +42,7 @@ public class HierarchyDimension {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
+		trimmedDeclareStatement	= null;
 		line		= null;
 	}
 

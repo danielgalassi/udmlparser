@@ -26,14 +26,14 @@ public class LogicalTableSource {
 			String logicalTableSource, 
 			BufferedReader udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		String trimmedDeclareStatement = declare.trim();
+		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
 		int eol;
 		int cbr;
-		this.logicalTableSourceID = sTrimmedDS.substring( logicalTableSource.length(), 
+		this.logicalTableSourceID = trimmedDeclareStatement.substring( logicalTableSource.length(), 
 				iIndexAS).
 				trim().replaceAll("\"", "");
-		this.logicalTableSourceName = sTrimmedDS.substring(iIndexAS + 4).
+		this.logicalTableSourceName = trimmedDeclareStatement.substring(iIndexAS + 4).
 				trim().replaceAll("\"", "");
 
 		try {
@@ -76,8 +76,8 @@ public class LogicalTableSource {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
-		line		= null;
+		trimmedDeclareStatement	= null;
+		line = null;
 	}
 
 	/**

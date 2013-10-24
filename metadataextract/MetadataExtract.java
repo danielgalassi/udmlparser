@@ -34,7 +34,7 @@ public class MetadataExtract {
 	 */
 	private static Vector <String>	vsUDMLtgt	= null;
 	/** DOM reference to the file storing a job set for batch processing.*/
-	private static Document			dBatch		= null;
+	private static Document			batchXML		= null;
 	/** stores whether the BusMatrix bundled app has been invoked or not.*/
 	private static boolean			isBusMatrixInvoked = false;
 	/**	is the reference to the first XSL file for bundled applications.*/
@@ -52,16 +52,16 @@ public class MetadataExtract {
 
 	/**
 	 * Loads a resource bundled in the jar file. Used for apps-related files.
-	 * @param rsc the relative file path (within the jar file)
+	 * @param resource the relative file path (within the jar file)
 	 * @return a reference to the XSL file used to transform XML files
 	 * @see java.io.InputStream
 	 */
-	private InputStream istrInternalResource(String rsc) {
+	private InputStream istrInternalResource(String resource) {
 		InputStream isRsc = null;
 		try {
-			isRsc = getClass().getClassLoader().getResourceAsStream(rsc);
+			isRsc = getClass().getClassLoader().getResourceAsStream(resource);
 		} catch (Exception e) {
-			System.out.println("istrInternalResource: " + rsc);
+			System.out.println("istrInternalResource: " + resource);
 			e.printStackTrace();
 		}
 		return isRsc;
@@ -69,19 +69,19 @@ public class MetadataExtract {
 
 	/**
 	 * Method processing XML file containing batch parameters
-	 * @param sBatch path to the file containing batch job sets
+	 * @param batchFileLocation path to the file containing batch job sets
 	 */
-	private static void batch(String sBatch) {
-		File fBatch;
+	private static void batch(String batchFileLocation) {
+		File batch;
 		int iBatchSize;
 
-		fBatch = new File(sBatch);
+		batch = new File(batchFileLocation);
 
-		if (!fBatch.exists())
+		if (!batch.exists())
 			return;
 
-		dBatch = XMLUtils.File2Document(fBatch);
-		iBatchSize = dBatch.getElementsByTagName("jobdetails").getLength();
+		batchXML = XMLUtils.File2Document(batch);
+		iBatchSize = batchXML.getElementsByTagName("jobdetails").getLength();
 
 		//loading batch arguments
 		vsUDMLtxt =	new Vector<String>();
@@ -91,32 +91,32 @@ public class MetadataExtract {
 
 		for (int s=0; s<iBatchSize; s++) {
 
-			if (dBatch.getElementsByTagName("udml").item(s).hasChildNodes())
-				vsUDMLtxt.add(dBatch.getElementsByTagName("udml").item(s).
+			if (batchXML.getElementsByTagName("udml").item(s).hasChildNodes())
+				vsUDMLtxt.add(batchXML.getElementsByTagName("udml").item(s).
 						getFirstChild().getNodeValue());
 			else
 				vsUDMLtxt.add("");
 
-			if (dBatch.getElementsByTagName("rpdxml").item(s).hasChildNodes())
-				vsUDMLxml.add(dBatch.getElementsByTagName("rpdxml").item(s).
+			if (batchXML.getElementsByTagName("rpdxml").item(s).hasChildNodes())
+				vsUDMLxml.add(batchXML.getElementsByTagName("rpdxml").item(s).
 						getFirstChild().getNodeValue());
 			else
 				vsUDMLxml.add("");
 
-			if (dBatch.getElementsByTagName("udmlxsl").item(s).hasChildNodes())
-				vsUDMLxsl.add(dBatch.getElementsByTagName("udmlxsl").item(s).
+			if (batchXML.getElementsByTagName("udmlxsl").item(s).hasChildNodes())
+				vsUDMLxsl.add(batchXML.getElementsByTagName("udmlxsl").item(s).
 						getFirstChild().getNodeValue());
 			else
 				vsUDMLxsl.add("");
 
-			if (dBatch.getElementsByTagName("udmltgt").item(s).hasChildNodes())
-				vsUDMLtgt.add(dBatch.getElementsByTagName("udmltgt").item(s).
+			if (batchXML.getElementsByTagName("udmltgt").item(s).hasChildNodes())
+				vsUDMLtgt.add(batchXML.getElementsByTagName("udmltgt").item(s).
 						getFirstChild().getNodeValue());
 			else
 				vsUDMLtgt.add("");
 		}
 		//loading batch arguments --end
-		fBatch = null;
+		batch = null;
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class MetadataExtract {
 		//batch requests HERE
 		if (args.length ==1 && args[0].startsWith("-b=")) {
 			batch(args[0].replaceFirst("-b=", ""));
-			if (dBatch == null) {
+			if (batchXML == null) {
 				System.out.println("Batch file not found");
 				return;
 			}

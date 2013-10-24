@@ -22,42 +22,42 @@ public class DimensionLevel {
 	public DimensionLevel ( String declare, 
 							String catalogFolder, 
 							BufferedReader udml) {
-		int iFullDrillCount;
-		int iGrandTotalCount;
-		int iTokenIndex;
+		int fullDrillIdx;
+		int grandTotalIdx;
+		int tokenIdx;
 		String line;
 		String tempLogColID;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		dimensionLevelID = sTrimmedDS.substring(catalogFolder.length(), 
+		String trimmedDeclareStatement = declare.trim();
+		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		dimensionLevelID = trimmedDeclareStatement.substring(catalogFolder.length(), 
 												 iIndexAS).
 												 trim().replaceAll("\"", "");
 		
-		iFullDrillCount = sTrimmedDS.indexOf(" FULL DRILL ");
-		iGrandTotalCount = sTrimmedDS.indexOf(" GRAND TOTAL ");
+		fullDrillIdx = trimmedDeclareStatement.indexOf(" FULL DRILL ");
+		grandTotalIdx = trimmedDeclareStatement.indexOf(" GRAND TOTAL ");
 		
-		if (iGrandTotalCount == -1 && 
-			iFullDrillCount == -1)
-			dimensionLevelName = sTrimmedDS.substring(iIndexAS+4).
+		if (grandTotalIdx == -1 && 
+			fullDrillIdx == -1)
+			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4).
 												trim().replaceAll("\"", "");
 		
-		if (iFullDrillCount != -1 && 
-			iGrandTotalCount == -1)
-			dimensionLevelName = sTrimmedDS.substring(iIndexAS+4,
-										sTrimmedDS.indexOf(" FULL DRILL ")).
+		if (fullDrillIdx != -1 && 
+			grandTotalIdx == -1)
+			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4,
+										trimmedDeclareStatement.indexOf(" FULL DRILL ")).
 										trim().replaceAll("\"", "");
 		
-		if (iFullDrillCount == -1 && 
-			iGrandTotalCount != -1)
-			dimensionLevelName = sTrimmedDS.substring(iIndexAS+4, 
-										sTrimmedDS.indexOf(" GRAND TOTAL ")).
+		if (fullDrillIdx == -1 && 
+			grandTotalIdx != -1)
+			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4, 
+										trimmedDeclareStatement.indexOf(" GRAND TOTAL ")).
 										trim().replaceAll("\"", "");
 		
-		if (iFullDrillCount != -1 &&
-			iGrandTotalCount != -1 && 
-			iFullDrillCount > iGrandTotalCount)
-			dimensionLevelName = sTrimmedDS.substring(iIndexAS+4,
-										sTrimmedDS.indexOf(" GRAND TOTAL ")).
+		if (fullDrillIdx != -1 &&
+			grandTotalIdx != -1 && 
+			fullDrillIdx > grandTotalIdx)
+			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4,
+										trimmedDeclareStatement.indexOf(" GRAND TOTAL ")).
 										trim().replaceAll("\"", "");
 		
 		try {
@@ -69,29 +69,29 @@ public class DimensionLevel {
 				logicalColumnIDs = new Vector<String>();
 				do {
 					line = udml.readLine().trim().replaceAll("\"", "");
-					iFullDrillCount = line.indexOf(") FULL DRILL ");
-					iGrandTotalCount = line.indexOf(") GRAND TOTAL ");
-					iTokenIndex = 0;
+					fullDrillIdx = line.indexOf(") FULL DRILL ");
+					grandTotalIdx = line.indexOf(") GRAND TOTAL ");
+					tokenIdx = 0;
 					
 					if (line.charAt(line.length()-1) == ',')
-						iTokenIndex = line.length()-1;
+						tokenIdx = line.length()-1;
 					else {
-						if (iFullDrillCount != -1 && 
-							iGrandTotalCount == -1)
-							iTokenIndex = line.indexOf(") FULL DRILL ");
-						if (iFullDrillCount == -1 && 
-							iGrandTotalCount != -1)
-							iTokenIndex = line.indexOf(") GRAND TOTAL ");
-						if (iFullDrillCount != -1 && 
-							iGrandTotalCount != -1 && 
-							iFullDrillCount > iGrandTotalCount)
-							iTokenIndex = line.indexOf(") GRAND TOTAL ");
+						if (fullDrillIdx != -1 && 
+							grandTotalIdx == -1)
+							tokenIdx = line.indexOf(") FULL DRILL ");
+						if (fullDrillIdx == -1 && 
+							grandTotalIdx != -1)
+							tokenIdx = line.indexOf(") GRAND TOTAL ");
+						if (fullDrillIdx != -1 && 
+							grandTotalIdx != -1 && 
+							fullDrillIdx > grandTotalIdx)
+							tokenIdx = line.indexOf(") GRAND TOTAL ");
 					}
 					
-					tempLogColID = line.substring(0, iTokenIndex);
+					tempLogColID = line.substring(0, tokenIdx);
 					logicalColumnIDs.add(tempLogColID.trim());
-				} while (iFullDrillCount == -1 && 
-						 iGrandTotalCount == -1);
+				} while (fullDrillIdx == -1 && 
+						 grandTotalIdx == -1);
 			}
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
@@ -105,7 +105,7 @@ public class DimensionLevel {
 
 		line			= null;
 		tempLogColID	= null;
-		sTrimmedDS		= null;
+		trimmedDeclareStatement		= null;
 	}
 	
 	/**

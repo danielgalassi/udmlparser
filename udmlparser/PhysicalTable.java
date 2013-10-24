@@ -33,16 +33,16 @@ public class PhysicalTable {
 							String physicalTable,
 							BufferedReader udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
+		String trimmedDeclareStatement = declare.trim();
 		int iIndexColName; 
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		physicalTableID = sTrimmedDS.substring(
+		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		physicalTableID = trimmedDeclareStatement.substring(
 											physicalTable.length(),
 											iIndexAS).
 											trim().replaceAll("\"", "");
 		int iIndexHaving = declare.indexOf(" HAVING");
 		if (iIndexHaving != -1)
-		physicalTableName = sTrimmedDS.substring(
+		physicalTableName = trimmedDeclareStatement.substring(
 											iIndexAS+4, 
 											iIndexHaving).
 											trim().replaceAll("\"", "");
@@ -75,16 +75,14 @@ public class PhysicalTable {
 					//PHYSCOLNAME
 					iIndexColName = line.indexOf(" TYPE ");
 					if (line.indexOf(" EXTERNAL ") != -1 &&
-						line.indexOf(" EXTERNAL ") < iIndexColName){
+						line.indexOf(" EXTERNAL ") < iIndexColName) {
 						iIndexColName = line.indexOf(" EXTERNAL ");
 					}
 					
-					if (specialCaseTYPE(line))
-					{
+					if (specialCaseTYPE(line)) {
 						physicalumnColumnNames.add("TYPE");
 					}
-					else
-					{
+					else {
 						String str = line.substring(line.indexOf(" AS ")+4, 
 								iIndexColName).trim().
 								replaceAll("\"", "");
@@ -102,8 +100,7 @@ public class PhysicalTable {
 					int iIndexSCALE = line.indexOf(" SCALE ");
 					int iIndexPRECISION = line.indexOf(" PRECISION ")+11;
 					
-					if (specialCaseSCALE(line))
-					{
+					if (specialCaseSCALE(line)) {
 						physicalColumnSizes.add("SCALE");
 					}
 					else
@@ -140,7 +137,7 @@ public class PhysicalTable {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
+		trimmedDeclareStatement	= null;
 		line		= null;
 	}
 

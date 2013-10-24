@@ -23,18 +23,18 @@ public class LogicalTable {
 	private Vector <String>	logicalColumnNames = null;
 	private Vector <String> logicalColumnDescriptions = null;
 	private Vector <String>	derivedLogicalColumnExpressions = null;
-	private Vector <String>	biz2BizColumnMappingLists = null;
+	private Vector <String>	derivedColumnMappings = null;
 
 	public LogicalTable (String declare,
 						 String logicalTable,
 						 BufferedReader udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		logicalTableID = sTrimmedDS.substring( logicalTable.length(), iIndexAS).
+		String trimmedDeclareStatement = declare.trim();
+		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		logicalTableID = trimmedDeclareStatement.substring( logicalTable.length(), iIndexAS).
 												trim().replaceAll("\"", "");
-		logicalTableName = sTrimmedDS.substring( iIndexAS + 4, 
-											sTrimmedDS.indexOf(" HAVING")).
+		logicalTableName = trimmedDeclareStatement.substring( iIndexAS + 4, 
+											trimmedDeclareStatement.indexOf(" HAVING")).
 											trim().replaceAll("\"", "");
 
 		try {
@@ -88,7 +88,7 @@ public class LogicalTable {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
+		trimmedDeclareStatement	= null;
 		line		= null;
 	}
 
@@ -172,9 +172,9 @@ public class LogicalTable {
 				eLogicalColumn.appendChild(eLogicalColumnDerivedExpression);
 
 				eLogicalColumnDerivedMappingList = xmldoc.createElement("LogicalColumnDerivedMappingList");
-				biz2BizColumnMappingLists = Utils.CalculationParser(logicalTableID, derivedLogicalColumnExpressions.get(i), true);
-				if(biz2BizColumnMappingLists != null) {
-					for (String vBiz2BizColumnMapping : biz2BizColumnMappingLists) {
+				derivedColumnMappings = Utils.CalculationParser(logicalTableID, derivedLogicalColumnExpressions.get(i), true);
+				if(derivedColumnMappings != null) {
+					for (String vBiz2BizColumnMapping : derivedColumnMappings) {
 						eBiz2BizColumnMappingID = xmldoc.createElement("LogicalColumnDerivedMappingID");
 						if (vBiz2BizColumnMapping == null)
 							nBiz2BizColumnMappingID = xmldoc.createTextNode("");
