@@ -36,16 +36,16 @@ public class SubjectArea {
 						String sSubjectArea,
 						BufferedReader udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		int iICONIDX = sTrimmedDS.indexOf(" ICON INDEX ");
-		subjectAreaID = sTrimmedDS.substring(sSubjectArea.length(),iIndexAS).
+		String trimmedDeclareStatement = declare.trim();
+		int asIdx = trimmedDeclareStatement.indexOf(" AS ");
+		int iconIds = trimmedDeclareStatement.indexOf(" ICON INDEX ");
+		subjectAreaID = trimmedDeclareStatement.substring(sSubjectArea.length(),asIdx).
 												trim().replaceAll("\"", "");
-		if (iICONIDX != -1)
-			subjectAreaName = sTrimmedDS.substring(iIndexAS+4, iICONIDX).
+		if (iconIds != -1)
+			subjectAreaName = trimmedDeclareStatement.substring(asIdx+4, iconIds).
 										trim().replaceAll("\"", "");
 		else
-			subjectAreaName = sTrimmedDS.substring(iIndexAS+4).
+			subjectAreaName = trimmedDeclareStatement.substring(asIdx+4).
 										trim().replaceAll("\"", "");
 		try {
 			line = udml.readLine();
@@ -80,7 +80,7 @@ public class SubjectArea {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
+		trimmedDeclareStatement	= null;
 		line		= null;
 	}
 

@@ -31,22 +31,23 @@ public class LogicalJoin {
 			String subjectArea,
 			BufferedReader udml) {
 		String line = "";
-		int iSpecsFound = 0;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		logicalJoinID = sTrimmedDS.substring(subjectArea.length(),iIndexAS).
+		int joinSpecifications = 0;
+		String trimmedDeclareStatement = declare.trim();
+		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		logicalJoinID = trimmedDeclareStatement.substring(subjectArea.length(),iIndexAS).
 							trim().replaceAll("\"", "");
 		try {
 			String logicalJoinSpecification = "DECLARE ROLE \"" + logicalJoinID;
 			logicalTableIDs = new Vector<String>();
-			while (iSpecsFound < 2) {
+			while (joinSpecifications < 2) {
 				line = udml.readLine();
-				while (line.indexOf(logicalJoinSpecification) == -1)
+				while (line.indexOf(logicalJoinSpecification) == -1) {
 					line = udml.readLine();
+				}
 
 				//table (logical join spec) found
 				parseLogicalJoinSpec(line);
-				iSpecsFound++;
+				joinSpecifications++;
 			}
 
 			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
@@ -58,7 +59,7 @@ public class LogicalJoin {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
+		trimmedDeclareStatement	= null;
 		line		= null;
 	}
 

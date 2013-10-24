@@ -24,9 +24,9 @@ public class LogicalForeignKey {
 		String line = "";
 		String line2 = "";
 		int iLogicalTable = 0;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		logicalForeignKeyJoinID = sTrimmedDS.substring(subjectArea.length(),iIndexAS).
+		String trimmedDeclareStatement = declare.trim();
+		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		logicalForeignKeyJoinID = trimmedDeclareStatement.substring(subjectArea.length(),iIndexAS).
 							trim().replaceAll("\"", "");
 		try {
 			logicalTableIDs = new Vector<String>();
@@ -47,7 +47,7 @@ public class LogicalForeignKey {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
+		trimmedDeclareStatement	= null;
 		line		= null;
 		line2		= null;
 	}

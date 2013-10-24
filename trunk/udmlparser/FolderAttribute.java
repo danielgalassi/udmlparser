@@ -26,21 +26,21 @@ public class FolderAttribute {
 							String presentationColumn,
 							BufferedReader udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		int iIndexLA = sTrimmedDS.indexOf(" LOGICAL ATTRIBUTE ");
-		presentationColumnID = sTrimmedDS.substring(presentationColumn.length(), iIndexAS).
+		String trimmedDeclareStatement = declare.trim();
+		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		int iIndexLA = trimmedDeclareStatement.indexOf(" LOGICAL ATTRIBUTE ");
+		presentationColumnID = trimmedDeclareStatement.substring(presentationColumn.length(), iIndexAS).
 												trim().replaceAll("\"", "");
-		presentationColumnName = sTrimmedDS.substring(iIndexAS+4, 
-						sTrimmedDS.indexOf( " LOGICAL ATTRIBUTE ",iIndexAS)).
+		presentationColumnName = trimmedDeclareStatement.substring(iIndexAS+4, 
+						trimmedDeclareStatement.indexOf( " LOGICAL ATTRIBUTE ",iIndexAS)).
 						trim().replaceAll("\"", "");
 
-		if (sTrimmedDS.indexOf(" OVERRIDE LOGICAL NAME") == -1)
-			presentationColumnMappingID = sTrimmedDS.substring(iIndexLA+19).
+		if (trimmedDeclareStatement.indexOf(" OVERRIDE LOGICAL NAME") == -1)
+			presentationColumnMappingID = trimmedDeclareStatement.substring(iIndexLA+19).
 												trim().replaceAll("\"", "");
 		else
-			presentationColumnMappingID = sTrimmedDS.substring(iIndexLA+19, 
-								sTrimmedDS.indexOf(" OVERRIDE LOGICAL NAME")).
+			presentationColumnMappingID = trimmedDeclareStatement.substring(iIndexLA+19, 
+								trimmedDeclareStatement.indexOf(" OVERRIDE LOGICAL NAME")).
 								trim().replace("\"", "");
 
 		try {
@@ -82,7 +82,7 @@ public class FolderAttribute {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
+		trimmedDeclareStatement	= null;
 		line		= null;
 	}
 

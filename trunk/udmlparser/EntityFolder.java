@@ -27,22 +27,22 @@ public class EntityFolder {
 						 String entityFolder, 
 						 BufferedReader udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		presentationTableID = sTrimmedDS.substring(entityFolder.length(), iIndexAS).
+		String trimmedDeclareStatement = declare.trim();
+		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		presentationTableID = trimmedDeclareStatement.substring(entityFolder.length(), iIndexAS).
 												trim().replaceAll("\"", "");
-		if (sTrimmedDS.indexOf(" ENTITY ") != -1 && 
-			sTrimmedDS.indexOf(" ENTITY ") != sTrimmedDS.
+		if (trimmedDeclareStatement.indexOf(" ENTITY ") != -1 && 
+			trimmedDeclareStatement.indexOf(" ENTITY ") != trimmedDeclareStatement.
 												lastIndexOf(" ENTITY ")) {
-			presentationTableName = sTrimmedDS.substring(iIndexAS + 4, 
-									sTrimmedDS.indexOf(" ENTITY ", iIndexAS)).
+			presentationTableName = trimmedDeclareStatement.substring(iIndexAS + 4, 
+									trimmedDeclareStatement.indexOf(" ENTITY ", iIndexAS)).
 									trim().replaceAll("\"", "");
-			presentationTableMappingID = sTrimmedDS.substring(sTrimmedDS.
+			presentationTableMappingID = trimmedDeclareStatement.substring(trimmedDeclareStatement.
 									indexOf(" ENTITY ", iIndexAS + 4) + 8).
 									trim().replaceAll("\"", "");
 		}
 		else {
-			presentationTableName = sTrimmedDS.substring(iIndexAS + 4).
+			presentationTableName = trimmedDeclareStatement.substring(iIndexAS + 4).
 									trim().replaceAll("\"", "");
 			presentationTableMappingID = "";
 		}
@@ -75,11 +75,9 @@ public class EntityFolder {
 					line.indexOf(";") == -1){
 				line = udml.readLine();
 				//DISPLAY NAME
-				if (line.indexOf("DISPLAY NAME ") != -1){
-					presentationDispayName = line.trim().substring(
-										line.indexOf("DISPLAY NAME ")+13,
-										line.lastIndexOf(" ON")).
-										trim().replaceAll("\"", "");
+				int displayNameIdx = line.indexOf("DISPLAY NAME ");
+				if (displayNameIdx != -1){
+					presentationDispayName = line.trim().substring(displayNameIdx+13, line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
 				}
 				
 				//DESCRIPTION
@@ -103,7 +101,7 @@ public class EntityFolder {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
+		trimmedDeclareStatement	= null;
 		line		= null;
 	}
 

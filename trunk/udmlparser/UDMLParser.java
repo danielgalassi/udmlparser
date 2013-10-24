@@ -26,14 +26,14 @@ public class UDMLParser {
 	private Document udml;
 	private Element root;
 	/** is the reference to the file containing the UDML code.*/
-	private File fNQ_UDML;
+	private File udmlExtract;
 	//UDML declaration statement's first token
 	private final String catalogFolders		= "DECLARE CATALOG FOLDER ";
 	private final String entityFolders		= "DECLARE ENTITY FOLDER ";
 	private final String folderAttributes	= "DECLARE FOLDER ATTRIBUTE ";
 	private final String subjectAreas		= "DECLARE SUBJECT AREA ";
 	private final String logicalTables		= "DECLARE LOGICAL TABLE ";
-	private final String logicalTableSrcs	= "DECLARE LOGICAL TABLE SOURCE ";
+	private final String logicalTableSources	= "DECLARE LOGICAL TABLE SOURCE ";
 	private final String physicalTables		= "DECLARE TABLE ";
 	private final String physicalTableKeys	= "DECLARE TABLE KEY ";
 	private final String dimensionLevels	= "DECLARE LEVEL ";
@@ -50,14 +50,16 @@ public class UDMLParser {
 	public UDMLParser(String sInput, String sOutput) {
 		udml		= XMLUtils.createDOMDocument();
 		root		= udml.createElement("UDML");
-		fNQ_UDML	= new File (sInput);
-		if(MetadataExtract.isBusMatrixInvoked())
+		udmlExtract	= new File (sInput);
+		if(MetadataExtract.isBusMatrixInvoked()) {
 			System.out.println("BusMatrix feature");
-		if(isUDML())
+		}
+		if(isUDML()) {
 			parse();
+		}
 		udml.appendChild(root);
 		XMLUtils.Document2File(udml, sOutput);
-		fNQ_UDML	= null;
+		udmlExtract	= null;
 		root		= null;
 		udml		= null;
 	}
@@ -67,21 +69,21 @@ public class UDMLParser {
 	 * @return true if the source contains UDML code 
 	 */
 	private boolean isUDML() {
-		boolean bIsUDML = false;
+		boolean isUDML = false;
 		try {
-			Reader frNQ_UDML = new InputStreamReader(new FileInputStream(fNQ_UDML), "UTF-8");
-			BufferedReader brUDML = new BufferedReader(frNQ_UDML);
-			if(brUDML.readLine().indexOf("DECLARE ") == 0)
-				bIsUDML = true;
-			brUDML.close();
-			frNQ_UDML.close();
+			Reader udmlStreamReader = new InputStreamReader(new FileInputStream(udmlExtract), "UTF-8");
+			BufferedReader udmlReader = new BufferedReader(udmlStreamReader);
+			if(udmlReader.readLine().indexOf("DECLARE ") == 0)
+				isUDML = true;
+			udmlReader.close();
+			udmlStreamReader.close();
 		}
 		catch (IOException e) {
 			System.out.println ("IO exception =" + e );
 		}
-		if (bIsUDML)
-			System.out.println(fNQ_UDML + " is a valid file.");
-		return bIsUDML;
+		if (isUDML)
+			System.out.println(udmlExtract + " is a valid file.");
+		return isUDML;
 	}
 
 	/**
@@ -92,7 +94,7 @@ public class UDMLParser {
 
 		try {
 			// Create a FileReader and then wrap it with BufferedReader.
-			Reader frNQ_UDML = new InputStreamReader(new FileInputStream(fNQ_UDML), "UTF-8");
+			Reader frNQ_UDML = new InputStreamReader(new FileInputStream(udmlExtract), "UTF-8");
 			BufferedReader brUDML = new BufferedReader (frNQ_UDML);
 
 			CatalogFolder c;
@@ -153,14 +155,14 @@ public class UDMLParser {
 						
 					}
 					if (line.indexOf(logicalTables) != -1 &&
-							line.indexOf(logicalTableSrcs) == -1) { //logl tbl
+							line.indexOf(logicalTableSources) == -1) { //logl tbl
 						System.out.println("Processing Logical Table...");
 						l = new LogicalTable(line, logicalTables, brUDML);
 						root.appendChild(l.serialize(udml));
 					}
-					if (line.indexOf(logicalTableSrcs) != -1) { //logl tbl src
+					if (line.indexOf(logicalTableSources) != -1) { //logl tbl src
 						System.out.println("Processing Logical Table Source...");
-						lts=new LogicalTableSource(line,logicalTableSrcs,brUDML);
+						lts=new LogicalTableSource(line,logicalTableSources,brUDML);
 						root.appendChild(lts.serialize(udml));
 					}
 					if (line.indexOf(physicalTables) != -1 && 

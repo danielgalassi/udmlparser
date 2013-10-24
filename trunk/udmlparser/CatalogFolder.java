@@ -20,31 +20,30 @@ public class CatalogFolder {
 	private String[]		catalogFolderAliases = null;
 	private String			catalogFolderMappingID;
 	private Vector <String>	entityFolderIDs = null;
-
 	private String			presentationDispayName;
 	private String			presentationDescription;
 
 	public CatalogFolder(String declare, String catalogFolder, BufferedReader udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
+		String trimmedDeclareStatement = declare.trim();
+		int as = trimmedDeclareStatement.indexOf(" AS ");
 		//finds custom icons in Subject Areas
-		int iICONIDX = sTrimmedDS.indexOf(" ICON INDEX ");
-		catalogFolderID = sTrimmedDS.substring(catalogFolder.length(), iIndexAS).trim().replaceAll("\"", "");
-		if (iICONIDX != -1) {
-			catalogFolderName = sTrimmedDS.substring(iIndexAS+4, iICONIDX).trim().replaceAll("\"", "");
+		int icon = trimmedDeclareStatement.indexOf(" ICON INDEX ");
+		catalogFolderID = trimmedDeclareStatement.substring(catalogFolder.length(), as).trim().replaceAll("\"", "");
+		if (icon != -1) {
+			catalogFolderName = trimmedDeclareStatement.substring(as+4, icon).trim().replaceAll("\"", "");
 		}
 		else {
-			catalogFolderName = sTrimmedDS.substring(iIndexAS+4).trim().replaceAll("\"", "");
+			catalogFolderName = trimmedDeclareStatement.substring(as+4).trim().replaceAll("\"", "");
 		}
 		try {
 			//SUBJECT AREA
 			line = udml.readLine().trim().replaceAll("\"", "");
 
-			if (line.indexOf("SUBJECT AREA ") != -1)
-				catalogFolderMappingID = line.substring(line.
-						indexOf("SUBJECT AREA ")+13).
-						trim().replaceAll("\"", "");
+			int subjectAreaIdx = line.indexOf("SUBJECT AREA ");
+			if (subjectAreaIdx != -1) {
+				catalogFolderMappingID = line.substring(subjectAreaIdx+13).trim().replaceAll("\"", "");
+			}
 
 			//ENTITY FOLDERS LIST
 			line = udml.readLine().trim().replaceAll("\"", "");
@@ -60,19 +59,17 @@ public class CatalogFolder {
 			//RECOVERING ALIASES
 			do {
 				line = udml.readLine().trim().replaceAll("\"", "");
-				if (line.indexOf("ALIASES (") != -1)
-					catalogFolderAliases = line.substring(line.
-							indexOf("ALIASES (")+9, line.lastIndexOf(")")).
-							trim().replaceAll("\"", "").split(",");
+				int aliasesIdx = line.indexOf("ALIASES (");
+				int lastParIdx = line.lastIndexOf(")");
+				if (aliasesIdx != -1)
+					catalogFolderAliases = line.substring(aliasesIdx+9, lastParIdx).trim().replaceAll("\"", "").split(",");
 
 				//DISPLAY NAME
-				if (line.indexOf("DISPLAY NAME ") != -1){
-					int i1 = line.indexOf("DISPLAY NAME ")+13;
+				int displayNameIdx = line.indexOf("DISPLAY NAME ");
+				if (displayNameIdx != -1){
+					int i1 = displayNameIdx+13;
 					int i2 = line.lastIndexOf(" ON");
-					presentationDispayName = line.trim().substring(
-							i1,
-							i2).
-							trim().replaceAll("\"", "");
+					presentationDispayName = line.trim().substring(i1, i2).trim().replaceAll("\"", "");
 				}
 
 				//DESCRIPTION
@@ -94,7 +91,7 @@ public class CatalogFolder {
 			System.out.println ("IO exception =" + e);
 		}
 
-		sTrimmedDS	= null;
+		trimmedDeclareStatement	= null;
 		line		= null;
 	}
 
