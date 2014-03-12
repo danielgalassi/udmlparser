@@ -259,10 +259,10 @@ public class MetadataExtract {
  * rpdxml + udmlxsl = udmltgt
  * rpdxml1 (=udmltgt) + udmlxsl1 = udmltgt1 (HTML)
 
-java -jar udmlparser.jar -udml=p6only.udml -cmd=busmatrix -udmltgt1=ShowMeTheMatrix.html 
+java -jar udmlparser.jar -udml=p6only.udml -cmd=busmatrix -udmltgt=ShowMeTheMatrix.html 
 
- -udml=test/st.udml 
- -rpdxml=test/RPD.XML 
+ -udml=sampleCases/st.udml 
+ -rpdxml=sampleCases/RPD.XML 
  -cmd=busmatrix 
- -udmltgt1=test/OBIEE.html
+ -udmltgt=sampleCases/OBIEE.html
 */
