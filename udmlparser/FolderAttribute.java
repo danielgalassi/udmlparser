@@ -46,23 +46,27 @@ public class FolderAttribute {
 		try {
 			//ALIASES
 			do {
+				boolean keywordFound = false;
 				line = udml.readLine().trim().replaceAll("\"", "");
-				if(line.indexOf("ALIASES (") != -1)
+				if(line.indexOf("ALIASES (") != -1) {
 					presentationColumnAliases = line.substring(
 										line.indexOf("ALIASES (")+9, 
 										line.lastIndexOf(")")).
 										trim().replaceAll("\"", "").split(",");
+					keywordFound = true;
+				}
 				
 				//DISPLAY NAME
-				if (line.indexOf("DISPLAY NAME ") != -1){
+				if (line.indexOf("DISPLAY NAME ") != -1 && !keywordFound) {
 					presentationDispayName = line.trim().substring(
 										line.indexOf("DISPLAY NAME ")+13,
 										line.lastIndexOf(" ON")).
 										trim().replaceAll("\"", "");
+					keywordFound = true;
 				}
 				
 				//DESCRIPTION
-				if (line.indexOf("DESCRIPTION") != -1){
+				if (line.indexOf("DESCRIPTION") != -1 && !keywordFound) {
 					presentationDescription = line.trim().substring(
 							line.indexOf("{")+1,
 							line.length()).
@@ -72,6 +76,7 @@ public class FolderAttribute {
 						line = udml.readLine().trim();
 						presentationDescription += "\n";
 						presentationDescription += line.trim().replaceAll("}", "");
+						keywordFound = true;
 					}
 				}
 					
