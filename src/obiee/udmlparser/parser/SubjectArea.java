@@ -33,30 +33,30 @@ public class SubjectArea {
 	}
 
 	public SubjectArea (String declare,
-						String sSubjectArea,
-						BufferedReader udml) {
+			String sSubjectArea,
+			BufferedReader udml) {
 		String line;
 		String trimmedDeclareStatement = declare.trim();
 		int asIdx = trimmedDeclareStatement.indexOf(" AS ");
 		int iconIds = trimmedDeclareStatement.indexOf(" ICON INDEX ");
 		subjectAreaID = trimmedDeclareStatement.substring(sSubjectArea.length(),asIdx).
-												trim().replaceAll("\"", "");
+				trim().replaceAll("\"", "");
 		if (iconIds != -1)
 			subjectAreaName = trimmedDeclareStatement.substring(asIdx+4, iconIds).
-										trim().replaceAll("\"", "");
+			trim().replaceAll("\"", "");
 		else
 			subjectAreaName = trimmedDeclareStatement.substring(asIdx+4).
-										trim().replaceAll("\"", "");
+			trim().replaceAll("\"", "");
 		try {
 			line = udml.readLine();
-			
+
 			//HIERARCHY DIMENSIONS
 			if (line.endsWith("DIMENSIONS (")) {
 				hierarchyDimensionIDs = new Vector<String>();
 				line = udml.readLine().trim().replaceAll("\"", "");
 				while (( line.indexOf("LOGICAL TABLES (") == -1) || 
 						(line.indexOf("PRIVILEGES") != -1 && 
-						 line.indexOf(";") != -1)) {
+						line.indexOf(";") != -1)) {
 					parseHierDim(line);
 					line = udml.readLine().trim().replaceAll("\"", "");
 				};
@@ -86,22 +86,22 @@ public class SubjectArea {
 
 	/**
 	 * Subject Area XML serializer
-	 * @param xmldoc XML document
+	 * @param doc XML document
 	 * @return XML fragment
 	 */
-	public Element serialize(Document xmldoc) {
+	public Element serialize(Document doc) {
 		if (subjectAreaID == null) {
 			subjectAreaID = "";
 		}
-		Node nBusinessCatalogID = xmldoc.createTextNode(subjectAreaID);
+		Node nBusinessCatalogID = doc.createTextNode(subjectAreaID);
 		if (subjectAreaName == null) {
 			subjectAreaName = "";
 		}
-		Node nBusinessCatalogName = xmldoc.createTextNode(subjectAreaName);
+		Node nBusinessCatalogName = doc.createTextNode(subjectAreaName);
 
-		Element eBusinessCatalog = xmldoc.createElement("BusinessCatalog");
-		Element eBusinessCatalogID = xmldoc.createElement("BusinessCatalogID");
-		Element eBusinessCatalogName = xmldoc.createElement("BusinessCatalogName");
+		Element eBusinessCatalog = doc.createElement("BusinessCatalog");
+		Element eBusinessCatalogID = doc.createElement("BusinessCatalogID");
+		Element eBusinessCatalogName = doc.createElement("BusinessCatalogName");
 
 		eBusinessCatalogID.appendChild(nBusinessCatalogID);
 		eBusinessCatalogName.appendChild(nBusinessCatalogName);
@@ -109,35 +109,35 @@ public class SubjectArea {
 		eBusinessCatalog.appendChild(eBusinessCatalogID);
 		eBusinessCatalog.appendChild(eBusinessCatalogName);
 
-		Element eHierDimensionList = xmldoc.createElement("HierarchyDimensionIDList");
+		Element eHierDimensionList = doc.createElement("HierarchyDimensionIDList");
 		Element eHierDim = null;
 		Node nHierDim = null;
-		
+
 		if (hierarchyDimensionIDs != null)
 			for (String sHierDimID : hierarchyDimensionIDs) {
-				eHierDim = xmldoc.createElement("HierarchyDimensionID");
-				if (sHierDimID == null)
-					nHierDim = xmldoc.createTextNode("");
-				else
-					nHierDim = xmldoc.createTextNode(sHierDimID);
+				eHierDim = doc.createElement("HierarchyDimensionID");
+				if (sHierDimID == null) {
+					sHierDimID = "";
+				}
+				nHierDim = doc.createTextNode(sHierDimID);
 
 				eHierDim.appendChild(nHierDim);
 				eHierDimensionList.appendChild(eHierDim);
 			}
-		
+
 		eBusinessCatalog.appendChild(eHierDimensionList);
 
-		Element eLogicalTableList = xmldoc.createElement("LogicalTableIDList");
+		Element eLogicalTableList = doc.createElement("LogicalTableIDList");
 		Element eLogicalTable = null;
 		Node nLogicalTable = null;
 
 		if (logicalTablesIDs != null)
-			for (String sLogicalTableID : logicalTablesIDs) {
-				eLogicalTable = xmldoc.createElement("LogicalTableID");
-				if (sLogicalTableID == null)
-					nLogicalTable = xmldoc.createTextNode("");
-				else
-					nLogicalTable = xmldoc.createTextNode(sLogicalTableID);
+			for (String logicalTableID : logicalTablesIDs) {
+				eLogicalTable = doc.createElement("LogicalTableID");
+				if (logicalTableID == null) {
+					logicalTableID = "";
+				}
+				nLogicalTable = doc.createTextNode(logicalTableID);
 
 				eLogicalTable.appendChild(nLogicalTable);
 				eLogicalTableList.appendChild(eLogicalTable);

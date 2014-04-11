@@ -32,7 +32,7 @@ public class UDMLParser {
 	private final String folderAttributes	= "DECLARE FOLDER ATTRIBUTE ";
 	private final String subjectAreas		= "DECLARE SUBJECT AREA ";
 	private final String logicalTables		= "DECLARE LOGICAL TABLE ";
-	private final String logicalTableSources	= "DECLARE LOGICAL TABLE SOURCE ";
+	private final String logicalTableSources= "DECLARE LOGICAL TABLE SOURCE ";
 	private final String physicalTables		= "DECLARE TABLE ";
 	private final String physicalTableKeys	= "DECLARE TABLE KEY ";
 	private final String dimensionLevels	= "DECLARE LEVEL ";
@@ -57,7 +57,7 @@ public class UDMLParser {
 			parse();
 		}
 		udml.appendChild(root);
-		XMLUtils.Document2File(udml, sOutput);
+		XMLUtils.saveDocument(udml, sOutput);
 		udmlExtract	= null;
 		root		= null;
 		udml		= null;

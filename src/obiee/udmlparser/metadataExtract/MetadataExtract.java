@@ -26,7 +26,7 @@ public class MetadataExtract {
 	/** one or more files containing OBIEE UDML code.*/
 	private static Vector <String>	udmlFiles	= null;
 	/** one or more files containing parsed metadata in XML format.*/
-	private static Vector <String>	vsUDMLxml	= null;
+	private static Vector <String>	xudmlFiles	= null;
 	/** one or more XSL files to transform the XML (parsed) results.*/
 	private static Vector <String>	stylesheets	= null;
 	/** one or more files resulting from applying XSL transformations.
@@ -34,13 +34,16 @@ public class MetadataExtract {
 	 */
 	private static Vector <String>	target	= null;
 	/** DOM reference to the file storing a job set for batch processing.*/
-	private static Document			batchXML		= null;
+	private static Document			batchConfig		= null;
 	/** stores whether the BusMatrix bundled app has been invoked or not.*/
 	private static boolean			isBusMatrixInvoked = false;
 	/**	is the reference to the first XSL file for bundled applications.*/
-	private static InputStream		stylesheet1 = null;
+//	private static InputStream		stylesheet1 = null;
 	/** is the reference to the second XSL file for bundled applications.*/
-	private static InputStream		stylesheet2 = null;
+//	private static InputStream		stylesheet2 = null;
+
+	/** is the reference to XSL stylesheets for bundled applications.*/
+	private static Vector<InputStream> bundledStylesheets = null;
 
 	/**
 	 * Indicates whether the Bus Matrix generation app has been invoked
@@ -56,15 +59,15 @@ public class MetadataExtract {
 	 * @return a reference to the XSL file used to transform XML files
 	 * @see java.io.InputStream
 	 */
-	private InputStream istrInternalResource(String resource) {
-		InputStream isRsc = null;
+	private InputStream getInternalResource(String resource) {
+		InputStream bundledResource = null;
 		try {
-			isRsc = getClass().getClassLoader().getResourceAsStream(resource);
+			bundledResource = getClass().getClassLoader().getResourceAsStream(resource);
 		} catch (Exception e) {
-			System.out.println("istrInternalResource: " + resource);
+			System.out.println("getInternalResource: " + resource);
 			e.printStackTrace();
 		}
-		return isRsc;
+		return bundledResource;
 	}
 
 	/**
@@ -73,47 +76,52 @@ public class MetadataExtract {
 	 */
 	private static void batch(String batchFileLocation) {
 		File batch;
-		int iBatchSize;
+		int batchConfigEntries;
 
 		batch = new File(batchFileLocation);
 
-		if (!batch.exists())
+		if (!batch.exists()) {
 			return;
+		}
 
-		batchXML = XMLUtils.File2Document(batch);
-		iBatchSize = batchXML.getElementsByTagName("jobdetails").getLength();
+		batchConfig = XMLUtils.loadDocument(batch);
+		batchConfigEntries = batchConfig.getElementsByTagName("jobdetails").getLength();
 
 		//loading batch arguments
 		udmlFiles = new Vector<String>();
-		vsUDMLxml = new Vector<String>();
+		xudmlFiles = new Vector<String>();
 		stylesheets = new Vector<String>();
 		target = new Vector<String>();
 
-		for (int s=0; s<iBatchSize; s++) {
+		for (int s=0; s<batchConfigEntries; s++) {
 
-			if (batchXML.getElementsByTagName("udml").item(s).hasChildNodes())
-				udmlFiles.add(batchXML.getElementsByTagName("udml").item(s).
-						getFirstChild().getNodeValue());
-			else
+			if (batchConfig.getElementsByTagName("udml").item(s).hasChildNodes()) {
+				udmlFiles.add(batchConfig.getElementsByTagName("udml").item(s).getFirstChild().getNodeValue());
+			}
+			else {
 				udmlFiles.add("");
+			}
 
-			if (batchXML.getElementsByTagName("rpdxml").item(s).hasChildNodes())
-				vsUDMLxml.add(batchXML.getElementsByTagName("rpdxml").item(s).
-						getFirstChild().getNodeValue());
-			else
-				vsUDMLxml.add("");
+			if (batchConfig.getElementsByTagName("rpdxml").item(s).hasChildNodes()) {
+				xudmlFiles.add(batchConfig.getElementsByTagName("rpdxml").item(s).getFirstChild().getNodeValue());
+			}
+			else {
+				xudmlFiles.add("");
+			}
 
-			if (batchXML.getElementsByTagName("udmlxsl").item(s).hasChildNodes())
-				stylesheets.add(batchXML.getElementsByTagName("udmlxsl").item(s).
-						getFirstChild().getNodeValue());
-			else
+			if (batchConfig.getElementsByTagName("udmlxsl").item(s).hasChildNodes()) {
+				stylesheets.add(batchConfig.getElementsByTagName("udmlxsl").item(s).getFirstChild().getNodeValue());
+			}
+			else {
 				stylesheets.add("");
+			}
 
-			if (batchXML.getElementsByTagName("udmltgt").item(s).hasChildNodes())
-				target.add(batchXML.getElementsByTagName("udmltgt").item(s).
-						getFirstChild().getNodeValue());
-			else
+			if (batchConfig.getElementsByTagName("udmltgt").item(s).hasChildNodes()) {
+				target.add(batchConfig.getElementsByTagName("udmltgt").item(s).getFirstChild().getNodeValue());
+			}
+			else {
 				target.add("");
+			}
 		}
 		//loading batch arguments --end
 		batch = null;
@@ -124,9 +132,9 @@ public class MetadataExtract {
 	 * @param args command line arguments
 	 */
 	private static void commandLine(String[] args) {
-		udmlFiles =	new Vector<String>();
-		vsUDMLxml =	new Vector<String>();
-		stylesheets =	new Vector<String>();
+		udmlFiles = new Vector<String>();
+		xudmlFiles = new Vector<String>();
+		stylesheets = new Vector<String>();
 		target =	new Vector<String>();
 
 		for(int i=0; i<args.length; i++) {
@@ -134,7 +142,7 @@ public class MetadataExtract {
 				udmlFiles.add(args[i].replaceFirst("-udml=",""));
 
 			if (args[i].startsWith("-rpdxml="))
-				vsUDMLxml.add(args[i].replaceFirst("-rpdxml=",""));
+				xudmlFiles.add(args[i].replaceFirst("-rpdxml=",""));
 
 			if (args[i].startsWith("-udmlxsl="))
 				stylesheets.add(args[i].replaceFirst("-udmlxsl=",""));
@@ -145,8 +153,9 @@ public class MetadataExtract {
 			if (args[i].equals("-cmd=busmatrix")) {
 				isBusMatrixInvoked = true;
 				MetadataExtract me = new MetadataExtract();
-				stylesheet1 = me.istrInternalResource("obiee/udmlparser/bundledApps/BusMatrix.xsl");
-				stylesheet2 = me.istrInternalResource("obiee/udmlparser/bundledApps/Output.xsl");
+				bundledStylesheets = new Vector<InputStream>();
+				bundledStylesheets.add(me.getInternalResource("obiee/udmlparser/bundledApps/BusMatrix.xsl"));
+				bundledStylesheets.add(me.getInternalResource("obiee/udmlparser/bundledApps/Output.xsl"));
 			}
 		}
 	}
@@ -180,26 +189,25 @@ public class MetadataExtract {
 	 */
 	public static void main(String[] args) {
 
+		int paramSize = args.length;
+
 		//batch requests HERE
-		if (args.length ==1 && args[0].startsWith("-b=")) {
+		if (paramSize == 1 && args[0].startsWith("-b=")) {
 			batch(args[0].replaceFirst("-b=", ""));
-			if (batchXML == null) {
+			if (batchConfig == null) {
 				System.out.println("Batch file not found");
 				return;
 			}
 		}
 		else 
 			//help requests or missing arguments HERE
-			if (args.length < 1 || 
-					args[0].startsWith("-h") || 
-					args[0].startsWith("-?") || 
-					args[0].startsWith("-help")) {
+			if (paramSize < 1 || args[0].startsWith("-h") || args[0].startsWith("-?") || args[0].startsWith("-help")) {
 				displayHelp();
 				return;
 			}
 			else 
 				//command line arguments HERE
-				if (args.length >= 2)
+				if (paramSize >= 2)
 					commandLine(args);
 
 		//REPOSITORY METADATA EXTRACTION
@@ -208,45 +216,42 @@ public class MetadataExtract {
 			//setting a default output file
 			//If the Bus Matrix app is invoked and the output filename is not
 			//specified, a default "rpd.xml" file is used.
-			if (vsUDMLxml.size() == 0 && isBusMatrixInvoked)
-				vsUDMLxml.add("rpd.xml");
+			if (xudmlFiles.size() == 0 && isBusMatrixInvoked) {
+				xudmlFiles.add("rpd.xml");
+			}
 
 			//Parameters check...
 			//And the UDML file is parsed
 			if (udmlFiles.size() > 0 &&
-					vsUDMLxml.size() > 0 &&
+					xudmlFiles.size() > 0 &&
 					udmlFiles.get(b).length() > 0 &&
-					vsUDMLxml.get(b).length() > 0)
-				new UDMLParser(udmlFiles.get(b), vsUDMLxml.get(b));
+					xudmlFiles.get(b).length() > 0) {
+				new UDMLParser(udmlFiles.get(b), xudmlFiles.get(b));
+			}
 
 			//Custom XML
 			if (stylesheets.size() > 0 &&
 					target.size() > 0 &&
 					stylesheets.get(b).length() > 0 &&
 					target.get(b).length() > 0 &&
-					!isBusMatrixInvoked)
-				XMLUtils.xsl4Files(vsUDMLxml.get(b), stylesheets.get(b), target.get(b));
+					!isBusMatrixInvoked) {
+				XMLUtils.applyStylesheet(xudmlFiles.get(b), stylesheets.get(b), target.get(b));
+			}
 
 			if (isBusMatrixInvoked) {
 				//picks up the XML file generated by the parser and applies BusMatrix.xsl to it
-				XMLUtils.xsl4Files(vsUDMLxml.get(b), stylesheet1, "temp.xml");
+				XMLUtils.applyStylesheet(xudmlFiles.get(b), bundledStylesheets.get(0), "temp.xml");
 				//creates the HTML page presenting results
 				System.out.println("Generating Bus Matrix document...");
-				XMLUtils.xsl4Files("temp.xml", stylesheet2, target.get(b));
+				XMLUtils.applyStylesheet("temp.xml", bundledStylesheets.get(1), target.get(b));
 
 				File temp = new File ("temp.xml");
 				System.out.println("Cleaning up temporary file: " + temp.getAbsolutePath());
 				temp.deleteOnExit();
-				temp = null;
 			}
 
 		}
 		//REPOSITORY METADATA EXTRACTION (END)
-
-		udmlFiles = null;
-		vsUDMLxml = null;
-		stylesheets = null;
-		target = null;
 	}
 }
 /*
