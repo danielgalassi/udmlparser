@@ -1,4 +1,4 @@
-metadataextract
-udmlparser
-utils
-xmlutils
+obiee.udmlparser.bundledApps
+obiee.udmlparser.metadataExtract
+obiee.udmlparser.parser
+obiee.udmlparser.utils
