@@ -143,22 +143,22 @@ public class PhysicalTable {
 
 	/**
 	 * Physical Table XML serializer
-	 * @param xmldoc XML document
+	 * @param doc XML document
 	 * @return XML fragment
 	 */
-	public Element serialize(Document xmldoc) {
+	public Element serialize(Document doc) {
 		if (physicalTableID == null) {
 			physicalTableID = "";
 		}
-		Node nPhysicalTableID = xmldoc.createTextNode(physicalTableID);
+		Node nPhysicalTableID = doc.createTextNode(physicalTableID);
 		if (physicalTableName == null) {
 			physicalTableName = "";
 		}
-		Node nPhysicalTableName = xmldoc.createTextNode(physicalTableName);
+		Node nPhysicalTableName = doc.createTextNode(physicalTableName);
 
-		Element ePhysicalTable = xmldoc.createElement("PhysicalTable");
-		Element ePhysicalTableID = xmldoc.createElement("PhysicalTableID");
-		Element ePhysicalTableName = xmldoc.createElement("PhysicalTableName");
+		Element ePhysicalTable = doc.createElement("PhysicalTable");
+		Element ePhysicalTableID = doc.createElement("PhysicalTableID");
+		Element ePhysicalTableName = doc.createElement("PhysicalTableName");
 
 		ePhysicalTable.setAttribute("isAlias", "false");
 		
@@ -175,7 +175,7 @@ public class PhysicalTable {
 		ePhysicalTable.appendChild(ePhysicalTableID);
 		ePhysicalTable.appendChild(ePhysicalTableName);
 
-		Element ePhysicalColumnList = xmldoc.createElement("PhysicalColumnList");
+		Element ePhysicalColumnList = doc.createElement("PhysicalColumnList");
 		Element ePhysicalColumn = null;
 
 		Element	ePhColID		= null;
@@ -193,49 +193,49 @@ public class PhysicalTable {
 
 		if(physicalumnColumnIDs != null)
 			for (int i=0; i< physicalumnColumnIDs.size(); i++) {
-				ePhysicalColumn = xmldoc.createElement("PhysicalColumn");
+				ePhysicalColumn = doc.createElement("PhysicalColumn");
 
-				ePhColID		= xmldoc.createElement("PhysicalColumnID");
-				ePhColName		= xmldoc.createElement("PhysicalColumnName");
-				ePhColDatatype	= xmldoc.createElement("PhysicalColumnDatatype");
-				ePhColSize		= xmldoc.createElement("PhysicalColumnSize");
-				ePhColScale		= xmldoc.createElement("PhysicalColumnScale");
-				ePhColNullable	= xmldoc.createElement("PhysicalColumnNullable");
+				ePhColID		= doc.createElement("PhysicalColumnID");
+				ePhColName		= doc.createElement("PhysicalColumnName");
+				ePhColDatatype	= doc.createElement("PhysicalColumnDatatype");
+				ePhColSize		= doc.createElement("PhysicalColumnSize");
+				ePhColScale		= doc.createElement("PhysicalColumnScale");
+				ePhColNullable	= doc.createElement("PhysicalColumnNullable");
 
 				if (physicalumnColumnIDs.get(i) == null) {
-					nPhColID = xmldoc.createTextNode("");
+					nPhColID = doc.createTextNode("");
 				} else {
-					nPhColID = xmldoc.createTextNode(physicalumnColumnIDs.get(i));
+					nPhColID = doc.createTextNode(physicalumnColumnIDs.get(i));
 				}
 
 				if (physicalumnColumnNames.get(i) == null) {
-					nPhColName = xmldoc.createTextNode("");
+					nPhColName = doc.createTextNode("");
 				} else {
-					nPhColName = xmldoc.createTextNode(physicalumnColumnNames.get(i));
+					nPhColName = doc.createTextNode(physicalumnColumnNames.get(i));
 				}
 
 				if (physicalColumnDataTypes.get(i) == null) {
-					nPhColDatatype = xmldoc.createTextNode("");
+					nPhColDatatype = doc.createTextNode("");
 				} else {
-					nPhColDatatype = xmldoc.createTextNode(physicalColumnDataTypes.get(i));
+					nPhColDatatype = doc.createTextNode(physicalColumnDataTypes.get(i));
 				}
 
 				if (physicalColumnSizes.get(i) == null) {
-					nPhColSize = xmldoc.createTextNode("");
+					nPhColSize = doc.createTextNode("");
 				} else {
-					nPhColSize = xmldoc.createTextNode(physicalColumnSizes.get(i));
+					nPhColSize = doc.createTextNode(physicalColumnSizes.get(i));
 				}
 
 				if (physicalColumnScales.get(i) == null) {
-					nPhColScale = xmldoc.createTextNode("");
+					nPhColScale = doc.createTextNode("");
 				} else {
-					nPhColScale = xmldoc.createTextNode(physicalColumnScales.get(i));
+					nPhColScale = doc.createTextNode(physicalColumnScales.get(i));
 				}
 
 				if (physicalColumnNullables.get(i) == null) {
-					nPhColNullable = xmldoc.createTextNode("");
+					nPhColNullable = doc.createTextNode("");
 				} else {
-					nPhColNullable = xmldoc.createTextNode(physicalColumnNullables.get(i));
+					nPhColNullable = doc.createTextNode(physicalColumnNullables.get(i));
 				}
 
 				ePhColID.appendChild(nPhColID);

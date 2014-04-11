@@ -45,43 +45,43 @@ public class XMLUtils {
 
 	/**
 	 * Reify a DOM document from a file
-	 * @param filename
+	 * @param xml
 	 * @return DOM document
 	 */
-	public static Document File2Document(File filename) {
-		DocumentBuilderFactory dBFXML = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBXML = null;
-		Document docXML = null;
+	public static Document loadDocument(File xml) {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = null;
+		Document doc = null;
 
 		try {
-			docBXML = dBFXML.newDocumentBuilder();
+			builder = factory.newDocumentBuilder();
 		} catch(Exception e) {
 			publishException(e);
 		}
 
 		try {
-			docXML = docBXML.parse(filename);
+			doc = builder.parse(xml);
 		} catch(Exception e) {
 			publishException(e);
 		}
 
-		return docXML;
+		return doc;
 	}
 
 	/**
 	 * Store a DOM document as a file
 	 * @param doc
-	 * @param filename
+	 * @param file
 	 */
-	public static void Document2File(Document doc, String filename) {
+	public static void saveDocument(Document doc, String file) {
 		Source source = new DOMSource(doc);
 
-		File XMLFile = new File(filename);
-		Result result = new StreamResult(XMLFile);
+		File xml = new File(file);
+		Result result = new StreamResult(xml);
 		try {
 
-			Transformer xformer = TransformerFactory.newInstance().newTransformer();
-			xformer.transform(source, result);
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
 			System.out.println(e);
 		} catch (TransformerException e) {
@@ -91,25 +91,33 @@ public class XMLUtils {
 
 	/**
 	 * Transform an XML file using XSL
-	 * @param strXMLFile
-	 * @param strXSLFile
-	 * @param strRESFile
+	 * @param xmlFile
+	 * @param xslFile
+	 * @param resultFile
 	 */
-	public static void xsl4Files(String strXMLFile,
-			String strXSLFile,
-			String strRESFile){
-		File fXMLFile = new File(strXMLFile);
-		File fXSLFile = new File(strXSLFile);
-		File fResult = new File(strRESFile);
-		Transformer trans = null;
-		Source xmlSource = new javax.xml.transform.stream.StreamSource(fXMLFile);
-		Source xsltSource = new javax.xml.transform.stream.StreamSource(fXSLFile);
-		Result result = new javax.xml.transform.stream.StreamResult(fResult);
+	public static void applyStylesheet(String xmlFile,
+			String xslFile,
+			String resultFile){
+		File xml = new File(xmlFile);
+		File xsl = new File(xslFile);
+		File output = new File(resultFile);
+		Transformer transformer = null;
+		Source xmlSource = new javax.xml.transform.stream.StreamSource(xml);
+		Source xsltSource = new javax.xml.transform.stream.StreamSource(xsl);
+		Result result = new javax.xml.transform.stream.StreamResult(output);
 		TransformerFactory transFact = javax.xml.transform.TransformerFactory.newInstance();
-		try {trans = transFact.newTransformer(xsltSource);
-		} catch (TransformerConfigurationException tcE) {System.out.println("3"); publishException(tcE);}
-		try {trans.transform(xmlSource, result);
-		} catch (TransformerException tE) {System.out.println("4"); publishException(tE);}
+		try {
+			transformer = transFact.newTransformer(xsltSource);
+		} catch (TransformerConfigurationException tcE) {
+			System.out.println("3");
+			publishException(tcE);
+		}
+		try {
+			transformer.transform(xmlSource, result);
+		} catch (TransformerException tE) {
+			System.out.println("4");
+			publishException(tE);
+		}
 	}
 
 	/**
@@ -118,7 +126,7 @@ public class XMLUtils {
 	 * @param inputsXSLFile
 	 * @param strRESFile
 	 */
-	public static void xsl4Files(String strXMLFile,
+	public static void applyStylesheet(String strXMLFile,
 			InputStream inputsXSLFile,
 			String strRESFile){
 		File fXMLFile = new File(strXMLFile);
@@ -139,7 +147,8 @@ public class XMLUtils {
 			System.out.println("3");
 			publishException(transformerConfigException);
 		}
-		try {trans.transform(xmlSource, result);
+		try {
+			trans.transform(xmlSource, result);
 		} catch (TransformerException transformerException) {
 			System.out.println("4");
 			publishException(transformerException);

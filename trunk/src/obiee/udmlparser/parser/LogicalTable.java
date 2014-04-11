@@ -26,16 +26,16 @@ public class LogicalTable {
 	private Vector <String>	derivedColumnMappings = null;
 
 	public LogicalTable (String declare,
-						 String logicalTable,
-						 BufferedReader udml) {
+			String logicalTable,
+			BufferedReader udml) {
 		String line;
 		String trimmedDeclareStatement = declare.trim();
 		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
 		logicalTableID = trimmedDeclareStatement.substring( logicalTable.length(), iIndexAS).
-												trim().replaceAll("\"", "");
+				trim().replaceAll("\"", "");
 		logicalTableName = trimmedDeclareStatement.substring( iIndexAS + 4, 
-											trimmedDeclareStatement.indexOf(" HAVING")).
-											trim().replaceAll("\"", "");
+				trimmedDeclareStatement.indexOf(" HAVING")).
+				trim().replaceAll("\"", "");
 
 		try {
 			line = udml.readLine();
@@ -48,36 +48,36 @@ public class LogicalTable {
 				if (line.indexOf(" AS ") != -1) {
 					//FQLOGCOLNAME
 					logicalColumnIDs.add(line.substring(0, 
-												line.indexOf(" AS ")).
-												trim().replaceAll("\"", ""));
+							line.indexOf(" AS ")).
+							trim().replaceAll("\"", ""));
 					//LOGCOLNAME
 					if (line.indexOf(" {") != -1)
 						logicalColumnNames.add(line.substring(
-											line.indexOf(" AS ")+4,
-											line.indexOf(" {")).
-											trim().replaceAll("\"", ""));
+								line.indexOf(" AS ")+4,
+								line.indexOf(" {")).
+								trim().replaceAll("\"", ""));
 					else
 						logicalColumnNames.add(line.substring(
-											line.indexOf(" AS ")+4).
-											trim().replaceAll("\"", ""));
+								line.indexOf(" AS ")+4).
+								trim().replaceAll("\"", ""));
 					if (line.indexOf(" DESCRIPTION") != -1)
 						logicalColumnDescriptions.add(line.substring(
-							line.indexOf(" {")+2,
-							line.indexOf("} ")).
-							trim());
+								line.indexOf(" {")+2,
+								line.indexOf("} ")).
+								trim());
 					else
 						logicalColumnDescriptions.add("");
 					//DERIVED EXPRESSION
 					if (line.indexOf(" DERIVED") != -1)
 						derivedLogicalColumnExpressions.add(line.substring(
-														line.indexOf(" {")+2, 
-														line.indexOf("} ")).
-														trim());
+								line.indexOf(" {")+2, 
+								line.indexOf("} ")).
+								trim());
 					else
 						derivedLogicalColumnExpressions.add("");
 				}
 			} while (line.indexOf("KEYS (") == -1 &&
-					 line.indexOf("SOURCES (") == -1);
+					line.indexOf("SOURCES (") == -1);
 
 			//DISCARD SOURCES, DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 &&
@@ -89,27 +89,27 @@ public class LogicalTable {
 		}
 
 		trimmedDeclareStatement	= null;
-		line		= null;
+		line = null;
 	}
 
 	/**
 	 * Folder Attribute XML serializer
-	 * @param xmldoc XML document
+	 * @param doc XML document
 	 * @return XML fragment
 	 */
-	public Element serialize(Document xmldoc) {
+	public Element serialize(Document doc) {
 		if (logicalTableID == null) {
 			logicalTableID = "";
 		}
-		Node nLogicalTableID = xmldoc.createTextNode(logicalTableID);
+		Node nLogicalTableID = doc.createTextNode(logicalTableID);
 		if (logicalTableName == null) {
 			logicalTableName = "";
 		}
-		Node nLogicalTableName = xmldoc.createTextNode(logicalTableName);
+		Node nLogicalTableName = doc.createTextNode(logicalTableName);
 
-		Element eLogicalTable = xmldoc.createElement("LogicalTable");
-		Element eLogicalTableID = xmldoc.createElement("LogicalTableID");
-		Element eLogicalTableName = xmldoc.createElement("LogicalTableName");
+		Element eLogicalTable = doc.createElement("LogicalTable");
+		Element eLogicalTableID = doc.createElement("LogicalTableID");
+		Element eLogicalTableName = doc.createElement("LogicalTableName");
 
 		eLogicalTableID.appendChild(nLogicalTableID);
 		eLogicalTableName.appendChild(nLogicalTableName);
@@ -117,7 +117,7 @@ public class LogicalTable {
 		eLogicalTable.appendChild(eLogicalTableID);
 		eLogicalTable.appendChild(eLogicalTableName);
 
-		Element eLogicalColumnList = xmldoc.createElement("LogicalColumnList");
+		Element eLogicalColumnList = doc.createElement("LogicalColumnList");
 		Element eLogicalColumn = null;
 		Element eLogicalColumnID = null;
 		Element eLogicalColumnName = null;
@@ -135,30 +135,30 @@ public class LogicalTable {
 
 		if(logicalColumnIDs != null)
 			for (int i=0; i< logicalColumnIDs.size(); i++) {
-				eLogicalColumn = xmldoc.createElement("LogicalColumn");
-				eLogicalColumnID = xmldoc.createElement("LogicalColumnID");
-				eLogicalColumnName = xmldoc.createElement("LogicalColumnName");
-				eLogicalColumnDescription = xmldoc.createElement("LogicalColumnDescription");
-				eLogicalColumnDerivedExpression = xmldoc.createElement("LogicalColumnDerivedExpression");
+				eLogicalColumn = doc.createElement("LogicalColumn");
+				eLogicalColumnID = doc.createElement("LogicalColumnID");
+				eLogicalColumnName = doc.createElement("LogicalColumnName");
+				eLogicalColumnDescription = doc.createElement("LogicalColumnDescription");
+				eLogicalColumnDerivedExpression = doc.createElement("LogicalColumnDerivedExpression");
 
 				if (logicalColumnIDs.get(i) == null) {
-					nLogicalColumnID = xmldoc.createTextNode("");
+					nLogicalColumnID = doc.createTextNode("");
 				} else {
-					nLogicalColumnID = xmldoc.createTextNode(logicalColumnIDs.get(i));
+					nLogicalColumnID = doc.createTextNode(logicalColumnIDs.get(i));
 				}
 
 				if (logicalColumnNames.get(i) == null) {
-					nLogicalColumnName = xmldoc.createTextNode("");
+					nLogicalColumnName = doc.createTextNode("");
 				} else {
-					nLogicalColumnName = xmldoc.createTextNode(logicalColumnNames.get(i));
+					nLogicalColumnName = doc.createTextNode(logicalColumnNames.get(i));
 				}
-				
-				nLogicalColumnDescription = xmldoc.createTextNode((logicalColumnDescriptions.get(i)).replace("\"", ""));
-				
+
+				nLogicalColumnDescription = doc.createTextNode((logicalColumnDescriptions.get(i)).replace("\"", ""));
+
 				if ((derivedLogicalColumnExpressions.get(i)).replaceAll("\"", "") == null) {
-					nLogicalColumnDerivedExpression = xmldoc.createTextNode("");
+					nLogicalColumnDerivedExpression = doc.createTextNode("");
 				} else {
-					nLogicalColumnDerivedExpression = xmldoc.createTextNode((derivedLogicalColumnExpressions.get(i)).replaceAll("\"", ""));
+					nLogicalColumnDerivedExpression = doc.createTextNode((derivedLogicalColumnExpressions.get(i)).replaceAll("\"", ""));
 				}
 
 				eLogicalColumnID.appendChild(nLogicalColumnID);
@@ -171,15 +171,15 @@ public class LogicalTable {
 				eLogicalColumn.appendChild(eLogicalColumnDescription);
 				eLogicalColumn.appendChild(eLogicalColumnDerivedExpression);
 
-				eLogicalColumnDerivedMappingList = xmldoc.createElement("LogicalColumnDerivedMappingList");
+				eLogicalColumnDerivedMappingList = doc.createElement("LogicalColumnDerivedMappingList");
 				derivedColumnMappings = Utils.CalculationParser(logicalTableID, derivedLogicalColumnExpressions.get(i), true);
 				if(derivedColumnMappings != null) {
-					for (String vBiz2BizColumnMapping : derivedColumnMappings) {
-						eBiz2BizColumnMappingID = xmldoc.createElement("LogicalColumnDerivedMappingID");
-						if (vBiz2BizColumnMapping == null)
-							nBiz2BizColumnMappingID = xmldoc.createTextNode("");
-						else
-							nBiz2BizColumnMappingID = xmldoc.createTextNode(vBiz2BizColumnMapping);
+					for (String biz2BizColumnMapping : derivedColumnMappings) {
+						eBiz2BizColumnMappingID = doc.createElement("LogicalColumnDerivedMappingID");
+						if (biz2BizColumnMapping == null) {
+							biz2BizColumnMapping = "";
+						}
+						nBiz2BizColumnMappingID = doc.createTextNode(biz2BizColumnMapping);
 
 						eBiz2BizColumnMappingID.appendChild(nBiz2BizColumnMappingID);
 						eLogicalColumnDerivedMappingList.appendChild(eBiz2BizColumnMappingID);
