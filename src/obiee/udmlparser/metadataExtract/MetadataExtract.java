@@ -24,24 +24,19 @@ import org.w3c.dom.Document;
 public class MetadataExtract {
 
 	/** one or more files containing OBIEE UDML code.*/
-	private static Vector <String>	udmlFiles	= null;
+	private static Vector <String>	udmlFiles = null;
 	/** one or more files containing parsed metadata in XML format.*/
-	private static Vector <String>	xudmlFiles	= null;
+	private static Vector <String>	xudmlFiles = null;
 	/** one or more XSL files to transform the XML (parsed) results.*/
-	private static Vector <String>	stylesheets	= null;
+	private static Vector <String>	stylesheets = null;
 	/** one or more files resulting from applying XSL transformations.
 	 * Most common formats: CSV, HTML, XML.
 	 */
-	private static Vector <String>	target	= null;
+	private static Vector <String>	target = null;
 	/** DOM reference to the file storing a job set for batch processing.*/
-	private static Document			batchConfig		= null;
+	private static Document			batchConfig = null;
 	/** stores whether the BusMatrix bundled app has been invoked or not.*/
 	private static boolean			isBusMatrixInvoked = false;
-	/**	is the reference to the first XSL file for bundled applications.*/
-//	private static InputStream		stylesheet1 = null;
-	/** is the reference to the second XSL file for bundled applications.*/
-//	private static InputStream		stylesheet2 = null;
-
 	/** is the reference to XSL stylesheets for bundled applications.*/
 	private static Vector<InputStream> bundledStylesheets = null;
 
@@ -135,7 +130,7 @@ public class MetadataExtract {
 		udmlFiles = new Vector<String>();
 		xudmlFiles = new Vector<String>();
 		stylesheets = new Vector<String>();
-		target =	new Vector<String>();
+		target = new Vector<String>();
 
 		for(int i=0; i<args.length; i++) {
 			if (args[i].startsWith("-udml="))
@@ -216,25 +211,18 @@ public class MetadataExtract {
 			//setting a default output file
 			//If the Bus Matrix app is invoked and the output filename is not
 			//specified, a default "rpd.xml" file is used.
-			if (xudmlFiles.size() == 0 && isBusMatrixInvoked) {
+			if (xudmlFiles.isEmpty() && isBusMatrixInvoked) {
 				xudmlFiles.add("rpd.xml");
 			}
 
 			//Parameters check...
 			//And the UDML file is parsed
-			if (udmlFiles.size() > 0 &&
-					xudmlFiles.size() > 0 &&
-					udmlFiles.get(b).length() > 0 &&
-					xudmlFiles.get(b).length() > 0) {
+			if (!udmlFiles.isEmpty() && !xudmlFiles.isEmpty() && !udmlFiles.get(b).equals("") && !xudmlFiles.get(b).equals("")) {
 				new UDMLParser(udmlFiles.get(b), xudmlFiles.get(b));
 			}
 
 			//Custom XML
-			if (stylesheets.size() > 0 &&
-					target.size() > 0 &&
-					stylesheets.get(b).length() > 0 &&
-					target.get(b).length() > 0 &&
-					!isBusMatrixInvoked) {
+			if (!stylesheets.isEmpty() && !target.isEmpty() && !stylesheets.get(b).equals("") && !target.get(b).equals("") && !isBusMatrixInvoked) {
 				XMLUtils.applyStylesheet(xudmlFiles.get(b), stylesheets.get(b), target.get(b));
 			}
 

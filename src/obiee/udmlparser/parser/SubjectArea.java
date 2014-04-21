@@ -22,30 +22,30 @@ public class SubjectArea {
 
 	private void parseLogicalTable(String line) {
 		int iIndexSA = line.indexOf(") SUBJECT AREA ");
-		if (line.endsWith(","))
+		if (line.endsWith(",")) {
 			logicalTablesIDs.add(line.substring(0, line.length()-1));
-		if (iIndexSA != -1)
+		}
+		if (iIndexSA != -1) {
 			logicalTablesIDs.add(line.substring(0, iIndexSA));
+		}
 	}
 
 	private void parseHierDim(String line) {
 		hierarchyDimensionIDs.add(line.substring(0, line.length()-1));
 	}
 
-	public SubjectArea (String declare,
-			String sSubjectArea,
-			BufferedReader udml) {
+	public SubjectArea (String declare, String sSubjectArea, BufferedReader udml) {
 		String line;
-		String trimmedDeclareStatement = declare.trim();
-		int asIdx = trimmedDeclareStatement.indexOf(" AS ");
-		int iconIds = trimmedDeclareStatement.indexOf(" ICON INDEX ");
-		subjectAreaID = trimmedDeclareStatement.substring(sSubjectArea.length(),asIdx).
+		String trimmedHeader = declare.trim();
+		int asIdx = trimmedHeader.indexOf(" AS ");
+		int iconIds = trimmedHeader.indexOf(" ICON INDEX ");
+		subjectAreaID = trimmedHeader.substring(sSubjectArea.length(),asIdx).
 				trim().replaceAll("\"", "");
 		if (iconIds != -1)
-			subjectAreaName = trimmedDeclareStatement.substring(asIdx+4, iconIds).
+			subjectAreaName = trimmedHeader.substring(asIdx+4, iconIds).
 			trim().replaceAll("\"", "");
 		else
-			subjectAreaName = trimmedDeclareStatement.substring(asIdx+4).
+			subjectAreaName = trimmedHeader.substring(asIdx+4).
 			trim().replaceAll("\"", "");
 		try {
 			line = udml.readLine();
@@ -79,9 +79,6 @@ public class SubjectArea {
 		} catch (IOException e) {
 			System.out.println ("IO exception =" + e);
 		}
-
-		trimmedDeclareStatement	= null;
-		line		= null;
 	}
 
 	/**

@@ -31,7 +31,7 @@ public class XMLUtils {
 	 * Create an empty DOM document
 	 * @return DOM document
 	 */
-	public static Document createDOMDocument() {
+	public static Document createDocument() {
 		DocumentBuilder builder = null;
 		Document doc = null;
 		try {
