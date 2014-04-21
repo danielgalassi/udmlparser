@@ -39,14 +39,15 @@ public class SubjectArea {
 		String trimmedHeader = declare.trim();
 		int asIdx = trimmedHeader.indexOf(" AS ");
 		int iconIds = trimmedHeader.indexOf(" ICON INDEX ");
-		subjectAreaID = trimmedHeader.substring(sSubjectArea.length(),asIdx).
-				trim().replaceAll("\"", "");
-		if (iconIds != -1)
-			subjectAreaName = trimmedHeader.substring(asIdx+4, iconIds).
-			trim().replaceAll("\"", "");
-		else
-			subjectAreaName = trimmedHeader.substring(asIdx+4).
-			trim().replaceAll("\"", "");
+		subjectAreaID = trimmedHeader.substring(sSubjectArea.length(),asIdx).trim().replaceAll("\"", "");
+
+		if (iconIds != -1) {
+			subjectAreaName = trimmedHeader.substring(asIdx+4, iconIds).trim().replaceAll("\"", "");
+		}
+		else {
+			subjectAreaName = trimmedHeader.substring(asIdx+4).trim().replaceAll("\"", "");
+		}
+
 		try {
 			line = udml.readLine();
 
