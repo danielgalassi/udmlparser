@@ -25,16 +25,16 @@ public class CatalogFolder {
 
 	public CatalogFolder(String declare, String catalogFolder, BufferedReader udml) {
 		String line;
-		String trimmedDeclareStatement = declare.trim();
-		int as = trimmedDeclareStatement.indexOf(" AS ");
+		String trimmedHeader = declare.trim();
+		int as = trimmedHeader.indexOf(" AS ");
 		//finds custom icons in Subject Areas
-		int icon = trimmedDeclareStatement.indexOf(" ICON INDEX ");
-		catalogFolderID = trimmedDeclareStatement.substring(catalogFolder.length(), as).trim().replaceAll("\"", "");
+		int icon = trimmedHeader.indexOf(" ICON INDEX ");
+		catalogFolderID = trimmedHeader.substring(catalogFolder.length(), as).trim().replaceAll("\"", "");
 		if (icon != -1) {
-			catalogFolderName = trimmedDeclareStatement.substring(as+4, icon).trim().replaceAll("\"", "");
+			catalogFolderName = trimmedHeader.substring(as+4, icon).trim().replaceAll("\"", "");
 		}
 		else {
-			catalogFolderName = trimmedDeclareStatement.substring(as+4).trim().replaceAll("\"", "");
+			catalogFolderName = trimmedHeader.substring(as+4).trim().replaceAll("\"", "");
 		}
 		try {
 			//SUBJECT AREA
@@ -91,7 +91,7 @@ public class CatalogFolder {
 			System.out.println ("IO exception =" + e);
 		}
 
-		trimmedDeclareStatement	= null;
+		trimmedHeader	= null;
 		line		= null;
 	}
 
