@@ -68,17 +68,19 @@ public class UDMLParser {
 		boolean isUDML = false;
 		try {
 			Reader udmlStreamReader = new InputStreamReader(new FileInputStream(udmlExtract), "UTF-8");
-			BufferedReader udmlReader = new BufferedReader(udmlStreamReader);
-			if(udmlReader.readLine().indexOf("DECLARE ") == 0)
+			BufferedReader udml = new BufferedReader(udmlStreamReader);
+			if(udml.readLine().indexOf("DECLARE ") == 0) {
 				isUDML = true;
-			udmlReader.close();
+			}
+			udml.close();
 			udmlStreamReader.close();
 		}
 		catch (IOException e) {
-			System.out.println ("IO exception =" + e );
+			e.printStackTrace();
 		}
-		if (isUDML)
+		if (isUDML) {
 			System.out.println(udmlExtract + " is a valid file.");
+		}
 		return isUDML;
 	}
 
