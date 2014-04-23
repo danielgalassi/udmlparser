@@ -45,6 +45,7 @@ public class LogicalTable implements UDMLObject {
 			derivedLogicalColumnExpressions = new Vector<String>();
 			do {
 				line = udml.readLine().trim();
+
 				if (line.indexOf(" AS ") != -1) {
 					//FQLOGCOLNAME
 					logicalColumnIDs.add(line.substring(0, 
@@ -77,7 +78,8 @@ public class LogicalTable implements UDMLObject {
 						derivedLogicalColumnExpressions.add("");
 				}
 			} while (line.indexOf("KEYS (") == -1 &&
-					line.indexOf("SOURCES (") == -1);
+					line.indexOf("SOURCES (") == -1 && 
+					line.indexOf("PRIVILEGES (") == -1);
 
 			//DISCARD SOURCES, DESCRIPTION AND PRIVILEGES
 			while ( line.indexOf("PRIVILEGES") == -1 &&
@@ -85,11 +87,8 @@ public class LogicalTable implements UDMLObject {
 				line = udml.readLine();
 
 		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+			e.printStackTrace();
 		}
-
-		trimmedDeclareStatement	= null;
-		line = null;
 	}
 
 	/**
