@@ -61,8 +61,7 @@ public class MetadataExtract {
 		try {
 			bundledResource = getClass().getClassLoader().getResourceAsStream(resource);
 		} catch (Exception e) {
-			logger.warn("getInternalResource: {}", resource);
-			e.printStackTrace();
+			logger.warn("Stylesheet {} could not be loaded.", resource);
 		}
 		return bundledResource;
 	}
@@ -205,13 +204,17 @@ public class MetadataExtract {
 	public static void main(String[] args) {
 
 		int paramSize = args.length;
-		String firstArg = args[0];
+		String firstArg = "";
+		
+		if (paramSize > 0)
+			firstArg = args[0];
 
 		//help requests or missing arguments HERE
 		if (paramSize < 1 || firstArg.startsWith("-h") || firstArg.startsWith("-?") || firstArg.startsWith("-help")) {
 			displayHelp();
 			return;
 		}
+
 
 		//command line arguments HERE
 		if (paramSize >= 2) {
