@@ -94,9 +94,8 @@ public class UDMLParser {
 			Reader reader = new InputStreamReader(new FileInputStream(udmlExtract), "UTF-8");
 			BufferedReader udmlBuffer = new BufferedReader (reader);
 
-			UDMLObject object = null;
-
 			do {
+				UDMLObject object = null;
 				header = udmlBuffer.readLine();
 				if (header == null) {
 					break;
@@ -153,16 +152,18 @@ public class UDMLParser {
 						object = new ForeignKey(header, foreignKeys, udmlBuffer);
 					}
 				}
-				try
-				{
-					Node node = object.serialize(udml);
-					root.appendChild(node);
+				if (!(object == null)) {
+					try
+					{
+						Node node = object.serialize(udml);
+						root.appendChild(node);
+					}
+					catch(Exception ex)
+					{
+						System.out.println(object == null);
+						ex.printStackTrace();
+					}
 				}
-				catch(Exception ex)
-				{
-					ex.printStackTrace();
-				}
-
 			} while (true);
 
 
