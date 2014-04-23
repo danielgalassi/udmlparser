@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
@@ -18,33 +17,27 @@ public class LogicalForeignKey implements UDMLObject {
 	private String			logicalForeignKeyJoinID;
 	private Vector <String>	logicalTableIDs = null;
 
-	public LogicalForeignKey (String declare,
-			String subjectArea,
-			BufferedReader udml) {
+	public LogicalForeignKey (String declare, String subjectArea, Scanner udml) {
 		String line = "";
 		String line2 = "";
 		int iLogicalTable = 0;
 		String trimmedDeclareStatement = declare.trim();
 		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
 		logicalForeignKeyJoinID = trimmedDeclareStatement.substring(subjectArea.length(),iIndexAS).
-							trim().replaceAll("\"", "");
-		try {
-			logicalTableIDs = new Vector<String>();
-			while ( line.indexOf(") COUNTERPART KEY ") == -1 && line.indexOf(";") == -1)
-				line = udml.readLine().trim();
-			iLogicalTable = line.substring(0, line.indexOf(") COUNTERPART KEY ")).trim().lastIndexOf("\".\"");
-			logicalTableIDs.add(line.substring(0,  iLogicalTable+1).replace("\"", ""));
-			line2 = line.substring(line.indexOf(") COUNTERPART KEY ")+18).trim();
-			iLogicalTable = line2.lastIndexOf("\".\"");
-			logicalTableIDs.add(line2.substring(0, iLogicalTable).replace("\"", ""));
+				trim().replaceAll("\"", "");
 
-			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			while ( line.indexOf("PRIVILEGES") == -1 &&
-					line.indexOf(";") == -1)
-				line = udml.readLine();
-			
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+		logicalTableIDs = new Vector<String>();
+		while ( line.indexOf(") COUNTERPART KEY ") == -1 && line.indexOf(";") == -1)
+			line = udml.nextLine().trim();
+		iLogicalTable = line.substring(0, line.indexOf(") COUNTERPART KEY ")).trim().lastIndexOf("\".\"");
+		logicalTableIDs.add(line.substring(0,  iLogicalTable+1).replace("\"", ""));
+		line2 = line.substring(line.indexOf(") COUNTERPART KEY ")+18).trim();
+		iLogicalTable = line2.lastIndexOf("\".\"");
+		logicalTableIDs.add(line2.substring(0, iLogicalTable).replace("\"", ""));
+
+		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
+		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			line = udml.nextLine();
 		}
 
 		trimmedDeclareStatement	= null;

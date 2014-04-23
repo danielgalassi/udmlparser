@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
@@ -14,14 +13,12 @@ import org.w3c.dom.Node;
  *
  */
 public class DimensionLevel implements UDMLObject {
-	
+
 	private String 			dimensionLevelID;
 	private String			dimensionLevelName;
 	private Vector <String>	logicalColumnIDs = null;
 
-	public DimensionLevel ( String declare, 
-							String catalogFolder, 
-							BufferedReader udml) {
+	public DimensionLevel (String declare, String catalogFolder, Scanner udml) {
 		int fullDrillIdx;
 		int grandTotalIdx;
 		int tokenIdx;
@@ -30,84 +27,78 @@ public class DimensionLevel implements UDMLObject {
 		String trimmedDeclareStatement = declare.trim();
 		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
 		dimensionLevelID = trimmedDeclareStatement.substring(catalogFolder.length(), 
-												 iIndexAS).
-												 trim().replaceAll("\"", "");
-		
+				iIndexAS).trim().replaceAll("\"", "");
+
 		fullDrillIdx = trimmedDeclareStatement.indexOf(" FULL DRILL ");
 		grandTotalIdx = trimmedDeclareStatement.indexOf(" GRAND TOTAL ");
-		
-		if (grandTotalIdx == -1 && 
-			fullDrillIdx == -1)
-			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4).
-												trim().replaceAll("\"", "");
-		
-		if (fullDrillIdx != -1 && 
-			grandTotalIdx == -1)
-			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4,
-										trimmedDeclareStatement.indexOf(" FULL DRILL ")).
-										trim().replaceAll("\"", "");
-		
-		if (fullDrillIdx == -1 && 
-			grandTotalIdx != -1)
-			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4, 
-										trimmedDeclareStatement.indexOf(" GRAND TOTAL ")).
-										trim().replaceAll("\"", "");
-		
-		if (fullDrillIdx != -1 &&
-			grandTotalIdx != -1 && 
-			fullDrillIdx > grandTotalIdx)
-			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4,
-										trimmedDeclareStatement.indexOf(" GRAND TOTAL ")).
-										trim().replaceAll("\"", "");
-		
-		try {
-			//HAVING STRING
-			line = udml.readLine().trim().replaceAll("\"", "");
 
-			//LOGICAL COLUMNS LIST
-			if (line.indexOf("HAVING (") != -1) {
-				logicalColumnIDs = new Vector<String>();
-				do {
-					line = udml.readLine().trim().replaceAll("\"", "");
-					fullDrillIdx = line.indexOf(") FULL DRILL ");
-					grandTotalIdx = line.indexOf(") GRAND TOTAL ");
-					tokenIdx = 0;
-					
-					if (line.charAt(line.length()-1) == ',')
-						tokenIdx = line.length()-1;
-					else {
-						if (fullDrillIdx != -1 && 
+		if (grandTotalIdx == -1 && 
+				fullDrillIdx == -1)
+			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4).
+			trim().replaceAll("\"", "");
+
+		if (fullDrillIdx != -1 && 
+				grandTotalIdx == -1)
+			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4,
+					trimmedDeclareStatement.indexOf(" FULL DRILL ")).
+					trim().replaceAll("\"", "");
+
+		if (fullDrillIdx == -1 && 
+				grandTotalIdx != -1)
+			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4, 
+					trimmedDeclareStatement.indexOf(" GRAND TOTAL ")).
+					trim().replaceAll("\"", "");
+
+		if (fullDrillIdx != -1 &&
+				grandTotalIdx != -1 && 
+				fullDrillIdx > grandTotalIdx)
+			dimensionLevelName = trimmedDeclareStatement.substring(iIndexAS+4,
+					trimmedDeclareStatement.indexOf(" GRAND TOTAL ")).
+					trim().replaceAll("\"", "");
+
+		//HAVING STRING
+		line = udml.nextLine().trim().replaceAll("\"", "");
+
+		//LOGICAL COLUMNS LIST
+		if (line.indexOf("HAVING (") != -1) {
+			logicalColumnIDs = new Vector<String>();
+			do {
+				line = udml.nextLine().trim().replaceAll("\"", "");
+				fullDrillIdx = line.indexOf(") FULL DRILL ");
+				grandTotalIdx = line.indexOf(") GRAND TOTAL ");
+				tokenIdx = 0;
+
+				if (line.charAt(line.length()-1) == ',')
+					tokenIdx = line.length()-1;
+				else {
+					if (fullDrillIdx != -1 && 
 							grandTotalIdx == -1)
-							tokenIdx = line.indexOf(") FULL DRILL ");
-						if (fullDrillIdx == -1 && 
+						tokenIdx = line.indexOf(") FULL DRILL ");
+					if (fullDrillIdx == -1 && 
 							grandTotalIdx != -1)
-							tokenIdx = line.indexOf(") GRAND TOTAL ");
-						if (fullDrillIdx != -1 && 
+						tokenIdx = line.indexOf(") GRAND TOTAL ");
+					if (fullDrillIdx != -1 && 
 							grandTotalIdx != -1 && 
 							fullDrillIdx > grandTotalIdx)
-							tokenIdx = line.indexOf(") GRAND TOTAL ");
-					}
-					
-					tempLogColID = line.substring(0, tokenIdx);
-					logicalColumnIDs.add(tempLogColID.trim());
-				} while (fullDrillIdx == -1 && 
-						 grandTotalIdx == -1);
-			}
+						tokenIdx = line.indexOf(") GRAND TOTAL ");
+				}
 
-			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			while ( line.indexOf("PRIVILEGES") == -1 && 
-					line.indexOf(";") == -1)
-				line = udml.readLine();
+				tempLogColID = line.substring(0, tokenIdx);
+				logicalColumnIDs.add(tempLogColID.trim());
+			} while (fullDrillIdx == -1 && 
+					grandTotalIdx == -1);
+		}
 
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
+		while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			line = udml.nextLine();
 		}
 
 		line			= null;
 		tempLogColID	= null;
 		trimmedDeclareStatement		= null;
 	}
-	
+
 	/**
 	 * Dimension Level XML serializer
 	 * @param xmldoc XML document
@@ -159,4 +150,3 @@ public class DimensionLevel implements UDMLObject {
  * FQ Logical Column name ) GRAND TOTAL ALIAS FULL DRILL UP COVERAGE CONSTANT 'All'
  * PRIVILEGES (...);
  */
- 

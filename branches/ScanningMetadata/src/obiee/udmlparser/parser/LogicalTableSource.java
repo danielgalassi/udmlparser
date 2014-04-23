@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import obiee.udmlparser.utils.Utils;
@@ -22,9 +21,7 @@ public class LogicalTableSource implements UDMLObject {
 	private Vector <String>	logicalColumnIDs;
 	private Vector <String>	logicalColumnCalculations;
 
-	public LogicalTableSource (String declare,
-			String logicalTableSource, 
-			BufferedReader udml) {
+	public LogicalTableSource (String declare, String logicalTableSource, Scanner udml) {
 		String line;
 		String trimmedDeclareStatement = declare.trim();
 		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
@@ -36,44 +33,39 @@ public class LogicalTableSource implements UDMLObject {
 		this.logicalTableSourceName = trimmedDeclareStatement.substring(iIndexAS + 4).
 				trim().replaceAll("\"", "");
 
-		try {
-			//DISCARD HEADING
+		//DISCARD HEADING
+		do {
+			line = udml.nextLine();
+		} while (line.indexOf("PROJECT (") == -1);
+
+		//LOGICAL COLUMNS
+		if (line.indexOf("PROJECT (") != -1) {
+			logicalColumnIDs = new Vector<String>();
+			logicalColumnCalculations = new Vector<String>();
 			do {
-				line = udml.readLine();
-			} while (line.indexOf("PROJECT (") == -1);
+				line = udml.nextLine().trim();
+				if (line.indexOf(" AS ") != -1 && 
+						line.indexOf(" CAST") == -1) {
+					logicalColumnIDs.add(line.substring(
+							line.indexOf("{") + 1,
+							line.indexOf("}")).
+							replaceAll("\"", ""));
+					//"end-of-line" in case } is missing. Issue # 6.
+					eol = line.lastIndexOf("}");
+					if (eol < line.lastIndexOf("{")-1)
+						eol = line.length()-1;
+					cbr = line.lastIndexOf("{")+1;
+					if (cbr >= line.length())
+						cbr = line.lastIndexOf("{");
+					logicalColumnCalculations.add(line.substring(
+							cbr,
+							eol));
+				}
+			} while (line.indexOf("FROM") == -1);
+		}
 
-			//LOGICAL COLUMNS
-			if (line.indexOf("PROJECT (") != -1) {
-				logicalColumnIDs = new Vector<String>();
-				logicalColumnCalculations = new Vector<String>();
-				do {
-					line = udml.readLine().trim();
-					if (line.indexOf(" AS ") != -1 && 
-							line.indexOf(" CAST") == -1) {
-						logicalColumnIDs.add(line.substring(
-								line.indexOf("{") + 1,
-								line.indexOf("}")).
-								replaceAll("\"", ""));
-						//"end-of-line" in case } is missing. Issue # 6.
-						eol = line.lastIndexOf("}");
-						if (eol < line.lastIndexOf("{")-1)
-							eol = line.length()-1;
-						cbr = line.lastIndexOf("{")+1;
-						if (cbr >= line.length())
-							cbr = line.lastIndexOf("{");
-						logicalColumnCalculations.add(line.substring(
-								cbr,
-								eol));
-					}
-				} while (line.indexOf("FROM") == -1);
-			}
-
-			while ( line.indexOf("PRIVILEGES") == -1 && 
-					line.indexOf(";") == -1)
-				line = udml.readLine();
-
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			line = udml.nextLine();
 		}
 
 		trimmedDeclareStatement	= null;

@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import obiee.udmlparser.utils.Utils;
@@ -25,9 +24,7 @@ public class LogicalTable implements UDMLObject {
 	private Vector <String>	derivedLogicalColumnExpressions = null;
 	private Vector <String>	derivedColumnMappings = null;
 
-	public LogicalTable (String declare,
-			String logicalTable,
-			BufferedReader udml) {
+	public LogicalTable (String declare, String logicalTable, Scanner udml) {
 		String line;
 		String trimmedDeclareStatement = declare.trim();
 		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
@@ -37,58 +34,54 @@ public class LogicalTable implements UDMLObject {
 				trimmedDeclareStatement.indexOf(" HAVING")).
 				trim().replaceAll("\"", "");
 
-		try {
-			line = udml.readLine();
-			logicalColumnIDs = new Vector<String>();
-			logicalColumnNames = new Vector<String>();
-			logicalColumnDescriptions = new Vector<String>();
-			derivedLogicalColumnExpressions = new Vector<String>();
-			do {
-				line = udml.readLine().trim();
+		line = udml.nextLine();
+		logicalColumnIDs = new Vector<String>();
+		logicalColumnNames = new Vector<String>();
+		logicalColumnDescriptions = new Vector<String>();
+		derivedLogicalColumnExpressions = new Vector<String>();
+		do {
+			line = udml.nextLine().trim();
 
-				if (line.indexOf(" AS ") != -1) {
-					//FQLOGCOLNAME
-					logicalColumnIDs.add(line.substring(0, 
-							line.indexOf(" AS ")).
+			if (line.indexOf(" AS ") != -1) {
+				//FQLOGCOLNAME
+				logicalColumnIDs.add(line.substring(0, 
+						line.indexOf(" AS ")).
+						trim().replaceAll("\"", ""));
+				//LOGCOLNAME
+				if (line.indexOf(" {") != -1)
+					logicalColumnNames.add(line.substring(
+							line.indexOf(" AS ")+4,
+							line.indexOf(" {")).
 							trim().replaceAll("\"", ""));
-					//LOGCOLNAME
-					if (line.indexOf(" {") != -1)
-						logicalColumnNames.add(line.substring(
-								line.indexOf(" AS ")+4,
-								line.indexOf(" {")).
-								trim().replaceAll("\"", ""));
-					else
-						logicalColumnNames.add(line.substring(
-								line.indexOf(" AS ")+4).
-								trim().replaceAll("\"", ""));
-					if (line.indexOf(" DESCRIPTION") != -1)
-						logicalColumnDescriptions.add(line.substring(
-								line.indexOf(" {")+2,
-								line.indexOf("} ")).
-								trim());
-					else
-						logicalColumnDescriptions.add("");
-					//DERIVED EXPRESSION
-					if (line.indexOf(" DERIVED") != -1)
-						derivedLogicalColumnExpressions.add(line.substring(
-								line.indexOf(" {")+2, 
-								line.indexOf("} ")).
-								trim());
-					else
-						derivedLogicalColumnExpressions.add("");
-				}
-			} while (line.indexOf("KEYS (") == -1 &&
-					line.indexOf("SOURCES (") == -1 && 
-					line.indexOf("PRIVILEGES (") == -1);
+				else
+					logicalColumnNames.add(line.substring(
+							line.indexOf(" AS ")+4).
+							trim().replaceAll("\"", ""));
+				if (line.indexOf(" DESCRIPTION") != -1)
+					logicalColumnDescriptions.add(line.substring(
+							line.indexOf(" {")+2,
+							line.indexOf("} ")).
+							trim());
+				else
+					logicalColumnDescriptions.add("");
+				//DERIVED EXPRESSION
+				if (line.indexOf(" DERIVED") != -1)
+					derivedLogicalColumnExpressions.add(line.substring(
+							line.indexOf(" {")+2, 
+							line.indexOf("} ")).
+							trim());
+				else
+					derivedLogicalColumnExpressions.add("");
+			}
+		} while (line.indexOf("KEYS (") == -1 &&
+				line.indexOf("SOURCES (") == -1 && 
+				line.indexOf("PRIVILEGES (") == -1);
 
-			//DISCARD SOURCES, DESCRIPTION AND PRIVILEGES
-			while ( line.indexOf("PRIVILEGES") == -1 &&
-					line.indexOf(";") == -1)
-				line = udml.readLine();
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		//DISCARD SOURCES, DESCRIPTION AND PRIVILEGES
+		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			line = udml.nextLine();
 		}
+
 	}
 
 	/**

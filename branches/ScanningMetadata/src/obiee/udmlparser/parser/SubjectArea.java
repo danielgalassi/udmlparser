@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
@@ -34,7 +33,7 @@ public class SubjectArea implements UDMLObject {
 		hierarchyDimensionIDs.add(line.substring(0, line.length()-1));
 	}
 
-	public SubjectArea (String declare, String sSubjectArea, BufferedReader udml) {
+	public SubjectArea (String declare, String sSubjectArea, Scanner udml) {
 		String line;
 		String trimmedHeader = declare.trim();
 		int asIdx = trimmedHeader.indexOf(" AS ");
@@ -48,37 +47,32 @@ public class SubjectArea implements UDMLObject {
 			subjectAreaName = trimmedHeader.substring(asIdx+4).trim().replaceAll("\"", "");
 		}
 
-		try {
-			line = udml.readLine();
+		line = udml.nextLine();
 
-			//HIERARCHY DIMENSIONS
-			if (line.endsWith("DIMENSIONS (")) {
-				hierarchyDimensionIDs = new Vector<String>();
-				line = udml.readLine().trim().replaceAll("\"", "");
-				while (( line.indexOf("LOGICAL TABLES (") == -1) || 
-						(line.indexOf("PRIVILEGES") != -1 && 
-						line.indexOf(";") != -1)) {
-					parseHierDim(line);
-					line = udml.readLine().trim().replaceAll("\"", "");
-				};
-			}
+		//HIERARCHY DIMENSIONS
+		if (line.endsWith("DIMENSIONS (")) {
+			hierarchyDimensionIDs = new Vector<String>();
+			line = udml.nextLine().trim().replaceAll("\"", "");
+			while (( line.indexOf("LOGICAL TABLES (") == -1) || 
+					(line.indexOf("PRIVILEGES") != -1 && 
+					line.indexOf(";") != -1)) {
+				parseHierDim(line);
+				line = udml.nextLine().trim().replaceAll("\"", "");
+			};
+		}
 
-			//LOGICAL TABLES LIST
-			if (line.endsWith("LOGICAL TABLES (")) {
-				logicalTablesIDs = new Vector<String>();
-				do {
-					line = udml.readLine().trim().replaceAll("\"", "");
-					parseLogicalTable(line);
-				} while (line.indexOf(") SUBJECT AREA ") == -1);
-			}
+		//LOGICAL TABLES LIST
+		if (line.endsWith("LOGICAL TABLES (")) {
+			logicalTablesIDs = new Vector<String>();
+			do {
+				line = udml.nextLine().trim().replaceAll("\"", "");
+				parseLogicalTable(line);
+			} while (line.indexOf(") SUBJECT AREA ") == -1);
+		}
 
-			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			while ( line.indexOf("PRIVILEGES") == -1 &&
-					line.indexOf(";") == -1)
-				line = udml.readLine();
-
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
+		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			line = udml.nextLine();
 		}
 	}
 
