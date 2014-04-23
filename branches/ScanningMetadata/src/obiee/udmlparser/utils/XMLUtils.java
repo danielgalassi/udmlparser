@@ -51,11 +51,6 @@ public class XMLUtils {
 
 		try {
 			builder = factory.newDocumentBuilder();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
 			doc = builder.parse(xml);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -90,9 +85,7 @@ public class XMLUtils {
 	 * @param xslFile
 	 * @param resultFile
 	 */
-	public static void applyStylesheet(String xmlFile,
-			String xslFile,
-			String resultFile){
+	public static void applyStylesheet(String xmlFile, String xslFile, String resultFile){
 		File xml = new File(xmlFile);
 		File xsl = new File(xslFile);
 		File output = new File(resultFile);
@@ -121,9 +114,7 @@ public class XMLUtils {
 	 * @param inputsXSLFile
 	 * @param strRESFile
 	 */
-	public static void applyStylesheet(String strXMLFile,
-			InputStream inputsXSLFile,
-			String strRESFile){
+	public static void applyStylesheet(String strXMLFile, InputStream inputsXSLFile, String strRESFile){
 		File fXMLFile = new File(strXMLFile);
 		File fResult = new File(strRESFile);
 		Source xmlSource = null;

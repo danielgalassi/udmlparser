@@ -49,7 +49,7 @@ public class UDMLParser {
 		udmlExtract	= new File(input);
 
 		if(MetadataExtract.isBusMatrixInvoked()) {
-			System.out.println("BusMatrix feature");
+			System.out.println("BusMatrix feature invoked.");
 		}
 		if(isUDML()) {
 			parse();
@@ -67,8 +67,7 @@ public class UDMLParser {
 		boolean isUDML = false;
 		try {
 			Scanner udml = new Scanner(udmlExtract);
-
-			if(udml.nextLine().indexOf("DECLARE ") == 0) {
+			if(udml.nextLine().startsWith("DECLARE ")) {
 				isUDML = true;
 			}
 			udml.close();

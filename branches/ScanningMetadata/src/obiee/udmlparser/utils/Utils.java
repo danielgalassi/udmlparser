@@ -17,9 +17,7 @@ public class Utils {
 	 * 			(derived column or mapping calculation)
 	 * @return Vector containing (logical or physical) column IDs
 	 */
-	public static Vector<String> CalculationParser (String sPrefixStr,
-													String sCalculation, 
-													boolean isDerived) {
+	public static Vector<String> CalculationParser (String sPrefixStr, String sCalculation, boolean isDerived) {
 		String subjectAreaPrefix	= "\"" + sPrefixStr.substring(0, sPrefixStr.indexOf(".")) + "\"";
 		String sExpr				= sCalculation.toString();
 		String remainingExpression	= sCalculation.toString();
