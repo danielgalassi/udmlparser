@@ -23,53 +23,48 @@ public class LogicalTableSource implements UDMLObject {
 
 	public LogicalTableSource (String declare, String logicalTableSource, Scanner udml) {
 		String line;
-		String trimmedDeclareStatement = declare.trim();
-		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		String header = declare.trim();
+		int indexAS = header.indexOf(" AS ");
 		int eol;
 		int cbr;
-		this.logicalTableSourceID = trimmedDeclareStatement.substring( logicalTableSource.length(), 
-				iIndexAS).
-				trim().replaceAll("\"", "");
-		this.logicalTableSourceName = trimmedDeclareStatement.substring(iIndexAS + 4).
-				trim().replaceAll("\"", "");
+
+		this.logicalTableSourceID = header.substring( logicalTableSource.length(),indexAS).trim().replaceAll("\"", "");
+
+		this.logicalTableSourceName = header.substring(indexAS + 4).trim().replaceAll("\"", "");
 
 		//DISCARD HEADING
 		do {
 			line = udml.nextLine();
-		} while (line.indexOf("PROJECT (") == -1);
+		} while (!line.contains("PROJECT ("));
 
 		//LOGICAL COLUMNS
-		if (line.indexOf("PROJECT (") != -1) {
+		if (line.contains("PROJECT (")) {
 			logicalColumnIDs = new Vector<String>();
 			logicalColumnCalculations = new Vector<String>();
 			do {
 				line = udml.nextLine().trim();
-				if (line.indexOf(" AS ") != -1 && 
-						line.indexOf(" CAST") == -1) {
+				if (line.indexOf(" AS ") != -1 && line.indexOf(" CAST") == -1) {
 					logicalColumnIDs.add(line.substring(
 							line.indexOf("{") + 1,
 							line.indexOf("}")).
 							replaceAll("\"", ""));
 					//"end-of-line" in case } is missing. Issue # 6.
 					eol = line.lastIndexOf("}");
-					if (eol < line.lastIndexOf("{")-1)
+					if (eol < line.lastIndexOf("{")-1) {
 						eol = line.length()-1;
+					}
 					cbr = line.lastIndexOf("{")+1;
-					if (cbr >= line.length())
+					if (cbr >= line.length()) {
 						cbr = line.lastIndexOf("{");
-					logicalColumnCalculations.add(line.substring(
-							cbr,
-							eol));
+					}
+					logicalColumnCalculations.add(line.substring(cbr, eol));
 				}
-			} while (line.indexOf("FROM") == -1);
+			} while (!line.contains("FROM"));
 		}
 
-		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+		while (!line.contains("PRIVILEGES") && line.contains(";")) {
 			line = udml.nextLine();
 		}
-
-		trimmedDeclareStatement	= null;
-		line = null;
 	}
 
 	/**

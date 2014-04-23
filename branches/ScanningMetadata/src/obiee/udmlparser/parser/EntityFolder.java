@@ -24,29 +24,22 @@ public class EntityFolder implements UDMLObject {
 
 	public EntityFolder (String declare, String entityFolder, Scanner udml) {
 		String line;
-		String trimmedDeclareStatement = declare.trim();
-		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
-		presentationTableID = trimmedDeclareStatement.substring(entityFolder.length(), iIndexAS).
-				trim().replaceAll("\"", "");
-		if (trimmedDeclareStatement.indexOf(" ENTITY ") != -1 && 
-				trimmedDeclareStatement.indexOf(" ENTITY ") != trimmedDeclareStatement.
-				lastIndexOf(" ENTITY ")) {
-			presentationTableName = trimmedDeclareStatement.substring(iIndexAS + 4, 
-					trimmedDeclareStatement.indexOf(" ENTITY ", iIndexAS)).
-					trim().replaceAll("\"", "");
-			presentationTableMappingID = trimmedDeclareStatement.substring(trimmedDeclareStatement.
-					indexOf(" ENTITY ", iIndexAS + 4) + 8).
-					trim().replaceAll("\"", "");
+		String header = declare.trim();
+		int indexAS = header.indexOf(" AS ");
+		presentationTableID = header.substring(entityFolder.length(), indexAS).trim().replaceAll("\"", "");
+
+		if (header.indexOf(" ENTITY ") != -1 && header.indexOf(" ENTITY ") != header.lastIndexOf(" ENTITY ")) {
+			presentationTableName = header.substring(indexAS + 4, header.indexOf(" ENTITY ", indexAS)).trim().replaceAll("\"", "");
+			presentationTableMappingID = header.substring(header.indexOf(" ENTITY ", indexAS + 4) + 8).trim().replaceAll("\"", "");
 		}
 		else {
-			presentationTableName = trimmedDeclareStatement.substring(iIndexAS + 4).
-					trim().replaceAll("\"", "");
+			presentationTableName = header.substring(indexAS + 4).trim().replaceAll("\"", "");
 			presentationTableMappingID = "";
 		}
 
 		//FOLDER ATTRIBUTES LIST
 		line = udml.nextLine().trim().replaceAll("\"", "");
-		if (line.indexOf("FOLDER ATTRIBUTES ") != -1) {
+		if (line.contains("FOLDER ATTRIBUTES ")) {
 			folderAttributeIDs = new Vector<String>();
 			do {
 				line = udml.nextLine().trim().replaceAll("\"", "");
@@ -55,45 +48,37 @@ public class EntityFolder implements UDMLObject {
 		}
 
 		//ALIASES
-		if (line.indexOf(";") == -1) {
+		if (!line.contains(";")) {
 			do {
 				line = udml.nextLine().trim().replaceAll("\"", "");
 			} while (line.indexOf("ALIASES (") != -1);
 			if (line.indexOf("ALIASES (") != -1)
 				presentationTableAliases = line.substring(
 						line.indexOf("ALIASES (")+9, 
-						line.lastIndexOf(")")).
-						trim().replaceAll("\"", "").split(",");
+						line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
 		}
 
 		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
 			line = udml.nextLine();
 			//DISPLAY NAME
-			int displayNameIdx = line.indexOf("DISPLAY NAME ");
-			if (displayNameIdx != -1){
-				presentationDispayName = line.trim().substring(displayNameIdx+13, line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
+			if (line.contains("DISPLAY NAME ")) {
+				presentationDispayName = line.trim().substring(line.indexOf("DISPLAY NAME ")+13, line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
 			}
 
 			//DESCRIPTION
-			if (line.indexOf("DESCRIPTION ") != -1){
-				int iIdexOpen = line.indexOf("{")+1;
+			if (line.contains("DESCRIPTION ")) {
+				int openBracket = line.indexOf("{")+1;
 				int length = line.length();
-				presentationDescription = line.substring(
-						iIdexOpen,
-						length).
-						replaceAll("}", "").trim();
+				presentationDescription = line.substring( openBracket, length).replaceAll("}", "").trim();
 				//LARGE TEXT
-				while (line.indexOf("}") == -1){
+				while (!line.contains("}")) {
 					line = udml.nextLine().trim();
 					presentationDescription += "\n";
 					presentationDescription += line.trim().replaceAll("}", "");
 				}
 			}
 		}
-
-		trimmedDeclareStatement	= null;
-		line		= null;
 	}
 
 	/**

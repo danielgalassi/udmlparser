@@ -22,43 +22,40 @@ public class ForeignKey implements UDMLObject {
 
 	public ForeignKey (String declare, String foreignKey, Scanner udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
-		int iIndexREFERENCES = 0;
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		foreignKeyID = sTrimmedDS.substring( foreignKey.length(), iIndexAS).
-				trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
-		int iNextToken = sTrimmedDS.indexOf(" HAVING");
-		if (iNextToken > sTrimmedDS.indexOf(" UPGRADE ID ") &&
-				sTrimmedDS.indexOf(" UPGRADE ID ") > -1)
-			iNextToken = sTrimmedDS.indexOf(" UPGRADE ID ");
-		foreignKeyName = sTrimmedDS.substring( iIndexAS + 4, iNextToken).
-				trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
+		String header = declare.trim();
+		int indexREFERENCES = 0;
+		int indexAS = header.indexOf(" AS ");
+		foreignKeyID = header.substring( foreignKey.length(), indexAS).trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
+		int nextToken = header.indexOf(" HAVING");
+		
+		if (nextToken > header.indexOf(" UPGRADE ID ") && header.contains(" UPGRADE ID ")) {
+			nextToken = header.indexOf(" UPGRADE ID ");
+		}
+		foreignKeyName = header.substring( indexAS + 4, nextToken).trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
 		physicalColumns = new ArrayList <String> ();
 
 		line = udml.nextLine();
 		do {
 			line = udml.nextLine().trim();
-			sTrimmedDS = line;
-			iIndexREFERENCES = line.indexOf(") REFERENCES ");
-			if (iIndexREFERENCES != -1) {
-				physicalColumns.add(sTrimmedDS.substring(0, iIndexREFERENCES).
+			header = line;
+			indexREFERENCES = line.indexOf(") REFERENCES ");
+			if (indexREFERENCES != -1) {
+				physicalColumns.add(header.substring(0, indexREFERENCES).
 						trim().replaceAll("\"", "").replaceAll("\\p{C}", "?"));
-				referencedKey = sTrimmedDS.substring(iIndexREFERENCES + 13).
+				referencedKey = header.substring(indexREFERENCES + 13).
 						trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
 			}
 			else {
-				physicalColumns.add(sTrimmedDS.
-						substring(0, sTrimmedDS.indexOf("\",")).
-						trim().replaceAll("\"", ""));
+				physicalColumns.add(header.substring(0, header.indexOf("\",")).trim().replaceAll("\"", ""));
 			}
-		} while (line.indexOf(") REFERENCES ") == -1);
+		} while (!line.contains(") REFERENCES "));
 
 		//DISCARD DESCRIPTION AND PRIVILEGES
-		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+		while (!line.contains("PRIVILEGES") && line.contains(";")) {
 			line = udml.nextLine();
 		}
 
-		sTrimmedDS	= null;
+		header	= null;
 		line		= null;
 	}
 
