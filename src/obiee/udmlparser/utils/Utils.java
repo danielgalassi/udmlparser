@@ -11,16 +11,16 @@ public class Utils {
 
 	/**
 	 * UDML calculation parser -identifies both, Logical and Physical columns
-	 * @param sPrefixStr where to get the Subject Area prefix from
-	 * @param sCalculation contains the expression to parse
+	 * @param prefix where to get the Subject Area prefix from
+	 * @param calculation contains the expression to parse
 	 * @param isDerived points out the type of expression to evaluate 
 	 * 			(derived column or mapping calculation)
 	 * @return Vector containing (logical or physical) column IDs
 	 */
-	public static Vector<String> CalculationParser (String sPrefixStr, String sCalculation, boolean isDerived) {
-		String subjectAreaPrefix	= "\"" + sPrefixStr.substring(0, sPrefixStr.indexOf(".")) + "\"";
-		String sExpr				= sCalculation.toString();
-		String remainingExpression	= sCalculation.toString();
+	public static Vector<String> CalculationParser (String prefix, String calculation, boolean isDerived) {
+		String subjectAreaPrefix	= "\"" + prefix.substring(0, prefix.indexOf(".")) + "\"";
+		String expression			= calculation.toString();
+		String remainingExpression	= calculation.toString();
 		
 		Vector <String>	columnMappingIDs = null;
 
@@ -32,31 +32,31 @@ public class Utils {
 
 		boolean isDuplicated;
 
-		if(sExpr.indexOf(subjectAreaPrefix) != -1)
+		if(expression.indexOf(subjectAreaPrefix) != -1) {
 			columnMappingIDs = new Vector<String>();
+		}
 
 		if (isDerived) {
 			loop = 4;
 		}
 
-		while (sExpr.indexOf(subjectAreaPrefix) != -1) {
-			startPosition = sExpr.indexOf(subjectAreaPrefix);
+		while (expression.indexOf(subjectAreaPrefix) != -1) {
+			startPosition = expression.indexOf(subjectAreaPrefix);
 			//gets the first occurrence of ."
-			firstOccurrence = sExpr.indexOf(".\"");
-			endPosition = sExpr.indexOf(subjectAreaPrefix) + subjectAreaPrefix.length();
+			firstOccurrence = expression.indexOf(".\"");
+			endPosition = expression.indexOf(subjectAreaPrefix) + subjectAreaPrefix.length();
 			//4 = derived calculation; 8 = LTS calculation
 			for (int i=0; i<loop; i++) {
-				sExpr = sExpr.substring(firstOccurrence);
-				firstOccurrence = sExpr.indexOf("\"") + 1;
+				expression = expression.substring(firstOccurrence);
+				firstOccurrence = expression.indexOf("\"") + 1;
 				endPosition += firstOccurrence;
 			}
 
 			if (endPosition > remainingExpression.length()) {
 				endPosition = remainingExpression.length();
 			}
-			
+
 			//prevents repeatedly added columns --begin
-			//TODO: refactor this part. Can be done using some Vector<String> method.
 			isDuplicated = false;
 			for (String columnMappingID : columnMappingIDs) {
 				if (columnMappingID.equals(remainingExpression.substring(startPosition, endPosition).replaceAll("\"", ""))) {
@@ -71,10 +71,9 @@ public class Utils {
 			//prevents repeatedly added columns --end
 
 			expressionBegins += endPosition;
-			sExpr = sCalculation.substring(expressionBegins);
-			remainingExpression = sExpr.toString();
+			expression = calculation.substring(expressionBegins);
+			remainingExpression = expression.toString();
 		}
-
 		return columnMappingIDs;
 	}
 }
