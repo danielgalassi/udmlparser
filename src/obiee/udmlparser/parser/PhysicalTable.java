@@ -30,19 +30,14 @@ public class PhysicalTable implements UDMLObject {
 
 	public PhysicalTable (String declare, String physicalTable, Scanner udml) {
 		String line;
-		String trimmedDeclareStatement = declare.trim();
-		int iIndexColName; 
-		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
-		physicalTableID = trimmedDeclareStatement.substring(
-				physicalTable.length(),
-				iIndexAS).
-				trim().replaceAll("\"", "");
-		int iIndexHaving = declare.indexOf(" HAVING");
-		if (iIndexHaving != -1)
-			physicalTableName = trimmedDeclareStatement.substring(
-					iIndexAS+4, 
-					iIndexHaving).
-					trim().replaceAll("\"", "");
+		String header = declare.trim();
+		int indexColName; 
+		int indexAS = header.indexOf(" AS ");
+		physicalTableID = header.substring(physicalTable.length(), indexAS).trim().replaceAll("\"", "");
+		int indexHaving = declare.indexOf(" HAVING");
+		if (indexHaving != -1) {
+			physicalTableName = header.substring(indexAS+4, indexHaving).trim().replaceAll("\"", "");
+		}
 		isPhysicalAlias = false;
 
 		line = udml.nextLine();
@@ -63,71 +58,52 @@ public class PhysicalTable implements UDMLObject {
 					line = udml.nextLine().trim().replaceAll("\"", "");
 				} while (!(line.indexOf("PRIVILEGES (") != -1 && line.indexOf(";") != -1));
 
-			if (line.indexOf(" AS ") != -1 &&
-					line.indexOf(" TYPE ") != -1) {
+			if (line.contains(" AS ") && line.contains(" TYPE ")) {
 				//FQPHYSCOLNAME
 				physicalumnColumnIDs.add(line.substring(0, line.indexOf(" AS ")).
 						trim().replaceAll("\"", ""));
 				//PHYSCOLNAME
-				iIndexColName = line.indexOf(" TYPE ");
-				if (line.indexOf(" EXTERNAL ") != -1 &&
-						line.indexOf(" EXTERNAL ") < iIndexColName) {
-					iIndexColName = line.indexOf(" EXTERNAL ");
+				indexColName = line.indexOf(" TYPE ");
+				if (line.contains(" EXTERNAL ") && line.indexOf(" EXTERNAL ") < indexColName) {
+					indexColName = line.indexOf(" EXTERNAL ");
 				}
 
 				if (specialCaseTYPE(line)) {
 					physicalumnColumnNames.add("TYPE");
 				}
 				else {
-					String str = line.substring(line.indexOf(" AS ")+4, 
-							iIndexColName).trim().
-							replaceAll("\"", "");
+					String str = line.substring(line.indexOf(" AS ")+4, indexColName).trim().replaceAll("\"", "");
 					physicalumnColumnNames.add(str);
 				}
 
 				//DATA TYPE
-				physicalColumnDataTypes.add(line.substring(
-						line.indexOf(" TYPE ")+6, 
-						line.indexOf(" PRECISION ")).
-						trim().replaceAll("\"", ""));
+				physicalColumnDataTypes.add(line.substring(line.indexOf(" TYPE ")+6, line.indexOf(" PRECISION ")).trim().replaceAll("\"", ""));
 				//SIZE
-				int iIndexSCALE = line.indexOf(" SCALE ");
-				int iIndexPRECISION = line.indexOf(" PRECISION ")+11;
+				int indexSCALE = line.indexOf(" SCALE ");
+				int indexPRECISION = line.indexOf(" PRECISION ")+11;
 
 				if (specialCaseSCALE(line)) {
 					physicalColumnSizes.add("SCALE");
 				}
-				else
-					physicalColumnSizes.add(line.substring(
-							iIndexPRECISION, 
-							iIndexSCALE).
-							trim().replaceAll("\"", ""));
+				else {
+					physicalColumnSizes.add(line.substring(indexPRECISION, indexSCALE).trim().replaceAll("\"", ""));
+				}
 				//SCALE & NULLABLE
-				if (line.indexOf(" NOT NULLABLE") != -1) {
-					physicalColumnScales.add(line.substring(
-							line.indexOf(" SCALE ")+7, 
-							line.indexOf(" NOT NULLABLE")).
-							trim().replaceAll("\"", ""));
+				if (line.contains(" NOT NULLABLE")) {
+					physicalColumnScales.add(line.substring(line.indexOf(" SCALE ")+7, line.indexOf(" NOT NULLABLE")).trim().replaceAll("\"", ""));
 					physicalColumnNullables.add("NOT NULLABLE");
 				}
 				else {
-					physicalColumnScales.add(line.substring(
-							line.indexOf(" SCALE ")+7, 
-							line.indexOf(" NULLABLE")).
-							trim().replaceAll("\"", ""));
+					physicalColumnScales.add(line.substring(line.indexOf(" SCALE ")+7, line.indexOf(" NULLABLE")).trim().replaceAll("\"", ""));
 					physicalColumnNullables.add("NULLABLE");
 				}
 			}
 
-			if (line.indexOf(")") == 0 && 
-					line.indexOf(" SOURCE ") != -1) {
+			if (line.indexOf(")") == 0 && line.contains(" SOURCE ")) {
 				physicalTableSource = line.substring(line.indexOf(" SOURCE ")+8);
 				isPhysicalAlias = true;
 			}
 		} while (!( line.indexOf("PRIVILEGES (") != -1 && line.indexOf(";") != -1));
-
-		trimmedDeclareStatement	= null;
-		line		= null;
 	}
 
 	/**

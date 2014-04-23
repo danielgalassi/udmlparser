@@ -20,12 +20,12 @@ public class SubjectArea implements UDMLObject {
 	private Vector <String> hierarchyDimensionIDs = null;
 
 	private void parseLogicalTable(String line) {
-		int iIndexSA = line.indexOf(") SUBJECT AREA ");
+		int indexSA = line.indexOf(") SUBJECT AREA ");
 		if (line.endsWith(",")) {
 			logicalTablesIDs.add(line.substring(0, line.length()-1));
 		}
-		if (iIndexSA != -1) {
-			logicalTablesIDs.add(line.substring(0, iIndexSA));
+		if (indexSA != -1) {
+			logicalTablesIDs.add(line.substring(0, indexSA));
 		}
 	}
 
@@ -35,16 +35,16 @@ public class SubjectArea implements UDMLObject {
 
 	public SubjectArea (String declare, String sSubjectArea, Scanner udml) {
 		String line;
-		String trimmedHeader = declare.trim();
-		int asIdx = trimmedHeader.indexOf(" AS ");
-		int iconIds = trimmedHeader.indexOf(" ICON INDEX ");
-		subjectAreaID = trimmedHeader.substring(sSubjectArea.length(),asIdx).trim().replaceAll("\"", "");
+		String header = declare.trim();
+		int indexAS = header.indexOf(" AS ");
+		int indexICON = header.indexOf(" ICON INDEX ");
+		subjectAreaID = header.substring(sSubjectArea.length(),indexAS).trim().replaceAll("\"", "");
 
-		if (iconIds != -1) {
-			subjectAreaName = trimmedHeader.substring(asIdx+4, iconIds).trim().replaceAll("\"", "");
+		if (indexICON != -1) {
+			subjectAreaName = header.substring(indexAS+4, indexICON).trim().replaceAll("\"", "");
 		}
 		else {
-			subjectAreaName = trimmedHeader.substring(asIdx+4).trim().replaceAll("\"", "");
+			subjectAreaName = header.substring(indexAS+4).trim().replaceAll("\"", "");
 		}
 
 		line = udml.nextLine();
@@ -53,9 +53,7 @@ public class SubjectArea implements UDMLObject {
 		if (line.endsWith("DIMENSIONS (")) {
 			hierarchyDimensionIDs = new Vector<String>();
 			line = udml.nextLine().trim().replaceAll("\"", "");
-			while (( line.indexOf("LOGICAL TABLES (") == -1) || 
-					(line.indexOf("PRIVILEGES") != -1 && 
-					line.indexOf(";") != -1)) {
+			while (!line.contains("LOGICAL TABLES (") || (line.contains("PRIVILEGES") && line.contains(";"))) {
 				parseHierDim(line);
 				line = udml.nextLine().trim().replaceAll("\"", "");
 			};
@@ -67,11 +65,11 @@ public class SubjectArea implements UDMLObject {
 			do {
 				line = udml.nextLine().trim().replaceAll("\"", "");
 				parseLogicalTable(line);
-			} while (line.indexOf(") SUBJECT AREA ") == -1);
+			} while (!line.contains(") SUBJECT AREA "));
 		}
 
 		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
 			line = udml.nextLine();
 		}
 	}

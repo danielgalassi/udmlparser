@@ -18,23 +18,18 @@ public class HierarchyDimension implements UDMLObject {
 
 	public HierarchyDimension (String declare, String hierarchyDimension, Scanner udml) {
 		String line;
-		String trimmedDeclareStatement = declare.trim();
-		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		String header = declare.trim();
+		int indexAS = header.indexOf(" AS ");
 
-		hierarchyDimensionID = trimmedDeclareStatement.substring(	hierarchyDimension.length(), 
-				iIndexAS).trim().replaceAll("\"", "");
+		hierarchyDimensionID = header.substring(hierarchyDimension.length(), indexAS).trim().replaceAll("\"", "");
 
-		hierarchyDimensionName = trimmedDeclareStatement.substring(iIndexAS+4,
-				trimmedDeclareStatement.indexOf(" ON")).trim().replaceAll("\"", "");
+		hierarchyDimensionName = header.substring(indexAS+4, header.indexOf(" ON")).trim().replaceAll("\"", "");
 
-		line = udml.nextLine();
 		//NO FURTHER ACTIONS
-		while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+		line = udml.nextLine();
+		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
 			line = udml.nextLine();
 		}
-
-		trimmedDeclareStatement	= null;
-		line		= null;
 	}
 
 	/**

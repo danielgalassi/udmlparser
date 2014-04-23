@@ -26,13 +26,10 @@ public class LogicalTable implements UDMLObject {
 
 	public LogicalTable (String declare, String logicalTable, Scanner udml) {
 		String line;
-		String trimmedDeclareStatement = declare.trim();
-		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
-		logicalTableID = trimmedDeclareStatement.substring( logicalTable.length(), iIndexAS).
-				trim().replaceAll("\"", "");
-		logicalTableName = trimmedDeclareStatement.substring( iIndexAS + 4, 
-				trimmedDeclareStatement.indexOf(" HAVING")).
-				trim().replaceAll("\"", "");
+		String header = declare.trim();
+		int indexAS = header.indexOf(" AS ");
+		logicalTableID = header.substring( logicalTable.length(), indexAS).trim().replaceAll("\"", "");
+		logicalTableName = header.substring( indexAS + 4, header.indexOf(" HAVING")).trim().replaceAll("\"", "");
 
 		line = udml.nextLine();
 		logicalColumnIDs = new Vector<String>();
@@ -42,43 +39,34 @@ public class LogicalTable implements UDMLObject {
 		do {
 			line = udml.nextLine().trim();
 
-			if (line.indexOf(" AS ") != -1) {
+			if (line.contains(" AS ")) {
 				//FQLOGCOLNAME
-				logicalColumnIDs.add(line.substring(0, 
-						line.indexOf(" AS ")).
-						trim().replaceAll("\"", ""));
+				logicalColumnIDs.add(line.substring(0, line.indexOf(" AS ")).trim().replaceAll("\"", ""));
 				//LOGCOLNAME
-				if (line.indexOf(" {") != -1)
-					logicalColumnNames.add(line.substring(
-							line.indexOf(" AS ")+4,
-							line.indexOf(" {")).
-							trim().replaceAll("\"", ""));
-				else
-					logicalColumnNames.add(line.substring(
-							line.indexOf(" AS ")+4).
-							trim().replaceAll("\"", ""));
-				if (line.indexOf(" DESCRIPTION") != -1)
-					logicalColumnDescriptions.add(line.substring(
-							line.indexOf(" {")+2,
-							line.indexOf("} ")).
-							trim());
-				else
+				if (line.contains(" {")) {
+					logicalColumnNames.add(line.substring(line.indexOf(" AS ")+4, line.indexOf(" {")).trim().replaceAll("\"", ""));
+				}
+				else {
+					logicalColumnNames.add(line.substring(line.indexOf(" AS ")+4).trim().replaceAll("\"", ""));
+				}
+				if (line.contains(" DESCRIPTION")) {
+					logicalColumnDescriptions.add(line.substring(line.indexOf(" {")+2, line.indexOf("} ")).trim());
+				}
+				else {
 					logicalColumnDescriptions.add("");
+				}
 				//DERIVED EXPRESSION
-				if (line.indexOf(" DERIVED") != -1)
-					derivedLogicalColumnExpressions.add(line.substring(
-							line.indexOf(" {")+2, 
-							line.indexOf("} ")).
-							trim());
-				else
+				if (line.contains(" DERIVED")) {
+					derivedLogicalColumnExpressions.add(line.substring(line.indexOf(" {")+2, line.indexOf("} ")).trim());
+				}
+				else {
 					derivedLogicalColumnExpressions.add("");
+				}
 			}
-		} while (line.indexOf("KEYS (") == -1 &&
-				line.indexOf("SOURCES (") == -1 && 
-				line.indexOf("PRIVILEGES (") == -1);
+		} while (!line.contains("KEYS (") && !line.contains("SOURCES (") && !line.contains("PRIVILEGES ("));
 
 		//DISCARD SOURCES, DESCRIPTION AND PRIVILEGES
-		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
 			line = udml.nextLine();
 		}
 
