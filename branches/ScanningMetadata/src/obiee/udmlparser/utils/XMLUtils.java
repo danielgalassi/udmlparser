@@ -14,6 +14,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 
 /**
@@ -22,6 +24,8 @@ import org.w3c.dom.Document;
  *
  */
 public class XMLUtils {
+
+	private static final Logger logger = LogManager.getLogger(XMLUtils.class.getName());
 
 	/**
 	 * Create an empty DOM document
@@ -34,7 +38,7 @@ public class XMLUtils {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			doc = builder.newDocument();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception thrown while creating a DOM document");
 		}
 		return doc;
 	}
@@ -53,6 +57,7 @@ public class XMLUtils {
 			builder = factory.newDocumentBuilder();
 			doc = builder.parse(xml);
 		} catch(Exception e) {
+			logger.error(e.getClass() + " thrown while loading an XML file into a DOM document");
 			e.printStackTrace();
 		}
 
@@ -73,9 +78,9 @@ public class XMLUtils {
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
+			logger.error("TransformerConfigurationException thrown while saving document");
 		} catch (TransformerException e) {
-			e.printStackTrace();
+			logger.error("TransformerException thrown while saving document");
 		}
 	}
 
@@ -97,14 +102,12 @@ public class XMLUtils {
 		try {
 			transformer = transFact.newTransformer(xsltSource);
 		} catch (TransformerConfigurationException transformerConfigException) {
-			System.out.println("3");
-			transformerConfigException.printStackTrace();
+			logger.error("TransformerConfigurationException exception thrown while applying stylesheet");
 		}
 		try {
 			transformer.transform(xmlSource, result);
 		} catch (TransformerException transformerException) {
-			System.out.println("4");
-			transformerException.printStackTrace();
+			logger.error("TransformerException exception thrown while applying stylesheet");
 		}
 	}
 
@@ -130,14 +133,14 @@ public class XMLUtils {
 		try {
 			trans = transFact.newTransformer(xsltSource);
 		} catch (TransformerConfigurationException transformerConfigException) {
-			System.out.println("3");
-			transformerConfigException.printStackTrace();
+			logger.error("TransformerConfigurationException thrown while applying stylesheet");
 		}
 		try {
 			trans.transform(xmlSource, result);
 		} catch (TransformerException transformerException) {
-			System.out.println("4");
-			transformerException.printStackTrace();
+			logger.error("TransformerException thrown while applying stylesheet");
+		} catch (NullPointerException nullPointerException) {
+			logger.error("NullPointerException thrown while applying stylesheet");
 		}
 	}
 }
