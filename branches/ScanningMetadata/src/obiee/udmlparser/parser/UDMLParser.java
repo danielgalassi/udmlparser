@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Scanner;
 
 import obiee.udmlparser.metadataExtract.MetadataExtract;
 import obiee.udmlparser.utils.XMLUtils;
@@ -68,21 +69,17 @@ public class UDMLParser {
 	private boolean isUDML() {
 		boolean isUDML = false;
 		try {
-			Reader udmlStreamReader = new InputStreamReader(new FileInputStream(udmlExtract), "UTF-8");
-			BufferedReader udml = new BufferedReader(udmlStreamReader);
-			if(udml.readLine().indexOf("DECLARE ") == 0) {
+			Scanner udml = new Scanner(udmlExtract);
+
+			if(udml.nextLine().indexOf("DECLARE ") == 0) {
 				isUDML = true;
 			}
 			udml.close();
-			udmlStreamReader.close();
 		}
 		catch (IOException e) {
-			System.out.println("Exception thrown while trying to open UDML file.");
 			e.printStackTrace();
 		}
-		if (isUDML) {
-			System.out.println(udmlExtract + " is a valid file.");
-		}
+		System.out.println("File contains UDML code = " + isUDML);
 		return isUDML;
 	}
 
