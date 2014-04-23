@@ -23,10 +23,6 @@ import org.w3c.dom.Document;
  */
 public class XMLUtils {
 
-	public static void publishException(Exception errMsg){
-		System.out.println("Error: " + errMsg.getClass() + "\tDescription: " + errMsg.getMessage());
-	}
-
 	/**
 	 * Create an empty DOM document
 	 * @return DOM document
@@ -56,13 +52,13 @@ public class XMLUtils {
 		try {
 			builder = factory.newDocumentBuilder();
 		} catch(Exception e) {
-			publishException(e);
+			e.printStackTrace();
 		}
 
 		try {
 			doc = builder.parse(xml);
 		} catch(Exception e) {
-			publishException(e);
+			e.printStackTrace();
 		}
 
 		return doc;
@@ -79,13 +75,12 @@ public class XMLUtils {
 		File xml = new File(file);
 		Result result = new StreamResult(xml);
 		try {
-
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} catch (TransformerException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -108,15 +103,15 @@ public class XMLUtils {
 		TransformerFactory transFact = javax.xml.transform.TransformerFactory.newInstance();
 		try {
 			transformer = transFact.newTransformer(xsltSource);
-		} catch (TransformerConfigurationException tcE) {
+		} catch (TransformerConfigurationException transformerConfigException) {
 			System.out.println("3");
-			publishException(tcE);
+			transformerConfigException.printStackTrace();
 		}
 		try {
 			transformer.transform(xmlSource, result);
-		} catch (TransformerException tE) {
+		} catch (TransformerException transformerException) {
 			System.out.println("4");
-			publishException(tE);
+			transformerException.printStackTrace();
 		}
 	}
 
@@ -145,13 +140,13 @@ public class XMLUtils {
 			trans = transFact.newTransformer(xsltSource);
 		} catch (TransformerConfigurationException transformerConfigException) {
 			System.out.println("3");
-			publishException(transformerConfigException);
+			transformerConfigException.printStackTrace();
 		}
 		try {
 			trans.transform(xmlSource, result);
 		} catch (TransformerException transformerException) {
 			System.out.println("4");
-			publishException(transformerException);
+			transformerException.printStackTrace();
 		}
 	}
 }
