@@ -15,7 +15,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class LogicalTableSource {
+public class LogicalTableSource implements UDMLObject {
 
 	private String			logicalTableSourceID;
 	private String			logicalTableSourceName;

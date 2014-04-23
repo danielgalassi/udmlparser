@@ -13,7 +13,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class DimensionLevel {
+public class DimensionLevel implements UDMLObject {
 	
 	private String 			dimensionLevelID;
 	private String			dimensionLevelName;

@@ -14,7 +14,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class ForeignKey {
+public class ForeignKey implements UDMLObject {
 
 	private String				foreignKeyID;
 	private String				foreignKeyName;

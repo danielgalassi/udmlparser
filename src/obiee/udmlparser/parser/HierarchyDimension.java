@@ -12,7 +12,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class HierarchyDimension {
+public class HierarchyDimension implements UDMLObject {
 
 	private String hierarchyDimensionID;
 	private String hierarchyDimensionName;

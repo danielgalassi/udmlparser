@@ -13,7 +13,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class LogicalJoin {
+public class LogicalJoin implements UDMLObject {
 
 	private String			logicalJoinID;
 	private Vector <String>	logicalTableIDs = null;

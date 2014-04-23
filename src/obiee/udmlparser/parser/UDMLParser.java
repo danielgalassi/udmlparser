@@ -43,13 +43,14 @@ public class UDMLParser {
 
 	/**
 	 * 
-	 * @param sInput source UDML file
-	 * @param sOutput target XML file
+	 * @param input source UDML file
+	 * @param output target XML file
 	 */
-	public UDMLParser(String sInput, String sOutput) {
+	public UDMLParser(String input, String output) {
 		udml		= XMLUtils.createDocument();
 		root		= udml.createElement("UDML");
-		udmlExtract	= new File (sInput);
+		udmlExtract	= new File(input);
+
 		if(MetadataExtract.isBusMatrixInvoked()) {
 			System.out.println("BusMatrix feature");
 		}
@@ -57,7 +58,7 @@ public class UDMLParser {
 			parse();
 		}
 		udml.appendChild(root);
-		XMLUtils.saveDocument(udml, sOutput);
+		XMLUtils.saveDocument(udml, output);
 	}
 
 	/**
@@ -76,6 +77,7 @@ public class UDMLParser {
 			udmlStreamReader.close();
 		}
 		catch (IOException e) {
+			System.out.println("Exception thrown while trying to open UDML file.");
 			e.printStackTrace();
 		}
 		if (isUDML) {
@@ -95,18 +97,7 @@ public class UDMLParser {
 			Reader reader = new InputStreamReader(new FileInputStream(udmlExtract), "UTF-8");
 			BufferedReader udmlBuffer = new BufferedReader (reader);
 
-			CatalogFolder c;
-			EntityFolder e;
-			FolderAttribute f;
-			SubjectArea s;
-			LogicalTable l;
-			LogicalTableSource lts;
-			PhysicalTable p;
-			DimensionLevel d;
-			HierarchyDimension h;
-			ForeignKey j;
-			LogicalJoin lj;
-			LogicalForeignKey lfk;
+			UDMLObject object = null;
 
 			do {
 				header = udmlBuffer.readLine();
@@ -115,97 +106,68 @@ public class UDMLParser {
 				}
 				if (header.indexOf(catalogFolders) != -1) { //pres subject area
 					System.out.println( "Processing Subject Area...");
-					c = new CatalogFolder(header, catalogFolders, udmlBuffer);
-					root.appendChild(c.serialize(udml));
+					object = new CatalogFolder(header, catalogFolders, udmlBuffer);
 				}
 				if (header.indexOf(subjectAreas) != -1) { //bmm subject area
 					System.out.println("Processing Business Model...");
-					s = new SubjectArea(header, subjectAreas, udmlBuffer);
-					root.appendChild(s.serialize(udml));
+					object = new SubjectArea(header, subjectAreas, udmlBuffer);
 				}
 				if (header.indexOf(logicalJoins) != -1) { //logical join (BMM)
 					System.out.println("Processing Logical Join...");
-					lj = new LogicalJoin(header, logicalJoins, udmlBuffer);
-					root.appendChild(lj.serialize(udml));
+					object = new LogicalJoin(header, logicalJoins, udmlBuffer);
 				}
 				if (header.indexOf(logicalForeignKeys) != -1) { //logical foreign key join (BMM)
 					System.out.println("Processing Logical (Foreign Key) Join...");
-					lfk = new LogicalForeignKey(header, logicalForeignKeys, udmlBuffer);
-					root.appendChild(lfk.serialize(udml));
+					object = new LogicalForeignKey(header, logicalForeignKeys, udmlBuffer);
 				}
+
 				if (!MetadataExtract.isBusMatrixInvoked()) {
 					if (header.indexOf(entityFolders) != -1) { //pres folder
 						System.out.println("Processing Presentation Folder...");
-						e = new EntityFolder(header, entityFolders, udmlBuffer);
-						root.appendChild(e.serialize(udml));
+						object = new EntityFolder(header, entityFolders, udmlBuffer);
 					}
 					if (header.indexOf(folderAttributes) != -1) { //pres column
 						System.out.println("Processing Presentation Column...");
-						f = new FolderAttribute(header, folderAttributes, udmlBuffer);
-						try
-						{
-							Node node = f.serialize(udml);
-							root.appendChild(node);
-						}
-						catch(Exception ex)
-						{
-							System.out.println("Presentation Column error");
-						}
-						
+						object = new FolderAttribute(header, folderAttributes, udmlBuffer);
 					}
-					if (header.indexOf(logicalTables) != -1 &&
-							header.indexOf(logicalTableSources) == -1) { //logl tbl
+					if (header.indexOf(logicalTables) != -1 && header.indexOf(logicalTableSources) == -1) { //logl tbl
 						System.out.println("Processing Logical Table...");
-						l = new LogicalTable(header, logicalTables, udmlBuffer);
-						root.appendChild(l.serialize(udml));
+						object = new LogicalTable(header, logicalTables, udmlBuffer);
 					}
 					if (header.indexOf(logicalTableSources) != -1) { //logl tbl src
 						System.out.println("Processing Logical Table Source...");
-						lts=new LogicalTableSource(header,logicalTableSources,udmlBuffer);
-						root.appendChild(lts.serialize(udml));
+						object=new LogicalTableSource(header,logicalTableSources,udmlBuffer);
 					}
 					if (header.indexOf(physicalTables) != -1 && 
 							header.indexOf(physicalTableKeys) == -1) { //physical tbl
 						System.out.println("Processing Physical Table...");
-						p = new PhysicalTable(header, physicalTables, udmlBuffer);
-						try
-						{
-							Node node = p.serialize(udml);
-							root.appendChild(node);
-						}
-						catch(Exception ex)
-						{
-							System.out.println("PhysicalTable block error");
-						}
+						object = new PhysicalTable(header, physicalTables, udmlBuffer);
 					}
 					if (header.indexOf(dimensionLevels) != -1) { //hier. dim. level
 						System.out.println("Processing Hierarchy Dim Level...");
-						d = new DimensionLevel(header, dimensionLevels, udmlBuffer);
-						root.appendChild(d.serialize(udml));
+						object = new DimensionLevel(header, dimensionLevels, udmlBuffer);
 					}
 					if (header.indexOf(hierarchyDims) != -1) { //hier dim
 						System.out.println("Processing Hierarchy Dimension...");
-						h = new HierarchyDimension(header, hierarchyDims, udmlBuffer);
-						root.appendChild(h.serialize(udml));
+						object = new HierarchyDimension(header, hierarchyDims, udmlBuffer);
 					}
 					if (header.indexOf(foreignKeys) != -1) { //join
 						System.out.println("Processing Foreign Key...");
-						j = new ForeignKey(header, foreignKeys, udmlBuffer);
-						root.appendChild(j.serialize(udml));
+						object = new ForeignKey(header, foreignKeys, udmlBuffer);
 					}
 				}
+				try
+				{
+					Node node = object.serialize(udml);
+					root.appendChild(node);
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+
 			} while (true);
 
-			c	= null;
-			e	= null;
-			f	= null;
-			s	= null;
-			l	= null;
-			lts	= null;
-			p	= null;
-			d	= null;
-			h	= null;
-			j	= null;
 
 			udmlBuffer.close ();
 			reader.close();
