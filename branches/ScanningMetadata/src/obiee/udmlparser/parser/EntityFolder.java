@@ -13,7 +13,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class EntityFolder {
+public class EntityFolder implements UDMLObject {
 
 	private String			presentationTableID;
 	private String			presentationTableName;

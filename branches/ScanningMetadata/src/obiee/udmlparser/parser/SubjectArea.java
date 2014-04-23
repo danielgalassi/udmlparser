@@ -13,7 +13,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class SubjectArea {
+public class SubjectArea implements UDMLObject {
 
 	private String			subjectAreaID;
 	private String			subjectAreaName;

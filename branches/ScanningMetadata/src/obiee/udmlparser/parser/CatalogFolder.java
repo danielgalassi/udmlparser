@@ -13,7 +13,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class CatalogFolder {
+public class CatalogFolder implements UDMLObject {
 
 	private String			catalogFolderID;
 	private String			catalogFolderName;

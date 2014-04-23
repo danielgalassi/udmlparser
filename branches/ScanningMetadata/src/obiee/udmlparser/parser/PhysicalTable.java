@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class PhysicalTable {
+public class PhysicalTable implements UDMLObject {
 
 	private String			physicalTableID;
 	private String			physicalTableName;

@@ -13,7 +13,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class LogicalForeignKey {
+public class LogicalForeignKey implements UDMLObject {
 
 	private String			logicalForeignKeyJoinID;
 	private Vector <String>	logicalTableIDs = null;

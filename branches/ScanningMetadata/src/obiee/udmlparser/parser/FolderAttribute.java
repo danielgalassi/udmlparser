@@ -12,7 +12,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class FolderAttribute {
+public class FolderAttribute implements UDMLObject {
 
 	private String		presentationColumnID;
 	private String		presentationColumnName;
