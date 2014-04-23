@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
@@ -27,36 +26,30 @@ public class LogicalJoin implements UDMLObject {
 			logicalTableIDs.add("Review definition for this logical join");
 	}
 
-	public LogicalJoin (String declare,
-			String subjectArea,
-			BufferedReader udml) {
+	public LogicalJoin (String declare, String subjectArea, Scanner udml) {
 		String line = "";
 		int joinSpecifications = 0;
 		String trimmedDeclareStatement = declare.trim();
 		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
 		logicalJoinID = trimmedDeclareStatement.substring(subjectArea.length(),iIndexAS).
-							trim().replaceAll("\"", "");
-		try {
-			String logicalJoinSpecification = "DECLARE ROLE \"" + logicalJoinID;
-			logicalTableIDs = new Vector<String>();
-			while (joinSpecifications < 2) {
-				line = udml.readLine();
-				while (line.indexOf(logicalJoinSpecification) == -1) {
-					line = udml.readLine();
-				}
+				trim().replaceAll("\"", "");
 
-				//table (logical join spec) found
-				parseLogicalJoinSpec(line);
-				joinSpecifications++;
+		String logicalJoinSpecification = "DECLARE ROLE \"" + logicalJoinID;
+		logicalTableIDs = new Vector<String>();
+		while (joinSpecifications < 2) {
+			line = udml.nextLine();
+			while (line.indexOf(logicalJoinSpecification) == -1) {
+				line = udml.nextLine();
 			}
 
-			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			while ( line.indexOf("PRIVILEGES") == -1 &&
-					line.indexOf(";") == -1)
-				line = udml.readLine();
-			
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+			//table (logical join spec) found
+			parseLogicalJoinSpec(line);
+			joinSpecifications++;
+		}
+
+		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
+		while ( line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			line = udml.nextLine();
 		}
 
 		trimmedDeclareStatement	= null;

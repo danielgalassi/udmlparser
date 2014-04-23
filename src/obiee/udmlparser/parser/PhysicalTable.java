@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
@@ -29,113 +28,103 @@ public class PhysicalTable implements UDMLObject {
 	private Vector <String>	physicalColumnScales;
 	private Vector <String>	physicalColumnNullables;
 
-	public PhysicalTable (	String declare,
-							String physicalTable,
-							BufferedReader udml) {
+	public PhysicalTable (String declare, String physicalTable, Scanner udml) {
 		String line;
 		String trimmedDeclareStatement = declare.trim();
 		int iIndexColName; 
 		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
 		physicalTableID = trimmedDeclareStatement.substring(
-											physicalTable.length(),
-											iIndexAS).
-											trim().replaceAll("\"", "");
+				physicalTable.length(),
+				iIndexAS).
+				trim().replaceAll("\"", "");
 		int iIndexHaving = declare.indexOf(" HAVING");
 		if (iIndexHaving != -1)
-		physicalTableName = trimmedDeclareStatement.substring(
-											iIndexAS+4, 
-											iIndexHaving).
-											trim().replaceAll("\"", "");
+			physicalTableName = trimmedDeclareStatement.substring(
+					iIndexAS+4, 
+					iIndexHaving).
+					trim().replaceAll("\"", "");
 		isPhysicalAlias = false;
 
-		try {
-			line = udml.readLine();
+		line = udml.nextLine();
 
-			physicalumnColumnIDs = new Vector<String>();
-			physicalumnColumnNames = new Vector<String>();
-			physicalColumnDataTypes = new Vector<String>();
-			physicalColumnSizes = new Vector<String>();
-			physicalColumnScales = new Vector<String>();
-			physicalColumnNullables = new Vector<String>();
+		physicalumnColumnIDs = new Vector<String>();
+		physicalumnColumnNames = new Vector<String>();
+		physicalColumnDataTypes = new Vector<String>();
+		physicalColumnSizes = new Vector<String>();
+		physicalColumnScales = new Vector<String>();
+		physicalColumnNullables = new Vector<String>();
 
-			do {
-				line = udml.readLine().trim().replaceAll("\"", "");
+		do {
+			line = udml.nextLine().trim().replaceAll("\"", "");
 
-				//This is a marker used in Opaque Views.
-				if (line.indexOf("TABLE TYPE SELECT DATABASE MAP") != -1)
-					do {
-						line = udml.readLine().trim().replaceAll("\"", "");
-					} while (!(line.indexOf("PRIVILEGES (") != -1 && line.indexOf(";") != -1));
+			//This is a marker used in Opaque Views.
+			if (line.indexOf("TABLE TYPE SELECT DATABASE MAP") != -1)
+				do {
+					line = udml.nextLine().trim().replaceAll("\"", "");
+				} while (!(line.indexOf("PRIVILEGES (") != -1 && line.indexOf(";") != -1));
 
-				if (line.indexOf(" AS ") != -1 &&
+			if (line.indexOf(" AS ") != -1 &&
 					line.indexOf(" TYPE ") != -1) {
-					//FQPHYSCOLNAME
-					physicalumnColumnIDs.add(line.substring(0, line.indexOf(" AS ")).
-												trim().replaceAll("\"", ""));
-					//PHYSCOLNAME
-					iIndexColName = line.indexOf(" TYPE ");
-					if (line.indexOf(" EXTERNAL ") != -1 &&
+				//FQPHYSCOLNAME
+				physicalumnColumnIDs.add(line.substring(0, line.indexOf(" AS ")).
+						trim().replaceAll("\"", ""));
+				//PHYSCOLNAME
+				iIndexColName = line.indexOf(" TYPE ");
+				if (line.indexOf(" EXTERNAL ") != -1 &&
 						line.indexOf(" EXTERNAL ") < iIndexColName) {
-						iIndexColName = line.indexOf(" EXTERNAL ");
-					}
-					
-					if (specialCaseTYPE(line)) {
-						physicalumnColumnNames.add("TYPE");
-					}
-					else {
-						String str = line.substring(line.indexOf(" AS ")+4, 
-								iIndexColName).trim().
-								replaceAll("\"", "");
-						physicalumnColumnNames.add(str);
-					}
-					
-					
-					
-					//DATA TYPE
-					physicalColumnDataTypes.add(line.substring(
-												line.indexOf(" TYPE ")+6, 
-												line.indexOf(" PRECISION ")).
-												trim().replaceAll("\"", ""));
-					//SIZE
-					int iIndexSCALE = line.indexOf(" SCALE ");
-					int iIndexPRECISION = line.indexOf(" PRECISION ")+11;
-					
-					if (specialCaseSCALE(line)) {
-						physicalColumnSizes.add("SCALE");
-					}
-					else
+					iIndexColName = line.indexOf(" EXTERNAL ");
+				}
+
+				if (specialCaseTYPE(line)) {
+					physicalumnColumnNames.add("TYPE");
+				}
+				else {
+					String str = line.substring(line.indexOf(" AS ")+4, 
+							iIndexColName).trim().
+							replaceAll("\"", "");
+					physicalumnColumnNames.add(str);
+				}
+
+				//DATA TYPE
+				physicalColumnDataTypes.add(line.substring(
+						line.indexOf(" TYPE ")+6, 
+						line.indexOf(" PRECISION ")).
+						trim().replaceAll("\"", ""));
+				//SIZE
+				int iIndexSCALE = line.indexOf(" SCALE ");
+				int iIndexPRECISION = line.indexOf(" PRECISION ")+11;
+
+				if (specialCaseSCALE(line)) {
+					physicalColumnSizes.add("SCALE");
+				}
+				else
 					physicalColumnSizes.add(line.substring(
-												iIndexPRECISION, 
-												iIndexSCALE).
-												trim().replaceAll("\"", ""));
-					//SCALE & NULLABLE
-					if (line.indexOf(" NOT NULLABLE") != -1) {
-						physicalColumnScales.add(line.substring(
-												line.indexOf(" SCALE ")+7, 
-												line.indexOf(" NOT NULLABLE")).
-												trim().replaceAll("\"", ""));
-						physicalColumnNullables.add("NOT NULLABLE");
-					}
-					else {
-						physicalColumnScales.add(line.substring(
-												line.indexOf(" SCALE ")+7, 
-												line.indexOf(" NULLABLE")).
-												trim().replaceAll("\"", ""));
-						physicalColumnNullables.add("NULLABLE");
-					}
+							iIndexPRECISION, 
+							iIndexSCALE).
+							trim().replaceAll("\"", ""));
+				//SCALE & NULLABLE
+				if (line.indexOf(" NOT NULLABLE") != -1) {
+					physicalColumnScales.add(line.substring(
+							line.indexOf(" SCALE ")+7, 
+							line.indexOf(" NOT NULLABLE")).
+							trim().replaceAll("\"", ""));
+					physicalColumnNullables.add("NOT NULLABLE");
 				}
+				else {
+					physicalColumnScales.add(line.substring(
+							line.indexOf(" SCALE ")+7, 
+							line.indexOf(" NULLABLE")).
+							trim().replaceAll("\"", ""));
+					physicalColumnNullables.add("NULLABLE");
+				}
+			}
 
-				if (line.indexOf(")") == 0 && 
+			if (line.indexOf(")") == 0 && 
 					line.indexOf(" SOURCE ") != -1) {
-					physicalTableSource = line.substring(line.indexOf(" SOURCE ")+8);
-					isPhysicalAlias = true;
-				}
-			} while (!( line.indexOf("PRIVILEGES (") != -1 && 
-						line.indexOf(";") != -1));
-
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
-		}
+				physicalTableSource = line.substring(line.indexOf(" SOURCE ")+8);
+				isPhysicalAlias = true;
+			}
+		} while (!( line.indexOf("PRIVILEGES (") != -1 && line.indexOf(";") != -1));
 
 		trimmedDeclareStatement	= null;
 		line		= null;
@@ -161,7 +150,7 @@ public class PhysicalTable implements UDMLObject {
 		Element ePhysicalTableName = doc.createElement("PhysicalTableName");
 
 		ePhysicalTable.setAttribute("isAlias", "false");
-		
+
 		if (isPhysicalAlias) {
 			ePhysicalTable.setAttribute("isAlias", "true");
 			ePhysicalTable.setAttribute("reference", physicalTableSource);
@@ -258,26 +247,26 @@ public class PhysicalTable implements UDMLObject {
 		ePhysicalTable.appendChild(ePhysicalColumnList);
 		return ePhysicalTable;
 	}
-	
-private boolean specialCaseTYPE(String inputStr)
-{
-	int first = inputStr.indexOf(" TYPE ");
-	String last = inputStr.substring(first+5, inputStr.length());
 
-	if (last.indexOf(" TYPE ") != -1) return true;
+	private boolean specialCaseTYPE(String inputStr)
+	{
+		int first = inputStr.indexOf(" TYPE ");
+		String last = inputStr.substring(first+5, inputStr.length());
 
-	return false;
-}
+		if (last.indexOf(" TYPE ") != -1) return true;
 
-private boolean specialCaseSCALE(String inputStr)
-{
-	int first = inputStr.indexOf(" SCALE ");
-	String last = inputStr.substring(first+6, inputStr.length());
+		return false;
+	}
 
-	if (last.indexOf(" SCALE ") != -1) return true;
+	private boolean specialCaseSCALE(String inputStr)
+	{
+		int first = inputStr.indexOf(" SCALE ");
+		String last = inputStr.substring(first+6, inputStr.length());
 
-	return false;
-}
+		if (last.indexOf(" SCALE ") != -1) return true;
+
+		return false;
+	}
 }
 /*
  * DECLARE TABLE <FQ table name> AS <table name> HAVING

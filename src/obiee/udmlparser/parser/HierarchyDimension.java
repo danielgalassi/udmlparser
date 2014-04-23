@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,29 +16,21 @@ public class HierarchyDimension implements UDMLObject {
 	private String hierarchyDimensionID;
 	private String hierarchyDimensionName;
 
-	public HierarchyDimension (	String declare, 
-								String hierarchyDimension, 
-								BufferedReader udml) {
+	public HierarchyDimension (String declare, String hierarchyDimension, Scanner udml) {
 		String line;
 		String trimmedDeclareStatement = declare.trim();
 		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
 
 		hierarchyDimensionID = trimmedDeclareStatement.substring(	hierarchyDimension.length(), 
-											iIndexAS).
-											trim().replaceAll("\"", "");
+				iIndexAS).trim().replaceAll("\"", "");
 
 		hierarchyDimensionName = trimmedDeclareStatement.substring(iIndexAS+4,
-											trimmedDeclareStatement.indexOf(" ON")).
-											trim().replaceAll("\"", "");
-		
-		try {
-			line = udml.readLine();
-			//NO FURTHER ACTIONS
-			while ( line.indexOf("PRIVILEGES") == -1 && 
-					line.indexOf(";") == -1)
-				line = udml.readLine();
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+				trimmedDeclareStatement.indexOf(" ON")).trim().replaceAll("\"", "");
+
+		line = udml.nextLine();
+		//NO FURTHER ACTIONS
+		while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+			line = udml.nextLine();
 		}
 
 		trimmedDeclareStatement	= null;
