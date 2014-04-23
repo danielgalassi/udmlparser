@@ -132,7 +132,7 @@ public class MetadataExtract {
 
 		for (String arg : args) {
 			if (arg.startsWith("-udml=")) {
-				udmlFiles.add(arg.replaceFirst("-udml", ""));
+				udmlFiles.add(arg.replaceFirst("-udml=", ""));
 			}
 
 			if (arg.startsWith("-rpdxml=")) {
