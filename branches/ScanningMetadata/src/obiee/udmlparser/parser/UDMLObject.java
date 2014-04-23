@@ -7,7 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * @author danielgalassi
+ * @author danielgalassi@gmail.com
  *
  */
 public interface UDMLObject {

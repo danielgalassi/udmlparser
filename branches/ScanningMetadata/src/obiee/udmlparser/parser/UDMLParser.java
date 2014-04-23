@@ -7,6 +7,8 @@ import java.util.Scanner;
 import obiee.udmlparser.metadataExtract.MetadataExtract;
 import obiee.udmlparser.utils.XMLUtils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,6 +20,8 @@ import org.w3c.dom.Node;
  *
  */
 public class UDMLParser {
+
+	private final Logger logger = LogManager.getLogger(UDMLParser.class.getName());
 
 	private Document udml;
 	private Element root;
@@ -49,7 +53,7 @@ public class UDMLParser {
 		udmlExtract	= new File(input);
 
 		if(MetadataExtract.isBusMatrixInvoked()) {
-			System.out.println("BusMatrix feature invoked.");
+			logger.info("BusMatrix feature invoked.");
 		}
 		if(isUDML()) {
 			parse();
@@ -75,7 +79,7 @@ public class UDMLParser {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("File contains UDML code = " + isUDML);
+		logger.info("File contains UDML code = {}", isUDML);
 		return isUDML;
 	}
 
@@ -93,54 +97,52 @@ public class UDMLParser {
 				header = udmlScanner.nextLine();
 
 				if (header.indexOf(catalogFolders) != -1) { //pres subject area
-					System.out.println( "Processing Subject Area...");
+					logger.info("Processing Subject Area...");
 					object = new CatalogFolder(header, catalogFolders, udmlScanner);
 				}
 				if (header.indexOf(subjectAreas) != -1) { //bmm subject area
-					System.out.println("Processing Business Model...");
+					logger.info("Processing Business Model...");
 					object = new SubjectArea(header, subjectAreas, udmlScanner);
 				}
 				if (header.indexOf(logicalJoins) != -1) { //logical join (BMM)
-					System.out.println("Processing Logical Join...");
+					logger.info("Processing Logical Join...");
 					object = new LogicalJoin(header, logicalJoins, udmlScanner);
 				}
 				if (header.indexOf(logicalForeignKeys) != -1) { //logical foreign key join (BMM)
-					System.out.println("Processing Logical (Foreign Key) Join...");
+					logger.info("Processing Logical (Foreign Key) Join...");
 					object = new LogicalForeignKey(header, logicalForeignKeys, udmlScanner);
 				}
-
 				if (!MetadataExtract.isBusMatrixInvoked()) {
 					if (header.indexOf(entityFolders) != -1) { //pres folder
-						System.out.println("Processing Presentation Folder...");
+						logger.info("Processing Presentation Folder...");
 						object = new EntityFolder(header, entityFolders, udmlScanner);
 					}
 					if (header.indexOf(folderAttributes) != -1) { //pres column
-						System.out.println("Processing Presentation Column...");
+						logger.info("Processing Presentation Column...");
 						object = new FolderAttribute(header, folderAttributes, udmlScanner);
 					}
 					if (header.indexOf(logicalTables) != -1 && header.indexOf(logicalTableSources) == -1) { //logl tbl
-						System.out.println("Processing Logical Table...");
+						logger.info("Processing Logical Table...");
 						object = new LogicalTable(header, logicalTables, udmlScanner);
 					}
 					if (header.indexOf(logicalTableSources) != -1) { //logl tbl src
-						System.out.println("Processing Logical Table Source...");
+						logger.info("Processing Logical Table Source...");
 						object = new LogicalTableSource(header,logicalTableSources,udmlScanner);
 					}
-					if (header.indexOf(physicalTables) != -1 && 
-							header.indexOf(physicalTableKeys) == -1) { //physical tbl
-						System.out.println("Processing Physical Table...");
+					if (header.indexOf(physicalTables) != -1 && header.indexOf(physicalTableKeys) == -1) { //physical tbl
+						logger.info("Processing Physical Table...");
 						object = new PhysicalTable(header, physicalTables, udmlScanner);
 					}
 					if (header.indexOf(dimensionLevels) != -1) { //hier. dim. level
-						System.out.println("Processing Hierarchy Dim Level...");
+						logger.info("Processing Hierarchy Dim Level...");
 						object = new DimensionLevel(header, dimensionLevels, udmlScanner);
 					}
 					if (header.indexOf(hierarchyDims) != -1) { //hier dim
-						System.out.println("Processing Hierarchy Dimension...");
+						logger.info("Processing Hierarchy Dimension...");
 						object = new HierarchyDimension(header, hierarchyDims, udmlScanner);
 					}
 					if (header.indexOf(foreignKeys) != -1) { //join
-						System.out.println("Processing Foreign Key...");
+						logger.info("Processing Foreign Key...");
 						object = new ForeignKey(header, foreignKeys, udmlScanner);
 					}
 				}
@@ -152,8 +154,7 @@ public class UDMLParser {
 					}
 					catch(Exception ex)
 					{
-						System.out.println(object == null);
-						ex.printStackTrace();
+						logger.error(ex.getClass() + " thrown while creating XUDML DOM.");
 					}
 				}
 			} while (udmlScanner.hasNextLine());
@@ -161,7 +162,7 @@ public class UDMLParser {
 			udmlScanner.close ();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getClass() + " thrown while parsing UDML.");
 		}
 
 		header = null;
