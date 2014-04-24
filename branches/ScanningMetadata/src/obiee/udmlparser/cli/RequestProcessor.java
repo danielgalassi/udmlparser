@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * This class handles argument processing for command line requests
  * @author danielgalassi@gmail.com
  *
  */
@@ -21,9 +22,17 @@ public class RequestProcessor {
 
 	private static final Logger logger = LogManager.getLogger(RequestProcessor.class.getName());
 
+	/** Command line arguments used by the parser application*/
 	private Options options = new Options();
+	/** Command line representation for Apache Commons CLI */
 	private CommandLine cli = null;
 
+	/**
+	 * Processes all arguments entered in the command line interface
+	 * @param args command line arguments
+	 * @throws Exception when command line arguments cannot be successfully parsed or represented
+	 * @see <code>ParseException</code>
+	 */
 	public RequestProcessor (String[] args) throws Exception {
 		createOptions();
 		try {
@@ -36,17 +45,31 @@ public class RequestProcessor {
 		}
 	}
 
+	/**
+	 * Displays help information
+	 */
 	private void displayUsage() {
 		org.apache.commons.cli.HelpFormatter help = new HelpFormatter();
 		help.printHelp("udmlparser", options);
 	}
 
+	/**
+	 * Verifies that dependencies are met
+	 * @throws Exception when argument dependencies are broken
+	 * @see <code>MissingOptionException</code>
+	 */
 	private void validatingOptions() throws Exception {
 		if (cli.hasOption("udmltgt") && !cli.hasOption("udmlxsl") && !cli.hasOption("cmd")) {
 			throw new MissingOptionException("Transformation requested without XSL stylesheet");
 		}
 	}
 
+	/**
+	 * Creates an representation of the command line arguments
+	 * @param args command line arguments
+	 * @throws Exception when command line arguments are missing or incorrectly entered
+	 * @see <code>ParseException</code> 
+	 */
 	private void parseCommandLine(String[] args) throws Exception {
 
 		if (args.length == 0) {
@@ -61,6 +84,9 @@ public class RequestProcessor {
 		}
 	}
 
+	/**
+	 * Adds all options evaluated by <code>MetadataExtract</code>
+	 */
 	private void createOptions() {
 		options.addOption("u", "udml", true, "a UDML file");
 		options.addOption("x", "rpdxml", false, "the resulting XML file");
@@ -71,6 +97,10 @@ public class RequestProcessor {
 		options.addOption("h", "help", false, "display usage options");
 	}
 
+	/**
+	 * Generates a request containing all (valid) retrieved arguments
+	 * @return a representation of a list of command line arguments
+	 */
 	public Request getRequest() {
 		Request request = new Request();
 		if (cli.hasOption("cmd")) {

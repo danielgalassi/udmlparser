@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Requests represent a specific call from a command line interface.
  * @author danielgalassi@gmail.com
  *
  */
 public class Request {
 
+	/** A set of (key,value) pairs representing all (no flags) attributes*/
 	private Map<String, String> request = new HashMap<String, String>();
 	private boolean isBusMatrixInvoked = false;
 	private boolean isTransformationInvoked = false;
