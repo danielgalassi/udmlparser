@@ -88,31 +88,18 @@ public class MetadataExtract {
 			return;
 		}
 
-		//REPOSITORY METADATA EXTRACTION
-
-		//TODO move to RequestProcessor or Request
-		//setting a default output file
-		//If the Bus Matrix app is invoked and the output filename is not specified, a default file is used.
-		if (request.getArg("rpdxml").equals("") && request.isBusMatrixInvoked()) {
-			request.changeArgTo("rpdxml", System.currentTimeMillis() + ".xml");
-		}
-
-		//Parameters check...
-		//And the UDML file is parsed
-		if (!request.getArg("udml").equals("") && !request.getArg("rpdxml").equals("")) {
-			new UDMLParser(request.getArg("udml"), request.getArg("rpdxml"));
-		}
+		//UDML file is parsed
+		new UDMLParser(request.getArg("udml"), request.getArg("rpdxml"));
 
 		//Custom XML
 		if (request.isTransformationInvoked()) {
+			System.out.println(request.getArg("target"));
 			XMLUtils.applyStylesheet(request.getArg("rpdxml"), request.getArg("stylesheet"), request.getArg("target"));
 		}
 
 		if (request.isBusMatrixInvoked()) {
 			buildBusMatrix();
 		}
-
-		//REPOSITORY METADATA EXTRACTION (END)
 	}
 }
 /*
