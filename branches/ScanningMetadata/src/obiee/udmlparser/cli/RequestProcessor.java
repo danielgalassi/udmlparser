@@ -42,7 +42,7 @@ public class RequestProcessor {
 	}
 
 	private void validatingOptions() throws Exception {
-		if (cli.hasOption("udmltgt") && !cli.hasOption("udmlxsl")) {
+		if (cli.hasOption("udmltgt") && !cli.hasOption("udmlxsl") && !cli.hasOption("cmd")) {
 			throw new MissingOptionException("Transformation requested without XSL stylesheet");
 		}
 	}
@@ -60,7 +60,7 @@ public class RequestProcessor {
 		options.addOption("u", "udml", true, "a UDML file");
 		options.addOption("x", "rpdxml", false, "the resulting XML file");
 		options.addOption("s", "udmlxsl", true, "XSL stylesheet for (optional) transformation");
-		options.addOption("t", "udmltgt", false, "the file resulting from the transformation");
+		options.addOption("t", "udmltgt", true, "the file resulting from the transformation");
 		options.addOption("c", "cmd", true, "invokes a bundled utility such as the Bus Matrix Generator");
 		options.addOption("?", "help", false, "display usage options");
 		options.addOption("h", "help", false, "display usage options");
@@ -74,12 +74,16 @@ public class RequestProcessor {
 		}
 		if (cli.hasOption("udml")) {
 			request.setArg("udml", cli.getOptionValue("udml"));
+			if (!cli.hasOption("rpdxml")) {
+				request.setArg("rpdxml", System.currentTimeMillis() + ".xml");
+			}
 		}
 		if (cli.hasOption("rpdxml")) {
 			request.setArg("rpdxml", cli.getOptionValue("rpdxml"));
 		}
 		if (cli.hasOption("udmlxsl")) {
 			request.setArg("stylesheet", cli.getOptionValue("udmlxsl"));
+			request.invokeTransformation(true);
 		}
 		if (cli.hasOption("udmltgt")) {
 			request.setArg("target", cli.getOptionValue("udmltgt"));

@@ -52,9 +52,8 @@ public class UDMLParser {
 		root		= udml.createElement("UDML");
 		udmlExtract	= new File(input);
 
-		if(MetadataExtract.isBusMatrixInvoked()) {
-			logger.info("BusMatrix feature invoked.");
-		}
+		logger.info("Creating Parser");
+		logger.info("BusMatrix feature invoked = {}", MetadataExtract.isBusMatrixInvoked());
 		if(isUDML()) {
 			parse();
 		}
@@ -89,6 +88,7 @@ public class UDMLParser {
 	private void parse() {
 		String header;
 
+		logger.info("Parsing UDML...");
 		try {
 			Scanner udmlScanner = new Scanner(udmlExtract);
 
@@ -165,6 +165,6 @@ public class UDMLParser {
 			logger.error(e.getClass() + " thrown while parsing UDML.");
 		}
 
-		header = null;
+		logger.info("Parsing complete");
 	}
 }

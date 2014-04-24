@@ -16,7 +16,7 @@ public class Request {
 	private boolean isBusMatrixInvoked = false;
 	private boolean isTransformationInvoked = false;
 
-	private void invokeTransformation(boolean invoked) {
+	public void invokeTransformation(boolean invoked) {
 		isTransformationInvoked = invoked;
 	}
 
@@ -34,7 +34,6 @@ public class Request {
 
 	public void setArg(String key, String value) {
 		request.put(key, value);
-		invokeTransformation(true);
 	}
 
 	public String getArg(String key) {
@@ -43,12 +42,5 @@ public class Request {
 			value = request.get(key);
 		}
 		return value;
-	}
-
-	public void changeArgTo(String key, String value) {
-		if (request.containsKey(key)) {
-			request.remove(key);
-			setArg(key, value);
-		}
 	}
 }
