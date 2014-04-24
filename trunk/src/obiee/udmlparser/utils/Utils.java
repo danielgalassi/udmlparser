@@ -11,69 +11,69 @@ public class Utils {
 
 	/**
 	 * UDML calculation parser -identifies both, Logical and Physical columns
-	 * @param sPrefixStr where to get the Subject Area prefix from
-	 * @param sCalculation contains the expression to parse
+	 * @param prefix where to get the Subject Area prefix from
+	 * @param calculation contains the expression to parse
 	 * @param isDerived points out the type of expression to evaluate 
 	 * 			(derived column or mapping calculation)
 	 * @return Vector containing (logical or physical) column IDs
 	 */
-	public static Vector<String> CalculationParser (String sPrefixStr,
-													String sCalculation, 
-													boolean isDerived) {
-		String sSAPrefix		= "\"" + sPrefixStr.substring(0,
-										sPrefixStr.indexOf(".")) + "\"";
-		String sExpr			= sCalculation.toString();
-		String sRemainingExpr	= sCalculation.toString();
+	public static Vector<String> CalculationParser (String prefix, String calculation, boolean isDerived) {
+		String subjectAreaPrefix	= "\"" + prefix.substring(0, prefix.indexOf(".")) + "\"";
+		String expression			= calculation.toString();
+		String remainingExpression	= calculation.toString();
 		
-		Vector <String>	vColMapID = null;
+		Vector <String>	columnMappingIDs = null;
 
-		int iExpBegins	= 0;
-		int iStPos		= 0;
-		int iRelPos		= 0;
-		int iEndPos		= 0;
-		int iLoop		= 8;
+		int expressionBegins = 0;
+		int startPosition = 0;
+		int firstOccurrence = 0;
+		int endPosition = 0;
+		int loop = 8;
 
-		boolean bDuplicated;
+		boolean isDuplicated;
 
-		if(sExpr.indexOf(sSAPrefix) != -1)
-			vColMapID = new Vector<String>();
-
-		if (isDerived)
-			iLoop = 4;
-		while (sExpr.indexOf(sSAPrefix) != -1) {
-			iStPos = sExpr.indexOf(sSAPrefix);
-			//gets the first ocurrence of ."
-			iRelPos = sExpr.indexOf(".\"");
-			iEndPos = sExpr.indexOf(sSAPrefix) + sSAPrefix.length();
-			//4 = derived calculation; 8 = LTS calculation
-			for (int i=0; i<iLoop; i++) {
-				sExpr = sExpr.substring(iRelPos);
-				iRelPos = sExpr.indexOf("\"") + 1;
-				iEndPos += iRelPos;
-			}
-
-			if (iEndPos > sRemainingExpr.length())
-				iEndPos = sRemainingExpr.length();
-			
-			//prevents repeatedly added columns --begin
-			bDuplicated = false;
-			for(int j=0; j<vColMapID.size(); j++)
-				if ((vColMapID.get(j)).equals(
-						sRemainingExpr.substring(iStPos, iEndPos).
-						replaceAll("\"", ""))) {
-					bDuplicated = true;
-					break;
-				}
-			if (!bDuplicated)
-				vColMapID.add(sRemainingExpr.
-						substring(iStPos, iEndPos).replaceAll("\"", ""));
-			//prevents repeatedly added columns --end
-
-			iExpBegins += iEndPos;
-			sExpr = sCalculation.substring(iExpBegins);
-			sRemainingExpr = sExpr.toString();
+		if(expression.indexOf(subjectAreaPrefix) != -1) {
+			columnMappingIDs = new Vector<String>();
 		}
 
-		return vColMapID;
+		if (isDerived) {
+			loop = 4;
+		}
+
+		while (expression.indexOf(subjectAreaPrefix) != -1) {
+			startPosition = expression.indexOf(subjectAreaPrefix);
+			//gets the first occurrence of ."
+			firstOccurrence = expression.indexOf(".\"");
+			endPosition = expression.indexOf(subjectAreaPrefix) + subjectAreaPrefix.length();
+			//4 = derived calculation; 8 = LTS calculation
+			for (int i=0; i<loop; i++) {
+				expression = expression.substring(firstOccurrence);
+				firstOccurrence = expression.indexOf("\"") + 1;
+				endPosition += firstOccurrence;
+			}
+
+			if (endPosition > remainingExpression.length()) {
+				endPosition = remainingExpression.length();
+			}
+
+			//prevents repeatedly added columns --begin
+			isDuplicated = false;
+			for (String columnMappingID : columnMappingIDs) {
+				if (columnMappingID.equals(remainingExpression.substring(startPosition, endPosition).replaceAll("\"", ""))) {
+					isDuplicated = true;
+					break;
+				}
+			}
+
+			if (!isDuplicated) {
+				columnMappingIDs.add(remainingExpression.substring(startPosition, endPosition).replaceAll("\"", ""));
+			}
+			//prevents repeatedly added columns --end
+
+			expressionBegins += endPosition;
+			expression = calculation.substring(expressionBegins);
+			remainingExpression = expression.toString();
+		}
+		return columnMappingIDs;
 	}
 }

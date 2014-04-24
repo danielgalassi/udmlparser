@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
@@ -13,7 +12,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class CatalogFolder {
+public class CatalogFolder implements UDMLObject {
 
 	private String			catalogFolderID;
 	private String			catalogFolderName;
@@ -23,7 +22,7 @@ public class CatalogFolder {
 	private String			presentationDispayName;
 	private String			presentationDescription;
 
-	public CatalogFolder(String declare, String catalogFolder, BufferedReader udml) {
+	public CatalogFolder(String declare, String catalogFolder, Scanner udml) {
 		String line;
 		String trimmedHeader = declare.trim();
 		int as = trimmedHeader.indexOf(" AS ");
@@ -36,63 +35,55 @@ public class CatalogFolder {
 		else {
 			catalogFolderName = trimmedHeader.substring(as+4).trim().replaceAll("\"", "");
 		}
-		try {
-			//SUBJECT AREA
-			line = udml.readLine().trim().replaceAll("\"", "");
+		//SUBJECT AREA
+		line = udml.nextLine().trim().replaceAll("\"", "");
 
-			int subjectAreaIdx = line.indexOf("SUBJECT AREA ");
-			if (subjectAreaIdx != -1) {
-				catalogFolderMappingID = line.substring(subjectAreaIdx+13).trim().replaceAll("\"", "");
-			}
-
-			//ENTITY FOLDERS LIST
-			line = udml.readLine().trim().replaceAll("\"", "");
-			if (line.indexOf("ENTITY FOLDERS (") != -1) {
-				entityFolderIDs = new Vector<String>();
-				do {
-					line = udml.readLine().trim().replaceAll("\"", "");
-					entityFolderIDs.add(line.substring(0,line.length()-1));
-				} while (line.charAt(line.length()-1) != ')');
-			}
-
-			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES,
-			//RECOVERING ALIASES
-			do {
-				line = udml.readLine().trim().replaceAll("\"", "");
-				int aliasesIdx = line.indexOf("ALIASES (");
-				int lastParIdx = line.lastIndexOf(")");
-				if (aliasesIdx != -1)
-					catalogFolderAliases = line.substring(aliasesIdx+9, lastParIdx).trim().replaceAll("\"", "").split(",");
-
-				//DISPLAY NAME
-				int displayNameIdx = line.indexOf("DISPLAY NAME ");
-				if (displayNameIdx != -1){
-					int i1 = displayNameIdx+13;
-					int i2 = line.lastIndexOf(" ON");
-					presentationDispayName = line.trim().substring(i1, i2).trim().replaceAll("\"", "");
-				}
-
-				//DESCRIPTION
-				if (line.indexOf("DESCRIPTION ") != -1){
-					presentationDescription = line.trim().substring(
-							line.indexOf("{")+1,
-							line.length()).
-							trim().replaceAll("}", "");
-					//LARGE TEXT
-					while (line.indexOf("}") == -1){
-						line = udml.readLine().trim();
-						presentationDescription += "\n";
-						presentationDescription += line.trim().replaceAll("}", "");
-					}
-				}
-			} while (line.indexOf(";") == -1);
-
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+		int subjectAreaIdx = line.indexOf("SUBJECT AREA ");
+		if (subjectAreaIdx != -1) {
+			catalogFolderMappingID = line.substring(subjectAreaIdx+13).trim().replaceAll("\"", "");
 		}
 
-		trimmedHeader	= null;
-		line		= null;
+		//ENTITY FOLDERS LIST
+		line = udml.nextLine().trim().replaceAll("\"", "");
+		if (line.indexOf("ENTITY FOLDERS (") != -1) {
+			entityFolderIDs = new Vector<String>();
+			do {
+				line = udml.nextLine().trim().replaceAll("\"", "");
+				entityFolderIDs.add(line.substring(0,line.length()-1));
+			} while (line.charAt(line.length()-1) != ')');
+		}
+
+		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES,
+		//RECOVERING ALIASES
+		do {
+			line = udml.nextLine().trim().replaceAll("\"", "");
+			int aliasesIdx = line.indexOf("ALIASES (");
+			int lastParIdx = line.lastIndexOf(")");
+			if (aliasesIdx != -1)
+				catalogFolderAliases = line.substring(aliasesIdx+9, lastParIdx).trim().replaceAll("\"", "").split(",");
+
+			//DISPLAY NAME
+			int displayNameIdx = line.indexOf("DISPLAY NAME ");
+			if (displayNameIdx != -1){
+				int i1 = displayNameIdx+13;
+				int i2 = line.lastIndexOf(" ON");
+				presentationDispayName = line.trim().substring(i1, i2).trim().replaceAll("\"", "");
+			}
+
+			//DESCRIPTION
+			if (line.indexOf("DESCRIPTION ") != -1){
+				presentationDescription = line.trim().substring(
+						line.indexOf("{")+1,
+						line.length()).
+						trim().replaceAll("}", "");
+				//LARGE TEXT
+				while (line.indexOf("}") == -1){
+					line = udml.nextLine().trim();
+					presentationDescription += "\n";
+					presentationDescription += line.trim().replaceAll("}", "");
+				}
+			}
+		} while (line.indexOf(";") == -1);
 	}
 
 	/**

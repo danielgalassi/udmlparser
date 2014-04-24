@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,7 +11,7 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class FolderAttribute {
+public class FolderAttribute implements UDMLObject {
 
 	private String		presentationColumnID;
 	private String		presentationColumnName;
@@ -20,75 +19,57 @@ public class FolderAttribute {
 	private String		presentationDispayName;
 	private String		presentationDescription;
 	private String[] 	presentationColumnAliases = null;
-	
 
-	public FolderAttribute (String declare, 
-							String presentationColumn,
-							BufferedReader udml) {
+
+	public FolderAttribute (String declare, String presentationColumn, Scanner udml) {
 		String line;
-		String trimmedDeclareStatement = declare.trim();
-		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
-		int iIndexLA = trimmedDeclareStatement.indexOf(" LOGICAL ATTRIBUTE ");
-		presentationColumnID = trimmedDeclareStatement.substring(presentationColumn.length(), iIndexAS).
-												trim().replaceAll("\"", "");
-		presentationColumnName = trimmedDeclareStatement.substring(iIndexAS+4, 
-						trimmedDeclareStatement.indexOf( " LOGICAL ATTRIBUTE ",iIndexAS)).
-						trim().replaceAll("\"", "");
+		String header = declare.trim();
+		int indexAS = header.indexOf(" AS ");
+		int indexAttribute = header.indexOf(" LOGICAL ATTRIBUTE ");
+		presentationColumnID = header.substring(presentationColumn.length(), indexAS).trim().replaceAll("\"", "");
+		presentationColumnName = header.substring(indexAS+4, header.indexOf( " LOGICAL ATTRIBUTE ",indexAS)).trim().replaceAll("\"", "");
 
-		if (trimmedDeclareStatement.indexOf(" OVERRIDE LOGICAL NAME") == -1)
-			presentationColumnMappingID = trimmedDeclareStatement.substring(iIndexLA+19).
-												trim().replaceAll("\"", "");
-		else
-			presentationColumnMappingID = trimmedDeclareStatement.substring(iIndexLA+19, 
-								trimmedDeclareStatement.indexOf(" OVERRIDE LOGICAL NAME")).
-								trim().replace("\"", "");
-
-		try {
-			//ALIASES
-			do {
-				boolean keywordFound = false;
-				line = udml.readLine().trim().replaceAll("\"", "");
-				if(line.indexOf("ALIASES (") != -1) {
-					presentationColumnAliases = line.substring(
-										line.indexOf("ALIASES (")+9, 
-										line.lastIndexOf(")")).
-										trim().replaceAll("\"", "").split(",");
-					keywordFound = true;
-				}
-				
-				//DISPLAY NAME
-				if (line.indexOf("DISPLAY NAME ") != -1 && !keywordFound) {
-					presentationDispayName = line.trim().substring(
-										line.indexOf("DISPLAY NAME ")+13,
-										line.lastIndexOf(" ON")).
-										trim().replaceAll("\"", "");
-					keywordFound = true;
-				}
-				
-				//DESCRIPTION
-				if (line.indexOf("DESCRIPTION") != -1 && !keywordFound) {
-					presentationDescription = line.trim().substring(
-							line.indexOf("{")+1,
-							line.length()).
-							trim().replaceAll("}", "");
-					//LARGE TEXT
-					while (line.indexOf("}") == -1){
-						line = udml.readLine().trim();
-						presentationDescription += "\n";
-						presentationDescription += line.trim().replaceAll("}", "");
-						keywordFound = true;
-					}
-				}
-					
-			} while (line.indexOf("PRIVILEGES") == -1 &&
-					 line.indexOf(";") == -1);
-
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+		if (header.indexOf(" OVERRIDE LOGICAL NAME") == -1) {
+			presentationColumnMappingID = header.substring(indexAttribute+19).trim().replaceAll("\"", "");
+		}
+		else {
+			presentationColumnMappingID = header.substring(indexAttribute+19, header.indexOf(" OVERRIDE LOGICAL NAME")).trim().replace("\"", "");
 		}
 
-		trimmedDeclareStatement	= null;
-		line		= null;
+		//ALIASES
+		do {
+			boolean keywordFound = false;
+			line = udml.nextLine().trim().replaceAll("\"", "");
+			if(line.indexOf("ALIASES (") != -1) {
+				presentationColumnAliases = line.substring(
+						line.indexOf("ALIASES (")+9, 
+						line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
+				keywordFound = true;
+			}
+
+			//DISPLAY NAME
+			if (line.indexOf("DISPLAY NAME ") != -1 && !keywordFound) {
+				presentationDispayName = line.trim().substring(
+						line.indexOf("DISPLAY NAME ")+13,
+						line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
+				keywordFound = true;
+			}
+
+			//DESCRIPTION
+			if (line.indexOf("DESCRIPTION") != -1 && !keywordFound) {
+				presentationDescription = line.trim().substring(
+						line.indexOf("{")+1,
+						line.length()).trim().replaceAll("}", "");
+				//LARGE TEXT
+				while (line.indexOf("}") == -1){
+					line = udml.nextLine().trim();
+					presentationDescription += "\n";
+					presentationDescription += line.trim().replaceAll("}", "");
+					keywordFound = true;
+				}
+			}
+
+		} while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1);
 	}
 
 	/**
@@ -126,7 +107,7 @@ public class FolderAttribute {
 		//added DISPLAY NAME and DESCRIPTION elements
 		Element ePresentationDisplayName = xmldoc.createElement("displayName");
 		Element ePresentationDescription = xmldoc.createElement("description");
-		
+
 		ePresentationColumnID.appendChild(nPresentationColumnID);
 		ePresentationColumnName.appendChild(nPresentationColumnName);
 		ePresentationColumnMappingID.appendChild(nPresentationColumnMappingID);

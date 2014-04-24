@@ -1,9 +1,8 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ListIterator;
+import java.util.Scanner;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,58 +13,49 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class ForeignKey {
+public class ForeignKey implements UDMLObject {
 
 	private String				foreignKeyID;
 	private String				foreignKeyName;
 	private ArrayList <String>	physicalColumns;
 	private String				referencedKey;
 
-	public ForeignKey (String declare,
-			 String foreignKey,
-			 BufferedReader udml) {
+	public ForeignKey (String declare, String foreignKey, Scanner udml) {
 		String line;
-		String sTrimmedDS = declare.trim();
-		int iIndexREFERENCES = 0;
-		int iIndexAS = sTrimmedDS.indexOf(" AS ");
-		foreignKeyID = sTrimmedDS.substring( foreignKey.length(), iIndexAS).
-												trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
-		int iNextToken = sTrimmedDS.indexOf(" HAVING");
-		if (iNextToken > sTrimmedDS.indexOf(" UPGRADE ID ") &&
-				sTrimmedDS.indexOf(" UPGRADE ID ") > -1)
-			iNextToken = sTrimmedDS.indexOf(" UPGRADE ID ");
-		foreignKeyName = sTrimmedDS.substring( iIndexAS + 4, iNextToken).
-											trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
+		String header = declare.trim();
+		int indexREFERENCES = 0;
+		int indexAS = header.indexOf(" AS ");
+		foreignKeyID = header.substring( foreignKey.length(), indexAS).trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
+		int nextToken = header.indexOf(" HAVING");
+		
+		if (nextToken > header.indexOf(" UPGRADE ID ") && header.contains(" UPGRADE ID ")) {
+			nextToken = header.indexOf(" UPGRADE ID ");
+		}
+		foreignKeyName = header.substring( indexAS + 4, nextToken).trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
 		physicalColumns = new ArrayList <String> ();
-		try {
-			line = udml.readLine();
-			do {
-				line = udml.readLine().trim();
-				sTrimmedDS = line;
-				iIndexREFERENCES = line.indexOf(") REFERENCES ");
-				if (iIndexREFERENCES != -1) {
-					physicalColumns.add(sTrimmedDS.substring(0, iIndexREFERENCES).
-											trim().replaceAll("\"", "").replaceAll("\\p{C}", "?"));
-					referencedKey = sTrimmedDS.substring(iIndexREFERENCES + 13).
-												trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
-				}
-				else {
-					physicalColumns.add(sTrimmedDS.
-											substring(0, sTrimmedDS.indexOf("\",")).
-											trim().replaceAll("\"", ""));
-				}
-			} while (line.indexOf(") REFERENCES ") == -1);
 
-			//DISCARD DESCRIPTION AND PRIVILEGES
-			while ( line.indexOf("PRIVILEGES") == -1 &&
-					line.indexOf(";") == -1)
-				line = udml.readLine();
+		line = udml.nextLine();
+		do {
+			line = udml.nextLine().trim();
+			header = line;
+			indexREFERENCES = line.indexOf(") REFERENCES ");
+			if (indexREFERENCES != -1) {
+				physicalColumns.add(header.substring(0, indexREFERENCES).
+						trim().replaceAll("\"", "").replaceAll("\\p{C}", "?"));
+				referencedKey = header.substring(indexREFERENCES + 13).
+						trim().replaceAll("\"", "").replaceAll("\\p{C}", "?");
+			}
+			else {
+				physicalColumns.add(header.substring(0, header.indexOf("\",")).trim().replaceAll("\"", ""));
+			}
+		} while (!line.contains(") REFERENCES "));
 
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+		//DISCARD DESCRIPTION AND PRIVILEGES
+		while (!line.contains("PRIVILEGES") && line.contains(";")) {
+			line = udml.nextLine();
 		}
 
-		sTrimmedDS	= null;
+		header	= null;
 		line		= null;
 	}
 
@@ -78,7 +68,7 @@ public class ForeignKey {
 		if (foreignKeyID == null)
 			foreignKeyID = "";
 		Node nForeignKeyID = xmldoc.createTextNode(foreignKeyID);
-		
+
 		if (foreignKeyName == null)
 			foreignKeyName = "";
 		Node nForeignKeyName = xmldoc.createTextNode(foreignKeyName);
