@@ -36,9 +36,9 @@
 	<body>
 	<!-- Business Models list Section -->
 	<h1>OBIEE Business Models
-		<span style="font-size: 24px; color: #676767; -moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); display: inline-block;">
+		<!--span style="font-size: 24px; color: #676767; -moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); display: inline-block;">
 			&#169;
-		</span>
+		</span-->
 	</h1>
 	<ul>
 	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">

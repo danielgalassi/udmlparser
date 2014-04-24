@@ -14,6 +14,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 
 /**
@@ -23,9 +25,7 @@ import org.w3c.dom.Document;
  */
 public class XMLUtils {
 
-	public static void publishException(Exception errMsg){
-		System.out.println("Error: " + errMsg.getClass() + "\tDescription: " + errMsg.getMessage());
-	}
+	private static final Logger logger = LogManager.getLogger(XMLUtils.class.getName());
 
 	/**
 	 * Create an empty DOM document
@@ -38,7 +38,7 @@ public class XMLUtils {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			doc = builder.newDocument();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("{} thrown while creating a DOM document", e.getClass().getCanonicalName());
 		}
 		return doc;
 	}
@@ -55,14 +55,10 @@ public class XMLUtils {
 
 		try {
 			builder = factory.newDocumentBuilder();
-		} catch(Exception e) {
-			publishException(e);
-		}
-
-		try {
 			doc = builder.parse(xml);
 		} catch(Exception e) {
-			publishException(e);
+			logger.error("{} thrown while loading an XML file into a DOM document", e.getClass().getCanonicalName());
+			e.printStackTrace();
 		}
 
 		return doc;
@@ -79,13 +75,12 @@ public class XMLUtils {
 		File xml = new File(file);
 		Result result = new StreamResult(xml);
 		try {
-
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
-			System.out.println(e);
+			logger.error("TransformerConfigurationException thrown while saving document");
 		} catch (TransformerException e) {
-			System.out.println(e);
+			logger.error("TransformerException thrown while saving document");
 		}
 	}
 
@@ -95,9 +90,7 @@ public class XMLUtils {
 	 * @param xslFile
 	 * @param resultFile
 	 */
-	public static void applyStylesheet(String xmlFile,
-			String xslFile,
-			String resultFile){
+	public static void applyStylesheet(String xmlFile, String xslFile, String resultFile){
 		File xml = new File(xmlFile);
 		File xsl = new File(xslFile);
 		File output = new File(resultFile);
@@ -108,15 +101,13 @@ public class XMLUtils {
 		TransformerFactory transFact = javax.xml.transform.TransformerFactory.newInstance();
 		try {
 			transformer = transFact.newTransformer(xsltSource);
-		} catch (TransformerConfigurationException tcE) {
-			System.out.println("3");
-			publishException(tcE);
+		} catch (TransformerConfigurationException transformerConfigException) {
+			logger.error("TransformerConfigurationException exception thrown while applying stylesheet");
 		}
 		try {
 			transformer.transform(xmlSource, result);
-		} catch (TransformerException tE) {
-			System.out.println("4");
-			publishException(tE);
+		} catch (TransformerException transformerException) {
+			logger.error("TransformerException exception thrown while applying stylesheet");
 		}
 	}
 
@@ -126,9 +117,7 @@ public class XMLUtils {
 	 * @param inputsXSLFile
 	 * @param strRESFile
 	 */
-	public static void applyStylesheet(String strXMLFile,
-			InputStream inputsXSLFile,
-			String strRESFile){
+	public static void applyStylesheet(String strXMLFile, InputStream inputsXSLFile, String strRESFile){
 		File fXMLFile = new File(strXMLFile);
 		File fResult = new File(strRESFile);
 		Source xmlSource = null;
@@ -144,14 +133,14 @@ public class XMLUtils {
 		try {
 			trans = transFact.newTransformer(xsltSource);
 		} catch (TransformerConfigurationException transformerConfigException) {
-			System.out.println("3");
-			publishException(transformerConfigException);
+			logger.error("TransformerConfigurationException thrown while applying stylesheet");
 		}
 		try {
 			trans.transform(xmlSource, result);
 		} catch (TransformerException transformerException) {
-			System.out.println("4");
-			publishException(transformerException);
+			logger.error("TransformerException thrown while applying stylesheet");
+		} catch (NullPointerException nullPointerException) {
+			logger.error("NullPointerException thrown while applying stylesheet");
 		}
 	}
 }

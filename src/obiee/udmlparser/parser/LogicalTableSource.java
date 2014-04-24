@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import obiee.udmlparser.utils.Utils;
@@ -15,69 +14,57 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class LogicalTableSource {
+public class LogicalTableSource implements UDMLObject {
 
 	private String			logicalTableSourceID;
 	private String			logicalTableSourceName;
 	private Vector <String>	logicalColumnIDs;
 	private Vector <String>	logicalColumnCalculations;
 
-	public LogicalTableSource (String declare,
-			String logicalTableSource, 
-			BufferedReader udml) {
+	public LogicalTableSource (String declare, String logicalTableSource, Scanner udml) {
 		String line;
-		String trimmedDeclareStatement = declare.trim();
-		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
+		String header = declare.trim();
+		int indexAS = header.indexOf(" AS ");
 		int eol;
 		int cbr;
-		this.logicalTableSourceID = trimmedDeclareStatement.substring( logicalTableSource.length(), 
-				iIndexAS).
-				trim().replaceAll("\"", "");
-		this.logicalTableSourceName = trimmedDeclareStatement.substring(iIndexAS + 4).
-				trim().replaceAll("\"", "");
 
-		try {
-			//DISCARD HEADING
+		this.logicalTableSourceID = header.substring( logicalTableSource.length(),indexAS).trim().replaceAll("\"", "");
+
+		this.logicalTableSourceName = header.substring(indexAS + 4).trim().replaceAll("\"", "");
+
+		//DISCARD HEADING
+		do {
+			line = udml.nextLine();
+		} while (!line.contains("PROJECT ("));
+
+		//LOGICAL COLUMNS
+		if (line.contains("PROJECT (")) {
+			logicalColumnIDs = new Vector<String>();
+			logicalColumnCalculations = new Vector<String>();
 			do {
-				line = udml.readLine();
-			} while (line.indexOf("PROJECT (") == -1);
-
-			//LOGICAL COLUMNS
-			if (line.indexOf("PROJECT (") != -1) {
-				logicalColumnIDs = new Vector<String>();
-				logicalColumnCalculations = new Vector<String>();
-				do {
-					line = udml.readLine().trim();
-					if (line.indexOf(" AS ") != -1 && 
-							line.indexOf(" CAST") == -1) {
-						logicalColumnIDs.add(line.substring(
-								line.indexOf("{") + 1,
-								line.indexOf("}")).
-								replaceAll("\"", ""));
-						//"end-of-line" in case } is missing. Issue # 6.
-						eol = line.lastIndexOf("}");
-						if (eol < line.lastIndexOf("{")-1)
-							eol = line.length()-1;
-						cbr = line.lastIndexOf("{")+1;
-						if (cbr >= line.length())
-							cbr = line.lastIndexOf("{");
-						logicalColumnCalculations.add(line.substring(
-								cbr,
-								eol));
+				line = udml.nextLine().trim();
+				if (line.indexOf(" AS ") != -1 && line.indexOf(" CAST") == -1) {
+					logicalColumnIDs.add(line.substring(
+							line.indexOf("{") + 1,
+							line.indexOf("}")).
+							replaceAll("\"", ""));
+					//"end-of-line" in case } is missing. Issue # 6.
+					eol = line.lastIndexOf("}");
+					if (eol < line.lastIndexOf("{")-1) {
+						eol = line.length()-1;
 					}
-				} while (line.indexOf("FROM") == -1);
-			}
-
-			while ( line.indexOf("PRIVILEGES") == -1 && 
-					line.indexOf(";") == -1)
-				line = udml.readLine();
-
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+					cbr = line.lastIndexOf("{")+1;
+					if (cbr >= line.length()) {
+						cbr = line.lastIndexOf("{");
+					}
+					logicalColumnCalculations.add(line.substring(cbr, eol));
+				}
+			} while (!line.contains("FROM"));
 		}
 
-		trimmedDeclareStatement	= null;
-		line = null;
+		while (!line.contains("PRIVILEGES") && line.contains(";")) {
+			line = udml.nextLine();
+		}
 	}
 
 	/**

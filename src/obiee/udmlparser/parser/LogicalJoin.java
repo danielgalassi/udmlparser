@@ -1,7 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
@@ -13,54 +12,47 @@ import org.w3c.dom.Node;
  * @author danielgalassi@gmail.com
  *
  */
-public class LogicalJoin {
+public class LogicalJoin implements UDMLObject {
 
 	private String			logicalJoinID;
 	private Vector <String>	logicalTableIDs = null;
 
 	private void parseLogicalJoinSpec(String line) {
-		int iLogicalTable = line.indexOf(" ON ENTITY ") + 12;
-		int iMULTIPLICITY = line.indexOf(" MULTIPLICITY  ");
-		if (iLogicalTable != -1 || iMULTIPLICITY != -1)
-			logicalTableIDs.add(line.substring(iLogicalTable, iMULTIPLICITY).replace("\"", ""));
-		else
+		int indexLogicalTable = line.indexOf(" ON ENTITY ") + 12;
+		int indexMULTIPLICITY = line.indexOf(" MULTIPLICITY  ");
+
+		if (indexLogicalTable != -1 || indexMULTIPLICITY != -1) {
+			logicalTableIDs.add(line.substring(indexLogicalTable, indexMULTIPLICITY).replace("\"", ""));
+		}
+		else {
 			logicalTableIDs.add("Review definition for this logical join");
+		}
 	}
 
-	public LogicalJoin (String declare,
-			String subjectArea,
-			BufferedReader udml) {
+	public LogicalJoin (String declare, String subjectArea, Scanner udml) {
 		String line = "";
 		int joinSpecifications = 0;
-		String trimmedDeclareStatement = declare.trim();
-		int iIndexAS = trimmedDeclareStatement.indexOf(" AS ");
-		logicalJoinID = trimmedDeclareStatement.substring(subjectArea.length(),iIndexAS).
-							trim().replaceAll("\"", "");
-		try {
-			String logicalJoinSpecification = "DECLARE ROLE \"" + logicalJoinID;
-			logicalTableIDs = new Vector<String>();
-			while (joinSpecifications < 2) {
-				line = udml.readLine();
-				while (line.indexOf(logicalJoinSpecification) == -1) {
-					line = udml.readLine();
-				}
+		String header = declare.trim();
+		int indexAS = header.indexOf(" AS ");
+		logicalJoinID = header.substring(subjectArea.length(),indexAS).trim().replaceAll("\"", "");
 
-				//table (logical join spec) found
-				parseLogicalJoinSpec(line);
-				joinSpecifications++;
+		String logicalJoinSpecification = "DECLARE ROLE \"" + logicalJoinID;
+		logicalTableIDs = new Vector<String>();
+		while (joinSpecifications < 2) {
+			line = udml.nextLine();
+			while (!line.contains(logicalJoinSpecification)) {
+				line = udml.nextLine();
 			}
 
-			//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-			while ( line.indexOf("PRIVILEGES") == -1 &&
-					line.indexOf(";") == -1)
-				line = udml.readLine();
-			
-		} catch (IOException e) {
-			System.out.println ("IO exception =" + e);
+			//table (logical join spec) found
+			parseLogicalJoinSpec(line);
+			joinSpecifications++;
 		}
 
-		trimmedDeclareStatement	= null;
-		line		= null;
+		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
+		while (!line.contains("PRIVILEGES") && line.contains(";")) {
+			line = udml.nextLine();
+		}
 	}
 
 	/**
