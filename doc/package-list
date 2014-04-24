@@ -1,4 +1,5 @@
 obiee.udmlparser.bundledApps
+obiee.udmlparser.cli
 obiee.udmlparser.metadataExtract
 obiee.udmlparser.parser
 obiee.udmlparser.utils
