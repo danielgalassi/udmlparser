@@ -26,8 +26,8 @@ public class RequestProcessor {
 
 	public RequestProcessor (String[] args) throws Exception {
 		createOptions();
-		parseCommandLine(args);
 		try {
+			parseCommandLine(args);
 			validatingOptions();
 		} catch (Exception e) {
 			logger.fatal("{} thrown while processing command line arguments ({})", e.getClass().getCanonicalName(), e.getMessage());
@@ -47,12 +47,17 @@ public class RequestProcessor {
 		}
 	}
 
-	private void parseCommandLine(String[] args) {
+	private void parseCommandLine(String[] args) throws Exception {
+
+		if (args.length == 0) {
+			logger.fatal("No arguments found");
+			throw new ParseException("Invalid request, no arguments found");
+		}
 		CommandLineParser parser = new GnuParser();
 		try {
 			cli = parser.parse(options, args);
 		} catch (ParseException e) {
-			logger.fatal("{} thrown while parsing command line options ({})", e.getClass().getCanonicalName(), e.getMessage());
+			logger.fatal("{} thrown while parsing command line arguments ({})", e.getClass().getCanonicalName(), e.getMessage());
 		}
 	}
 
