@@ -38,7 +38,7 @@ public class XMLUtils {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			doc = builder.newDocument();
 		} catch (Exception e) {
-			logger.error("Exception thrown while creating a DOM document");
+			logger.error("{} thrown while creating a DOM document", e.getClass().getCanonicalName());
 		}
 		return doc;
 	}
@@ -57,7 +57,7 @@ public class XMLUtils {
 			builder = factory.newDocumentBuilder();
 			doc = builder.parse(xml);
 		} catch(Exception e) {
-			logger.error(e.getClass() + " thrown while loading an XML file into a DOM document");
+			logger.error("{} thrown while loading an XML file into a DOM document", e.getClass().getCanonicalName());
 			e.printStackTrace();
 		}
 

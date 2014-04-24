@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Vector;
 
+import obiee.udmlparser.cli.Request;
 import obiee.udmlparser.parser.UDMLParser;
 import obiee.udmlparser.utils.XMLUtils;
 
@@ -203,11 +204,17 @@ public class MetadataExtract {
 	 */
 	public static void main(String[] args) {
 
+		try {
+			new Request(args);
+		} catch (Exception e) {
+			logger.fatal("{} thrown while processing command line arguments ({})", e.getClass().getCanonicalName(), e.getMessage());
+		}
+
 		int paramSize = args.length;
 		String firstArg = "";
 		boolean isFatal = false;
 
-		//TODO: refactor the command line processing feature.
+		//TODO refactor the command line processing feature.
 		if (paramSize > 0) {
 			firstArg = args[0];
 		}
