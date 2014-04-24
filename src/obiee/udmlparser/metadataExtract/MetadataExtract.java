@@ -93,7 +93,6 @@ public class MetadataExtract {
 
 		//Custom XML
 		if (request.isTransformationInvoked()) {
-			System.out.println(request.getArg("target"));
 			XMLUtils.applyStylesheet(request.getArg("rpdxml"), request.getArg("stylesheet"), request.getArg("target"));
 		}
 
