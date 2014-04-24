@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
  *
  */
 public class MetadataExtract {
-	
+
 	private static final Logger logger = LogManager.getLogger(MetadataExtract.class.getName());
 
 	/** one or more files containing OBIEE UDML code.*/
@@ -205,16 +205,12 @@ public class MetadataExtract {
 
 		int paramSize = args.length;
 		String firstArg = "";
-		
-		if (paramSize > 0)
+		boolean isFatal = false;
+
+		//TODO: refactor the command line processing feature.
+		if (paramSize > 0) {
 			firstArg = args[0];
-
-		//help requests or missing arguments HERE
-		if (paramSize < 1 || firstArg.startsWith("-h") || firstArg.startsWith("-?") || firstArg.startsWith("-help")) {
-			displayHelp();
-			return;
 		}
-
 
 		//command line arguments HERE
 		if (paramSize >= 2) {
@@ -226,8 +222,19 @@ public class MetadataExtract {
 			batch(firstArg.replaceFirst("-b=", ""));
 			if (batchConfig == null) {
 				logger.fatal("Batch file not found");
-				return;
+				isFatal = true;
 			}
+		}
+
+		if (udmlFiles == null || udmlFiles.isEmpty()) {
+			logger.fatal("Incorrect or no valid params found");
+			isFatal = true;
+		}
+
+		//help requests or missing arguments HERE
+		if (paramSize < 1 || firstArg.startsWith("-h") || firstArg.startsWith("-?") || firstArg.startsWith("-help") || isFatal) {
+			displayHelp();
+			return;
 		}
 
 		//REPOSITORY METADATA EXTRACTION
