@@ -14,7 +14,7 @@
 
 ===First things first===
 
-  * Download the JAR file from the HomePage (link to Google Drive).
+  * Download the JAR file from the Home Page (link to Google Drive).
 
   * If you want to download older versions, please follow this link to the old [https://code.google.com/p/udmlparser/downloads/list Downloads] section.
 
