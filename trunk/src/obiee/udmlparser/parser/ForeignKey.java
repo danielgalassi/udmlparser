@@ -2,7 +2,8 @@ package obiee.udmlparser.parser;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
-import java.util.Scanner;
+
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,7 +21,7 @@ public class ForeignKey implements UDMLObject {
 	private ArrayList <String>	physicalColumns;
 	private String				referencedKey;
 
-	public ForeignKey (String declare, String foreignKey, Scanner udml) {
+	public ForeignKey (String declare, String foreignKey, Repository udml) {
 		String line;
 		String header = declare.trim();
 		int indexREFERENCES = 0;

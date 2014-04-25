@@ -1,6 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,7 +16,7 @@ public class HierarchyDimension implements UDMLObject {
 	private String hierarchyDimensionID;
 	private String hierarchyDimensionName;
 
-	public HierarchyDimension (String declare, String hierarchyDimension, Scanner udml) {
+	public HierarchyDimension (String declare, String hierarchyDimension, Repository udml) {
 		String line;
 		String header = declare.trim();
 		int indexAS = header.indexOf(" AS ");

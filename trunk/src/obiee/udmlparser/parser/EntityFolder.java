@@ -1,7 +1,8 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
 import java.util.Vector;
+
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,7 +23,7 @@ public class EntityFolder implements UDMLObject {
 	private Vector <String>	folderAttributeIDs = null;
 	private String[]		presentationTableAliases = null;
 
-	public EntityFolder (String declare, String entityFolder, Scanner udml) {
+	public EntityFolder (String declare, String entityFolder, Repository udml) {
 		String line;
 		String header = declare.trim();
 		int indexAS = header.indexOf(" AS ");

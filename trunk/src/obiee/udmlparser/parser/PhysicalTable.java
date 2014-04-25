@@ -1,7 +1,8 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
 import java.util.Vector;
+
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,7 +29,7 @@ public class PhysicalTable implements UDMLObject {
 	private Vector <String>	physicalColumnScales;
 	private Vector <String>	physicalColumnNullables;
 
-	public PhysicalTable (String declare, String physicalTable, Scanner udml) {
+	public PhysicalTable (String declare, String physicalTable, Repository udml) {
 		String line;
 		String header = declare.trim();
 		int indexColName; 

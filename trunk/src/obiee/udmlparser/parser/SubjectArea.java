@@ -1,7 +1,8 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
 import java.util.Vector;
+
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,7 +34,7 @@ public class SubjectArea implements UDMLObject {
 		hierarchyDimensionIDs.add(line.substring(0, line.length()-1));
 	}
 
-	public SubjectArea (String declare, String sSubjectArea, Scanner udml) {
+	public SubjectArea (String declare, String sSubjectArea, Repository udml) {
 		String line;
 		String header = declare.trim();
 		int indexAS = header.indexOf(" AS ");

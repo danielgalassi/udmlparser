@@ -1,8 +1,8 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
 import java.util.Vector;
 
+import metadata.Repository;
 import obiee.udmlparser.utils.Utils;
 
 import org.w3c.dom.Document;
@@ -24,7 +24,7 @@ public class LogicalTable implements UDMLObject {
 	private Vector <String>	derivedLogicalColumnExpressions = null;
 	private Vector <String>	derivedColumnMappings = null;
 
-	public LogicalTable (String declare, String logicalTable, Scanner udml) {
+	public LogicalTable (String declare, String logicalTable, Repository udml) {
 		String line;
 		String header = declare.trim();
 		int indexAS = header.indexOf(" AS ");

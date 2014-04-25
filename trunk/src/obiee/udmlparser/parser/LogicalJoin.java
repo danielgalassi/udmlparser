@@ -1,7 +1,8 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
 import java.util.Vector;
+
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,7 +30,7 @@ public class LogicalJoin implements UDMLObject {
 		}
 	}
 
-	public LogicalJoin (String declare, String subjectArea, Scanner udml) {
+	public LogicalJoin (String declare, String subjectArea, Repository udml) {
 		String line = "";
 		int joinSpecifications = 0;
 		String header = declare.trim();

@@ -1,7 +1,8 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
 import java.util.Vector;
+
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,7 +23,7 @@ public class CatalogFolder implements UDMLObject {
 	private String			presentationDispayName;
 	private String			presentationDescription;
 
-	public CatalogFolder(String declare, String catalogFolder, Scanner udml) {
+	public CatalogFolder(String declare, String catalogFolder, Repository udml) {
 		String line;
 		String trimmedHeader = declare.trim();
 		int as = trimmedHeader.indexOf(" AS ");

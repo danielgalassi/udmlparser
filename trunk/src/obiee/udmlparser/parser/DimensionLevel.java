@@ -1,7 +1,8 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
 import java.util.Vector;
+
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,7 +19,7 @@ public class DimensionLevel implements UDMLObject {
 	private String			dimensionLevelName;
 	private Vector <String>	logicalColumnIDs = null;
 
-	public DimensionLevel (String declare, String catalogFolder, Scanner udml) {
+	public DimensionLevel (String declare, String catalogFolder, Repository udml) {
 		int fullDrillIdx;
 		int grandTotalIdx;
 		int tokenIdx;
