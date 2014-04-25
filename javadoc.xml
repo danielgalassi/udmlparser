@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" author="true" classpath="lib/log4j2/log4j-api-2.0-rc1.jar;lib/log4j2/log4j-core-2.0-rc1.jar;config" destdir="doc" doctitle="UDML Parser" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="obiee.udmlparser.bundledApps,obiee.udmlparser.cli,metadata,org.apache.commons.cli,obiee.udmlparser.utils,obiee.udmlparser.parser,obiee.udmlparser.metadataExtract" source="1.7" sourcepath="src" splitindex="true" use="true" version="true"/>
+    </target>
+</project>

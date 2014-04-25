@@ -57,7 +57,6 @@ public class XMLUtils {
 			doc = builder.parse(xml);
 		} catch(Exception e) {
 			logger.error("{} thrown while loading an XML file into a DOM document", e.getClass().getCanonicalName());
-			e.printStackTrace();
 		}
 
 		return doc;
