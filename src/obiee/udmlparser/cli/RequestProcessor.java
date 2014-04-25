@@ -39,9 +39,8 @@ public class RequestProcessor {
 			parseCommandLine(args);
 			validatingOptions();
 		} catch (Exception e) {
-			logger.fatal("{} thrown while processing command line arguments ({})", e.getClass().getCanonicalName(), e.getMessage());
-			displayUsage();
-			throw new ParseException("Invalid request");
+			logger.error("{} thrown while processing command line arguments ({})", e.getClass().getCanonicalName(), e.getMessage());
+			throw new Exception("Command line request processing terminated");
 		}
 	}
 
@@ -61,6 +60,10 @@ public class RequestProcessor {
 	private void validatingOptions() throws Exception {
 		if (cli.hasOption("udmltgt") && !cli.hasOption("udmlxsl") && !cli.hasOption("cmd")) {
 			throw new MissingOptionException("Transformation requested without XSL stylesheet");
+		}
+		if (cli.hasOption("help")) {
+			displayUsage();
+			throw new Exception("Arguments (if any) after 'help' not used");
 		}
 	}
 
@@ -89,10 +92,11 @@ public class RequestProcessor {
 	 */
 	private void createOptions() {
 		options.addOption("u", "udml", true, "a UDML file");
-		options.addOption("x", "rpdxml", false, "the resulting XML file");
+		options.addOption("x", "rpdxml", false, "the resulting XML file, if left unspecified a random name will be set");
 		options.addOption("s", "udmlxsl", true, "XSL stylesheet for (optional) transformation");
-		options.addOption("t", "udmltgt", true, "the file resulting from the transformation");
+		options.addOption("t", "udmltgt", true, "the file resulting from the transformation, if left unspecified a random name will be set");
 		options.addOption("c", "cmd", true, "invokes a bundled utility such as the Bus Matrix Generator");
+		options.addOption("h", "help", false, "displays valid command line arguments");
 	}
 
 	/**

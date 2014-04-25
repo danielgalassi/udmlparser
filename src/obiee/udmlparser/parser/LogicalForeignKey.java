@@ -1,7 +1,8 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
 import java.util.Vector;
+
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,7 +18,7 @@ public class LogicalForeignKey implements UDMLObject {
 	private String			logicalForeignKeyJoinID;
 	private Vector <String>	logicalTableIDs = null;
 
-	public LogicalForeignKey (String declare, String subjectArea, Scanner udml) {
+	public LogicalForeignKey (String declare, String subjectArea, Repository udml) {
 		String line = "";
 		String line2 = "";
 		int indexLogicalTable = 0;

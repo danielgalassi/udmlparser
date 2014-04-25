@@ -1,6 +1,6 @@
 package obiee.udmlparser.parser;
 
-import java.util.Scanner;
+import metadata.Repository;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,7 +21,7 @@ public class FolderAttribute implements UDMLObject {
 	private String[] 	presentationColumnAliases = null;
 
 
-	public FolderAttribute (String declare, String presentationColumn, Scanner udml) {
+	public FolderAttribute (String declare, String presentationColumn, Repository udml) {
 		String line;
 		String header = declare.trim();
 		int indexAS = header.indexOf(" AS ");

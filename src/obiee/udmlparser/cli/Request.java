@@ -34,10 +34,23 @@ public class Request {
 		return isBusMatrixInvoked;
 	}
 
+	/**
+	 * Sets execution argument to the provided value
+	 * @param key command line argument representation
+	 * @param value value of the argument (not flags)
+	 */
 	public void setArg(String key, String value) {
+		if (request.containsKey(key)) {
+			request.remove(key);
+		}
 		request.put(key, value);
 	}
 
+	/**
+	 * Retrieves the value of the execution argument. If not available, returns an empty <code>String</code>
+	 * @param key command line argument representation
+	 * @return the value of the execution argument or an empty String if no value is found
+	 */
 	public String getArg(String key) {
 		String value = "";
 		if (request.containsKey(key)) {
