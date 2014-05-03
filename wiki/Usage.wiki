@@ -48,8 +48,6 @@ Yes, little documentation, over 50 fact tables and a myriad of dimensions are a 
   # check the resulting HTML page :)
 
 
-Hey mate, wouldn't you send an email if you find this feature interesting?
-
 
 ----
 *I like the idea of getting issues reported*
