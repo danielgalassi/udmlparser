@@ -3,7 +3,7 @@
 
 
 
-===Requisites===
+===Requirements===
 
   * As a Java application you need JRE installed in whatever the target system is.
 
