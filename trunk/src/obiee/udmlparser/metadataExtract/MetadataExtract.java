@@ -106,7 +106,6 @@ public class MetadataExtract {
 java -jar udmlparser.jar -udml=p6only.udml -cmd=busmatrix -udmltgt=ShowMeTheMatrix.html 
 
  -udml=sampleCases/st.udml 
- -rpdxml=sampleCases/RPD.XML 
  -cmd=busmatrix 
  -udmltgt=sampleCases/OBIEE.html
  */
