@@ -56,6 +56,9 @@ public class Request {
 		if (request.containsKey(key)) {
 			value = request.get(key);
 		}
+		else {
+			System.out.println("Parameter " + key + " not found.");
+		}
 		return value;
 	}
 }
