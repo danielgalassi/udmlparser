@@ -69,7 +69,6 @@ public class UDMLParser {
 		do {
 			UDMLObject object = null;
 			header = repository.nextLine();
-
 			if (header.indexOf(catalogFolders) != -1) { //pres subject area
 				logger.info("Processing Subject Area...");
 				object = new CatalogFolder(header, catalogFolders, repository);
