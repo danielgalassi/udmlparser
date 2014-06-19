@@ -22,7 +22,7 @@ public class Repository {
 	public Repository(String input) {
 		try {
 			File udmlExtract = new File(input);
-			udml = new Scanner(udmlExtract);
+			udml = new Scanner(udmlExtract, "UTF-8");
 		} catch (Exception e) {
 			logger.fatal("A repository could not be created. {} thrown while creating a representation of a repository file", e.getClass().getCanonicalName());
 		}
