@@ -34,10 +34,18 @@ public class MetadataExtract {
 	 * Indicates whether the Bus Matrix generation app has been invoked
 	 * @return true if the BusMatrix app has been invoked, false otherwise.
 	 */
-	public static boolean isBusMatrixInvoked () {
+	public static boolean isBusMatrixInvoked() {
 		return request.isBusMatrixInvoked();
 	}
 
+	/**
+	 * Indicates whether the bus matrix must feature metrics (off the BMM layer)
+	 * @return true if metrics must be included in the bus matrix
+	 */
+	public static boolean isFullMatrixInvoked() {
+		return request.isFullMatrixInvoked();
+	}
+	
 	/**
 	 * Loads a resource bundled in the jar file. Used for apps-related files.
 	 * @param resource the relative file path (within the jar file)

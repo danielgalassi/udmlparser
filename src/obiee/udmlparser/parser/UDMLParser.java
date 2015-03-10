@@ -85,6 +85,12 @@ public class UDMLParser {
 				logger.info("Processing Logical (Foreign Key) Join...");
 				object = new LogicalForeignKey(header, logicalForeignKeys, repository);
 			}
+			if (!MetadataExtract.isBusMatrixInvoked() || MetadataExtract.isFullMatrixInvoked()) {
+				if (header.indexOf(logicalTableSources) != -1) { //logl tbl src -- including list of logical columns
+					logger.info("Processing Logical Table Source...");
+					object = new LogicalTableSource(header,logicalTableSources,repository);
+				}
+			}
 			if (!MetadataExtract.isBusMatrixInvoked()) {
 				if (header.indexOf(entityFolders) != -1) { //pres folder
 					logger.info("Processing Presentation Folder...");
@@ -98,10 +104,12 @@ public class UDMLParser {
 					logger.info("Processing Logical Table...");
 					object = new LogicalTable(header, logicalTables, repository);
 				}
+				/*
 				if (header.indexOf(logicalTableSources) != -1) { //logl tbl src
 					logger.info("Processing Logical Table Source...");
 					object = new LogicalTableSource(header,logicalTableSources,repository);
 				}
+				*/
 				if (header.indexOf(physicalTables) != -1 && header.indexOf(physicalTableKeys) == -1) { //physical tbl
 					logger.info("Processing Physical Table...");
 					object = new PhysicalTable(header, physicalTables, repository);
