@@ -3,6 +3,7 @@
 	<xsl:output method="xml" media-type="text/plain"/>
 	<xsl:template match="/">
 	<busMatrix>
+	<!-- Business Catalog is a Business Model -->
 	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">
 	<BusinessCatalog>
 		<xsl:copy-of select="."/>
