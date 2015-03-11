@@ -107,7 +107,7 @@ public class RequestProcessor {
 		Request request = new Request();
 		if (cli.hasOption("cmd")) {
 			logger.info("Bundled App invoked");
-			request.invokeBusMatrix(cli.getOptionValue("cmd"));
+			request.setArg("matrixMode", cli.getOptionValue("cmd"));
 		}
 		if (cli.hasOption("udml")) {
 			request.setArg("udml", cli.getOptionValue("udml"));

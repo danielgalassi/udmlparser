@@ -15,8 +15,6 @@ public class Request {
 
 	/** A set of (key,value) pairs representing all (no flags) attributes*/
 	private Map<String, String> request = new HashMap<String, String>();
-	private boolean isBusMatrixInvoked = false;
-	private boolean isFullMatrixInvoked = false;
 	private boolean isTransformationInvoked = false;
 
 	public void invokeTransformation(boolean invoked) {
@@ -27,20 +25,8 @@ public class Request {
 		return isTransformationInvoked;
 	}
 
-	public void invokeBusMatrix(String value) {
-		isBusMatrixInvoked = (value.equals("busmatrix"));
-		
-		if (!isBusMatrixInvoked) {
-			isFullMatrixInvoked = (value.equals("metrics"));
-		}
-	}
-
-	public boolean isBusMatrixInvoked() {
-		return isBusMatrixInvoked;
-	}
-
-	public boolean isFullMatrixInvoked() {
-		return isFullMatrixInvoked;
+	public String getMatrixMode() {
+		return request.get("matrixMode");
 	}
 
 	/**

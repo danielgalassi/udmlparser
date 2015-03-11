@@ -29,22 +29,6 @@ public class MetadataExtract {
 
 	/** command line arguments processed to make execution flow easier */
 	private static Request request = null;
-
-	/**
-	 * Indicates whether the Bus Matrix generation app has been invoked
-	 * @return true if the BusMatrix app has been invoked, false otherwise.
-	 */
-	public static boolean isBusMatrixInvoked() {
-		return request.isBusMatrixInvoked();
-	}
-
-	/**
-	 * Indicates whether the bus matrix must feature metrics (off the BMM layer)
-	 * @return true if metrics must be included in the bus matrix
-	 */
-	public static boolean isFullMatrixInvoked() {
-		return request.isFullMatrixInvoked();
-	}
 	
 	/**
 	 * Loads a resource bundled in the jar file. Used for apps-related files.
@@ -74,7 +58,7 @@ public class MetadataExtract {
 
 		File temp = new File ("temp.xml");
 		logger.info("Cleaning up temporary file {}", temp.getAbsolutePath());
-		temp.deleteOnExit();
+		//temp.deleteOnExit();
 	}
 
 	/**
@@ -101,9 +85,13 @@ public class MetadataExtract {
 		}
 
 		//transforms the RPD XML file into a bus matrix HTML page
-		if (request.isBusMatrixInvoked()) {
+		if (isMatrixModeON()) {
 			buildBusMatrix();
 		}
+	}
+
+	public static boolean isMatrixModeON() {
+		return (request.getMatrixMode() != null);
 	}
 }
 /*
