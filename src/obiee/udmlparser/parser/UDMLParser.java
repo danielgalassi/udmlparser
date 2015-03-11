@@ -50,7 +50,7 @@ public class UDMLParser {
 		repository	= new Repository(input);
 
 		logger.info("Creating Parser");
-		logger.info("BusMatrix feature invoked = {}", MetadataExtract.isBusMatrixInvoked());
+		logger.info("BusMatrix feature invoked = {}", MetadataExtract.isMatrixModeON());
 		if(repository.isValid()) {
 			parse();
 		}
@@ -85,13 +85,12 @@ public class UDMLParser {
 				logger.info("Processing Logical (Foreign Key) Join...");
 				object = new LogicalForeignKey(header, logicalForeignKeys, repository);
 			}
-			if (!MetadataExtract.isBusMatrixInvoked() || MetadataExtract.isFullMatrixInvoked()) {
-				if (header.indexOf(logicalTableSources) != -1) { //logl tbl src -- including list of logical columns
-					logger.info("Processing Logical Table Source...");
-					object = new LogicalTableSource(header,logicalTableSources,repository);
-				}
+			//to list metrics from the presentation
+			if (header.indexOf(logicalTableSources) != -1) { //logl tbl src -- including list of logical columns
+				logger.info("Processing Logical Table Source...");
+				object = new LogicalTableSource(header,logicalTableSources,repository);
 			}
-			if (!MetadataExtract.isBusMatrixInvoked()) {
+			if (!MetadataExtract.isMatrixModeON()) {
 				if (header.indexOf(entityFolders) != -1) { //pres folder
 					logger.info("Processing Presentation Folder...");
 					object = new EntityFolder(header, entityFolders, repository);
