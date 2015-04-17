@@ -91,6 +91,7 @@ public class RequestProcessor {
 	 * Adds all options evaluated by <code>MetadataExtract</code>
 	 */
 	private void createOptions() {
+		options.addOption("l", "list", true, "a comma-separated list of subject areas");
 		options.addOption("u", "udml", true, "a UDML file");
 		options.addOption("x", "rpdxml", false, "the resulting XML file, if left unspecified a random name will be set");
 		options.addOption("s", "udmlxsl", true, "XSL stylesheet for (optional) transformation");
@@ -105,9 +106,17 @@ public class RequestProcessor {
 	 */
 	public Request getRequest() {
 		Request request = new Request();
+		if (cli.hasOption("list")) {
+			logger.info("Found subject area list, all other subject areas and business model tables will be excluded");
+			if (!request.isBusMatrixModeOn()) {
+				logger.info("Bundled App invoked");
+				request.setBusMatrixMode("busmatrix");
+			}
+			request.setArg("list", cli.getOptionValue("list"));
+		}
 		if (cli.hasOption("cmd")) {
 			logger.info("Bundled App invoked");
-			request.invokeBusMatrix(cli.getOptionValue("cmd"));
+			request.setBusMatrixMode(cli.getOptionValue("cmd"));
 		}
 		if (cli.hasOption("udml")) {
 			request.setArg("udml", cli.getOptionValue("udml"));
