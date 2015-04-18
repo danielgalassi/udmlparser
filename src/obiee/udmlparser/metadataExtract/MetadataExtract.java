@@ -89,11 +89,11 @@ public class MetadataExtract {
 		}
 
 		//UDML file is parsed
+		logger.warn("weird message");
 		new UDMLParser(request.getArg("udml"), request.getArg("rpdxml"));
 
 		//Custom transformation
 		if (request.isTransformationInvoked()) {
-			System.out.println("@@@@@@@@@@@");
 			XMLUtils.applyStylesheet(request.getArg("rpdxml"), request.getArg("stylesheet"), request.getArg("target"));
 		}
 

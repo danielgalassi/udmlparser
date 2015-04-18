@@ -112,7 +112,7 @@ public class RequestProcessor {
 				logger.info("Bundled App invoked");
 				request.setBusMatrixMode("busmatrix");
 			}
-			request.setArg("list", cli.getOptionValue("list"));
+			request.setArg("list", cli.getOptionValue("list").toUpperCase());
 		}
 		if (cli.hasOption("cmd")) {
 			logger.info("Bundled App invoked");
