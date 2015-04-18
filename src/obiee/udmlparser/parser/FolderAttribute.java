@@ -57,14 +57,25 @@ public class FolderAttribute implements UDMLObject {
 
 			//DESCRIPTION
 			if (line.indexOf("DESCRIPTION") != -1 && !keywordFound) {
+				int descriptionStarts;
+				String descriptionStops;
+				//some versions of UDML may no longer use brackets for descriptions (CUSTOM DESCRIPTION = no brackets, DESCRIPTION = brackets)
+				if (line.contains("{")) {
+					descriptionStarts = line.indexOf("{")+1;
+					descriptionStops = "}";
+				}
+				else {
+					descriptionStarts = line.indexOf("DESCRIPTION ") + 12;
+					descriptionStops = " TRUE";
+				}
 				presentationDescription = line.trim().substring(
-						line.indexOf("{")+1,
-						line.length()).trim().replaceAll("}", "");
+						descriptionStarts,
+						line.length()).trim().replaceAll(descriptionStops, "");
 				//LARGE TEXT
-				while (line.indexOf("}") == -1){
+				while (line.indexOf(descriptionStops) == -1){
 					line = udml.nextLine().trim();
 					presentationDescription += "\n";
-					presentationDescription += line.trim().replaceAll("}", "");
+					presentationDescription += line.trim().replaceAll(descriptionStops, "");
 					keywordFound = true;
 				}
 			}

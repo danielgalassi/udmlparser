@@ -38,6 +38,10 @@ public class MetadataExtract {
 		return request.isBusMatrixModeOn();
 	}
 
+	public static boolean isSubjectAreaListOn () {
+		return request.isSubjectAreaListOn();
+	}
+
 	/**
 	 * Loads a resource bundled in the jar file. Used for apps-related files.
 	 * @param resource the relative file path (within the jar file)
@@ -89,6 +93,7 @@ public class MetadataExtract {
 
 		//Custom transformation
 		if (request.isTransformationInvoked()) {
+			System.out.println("@@@@@@@@@@@");
 			XMLUtils.applyStylesheet(request.getArg("rpdxml"), request.getArg("stylesheet"), request.getArg("target"));
 		}
 

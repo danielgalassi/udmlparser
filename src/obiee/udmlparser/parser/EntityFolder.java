@@ -18,7 +18,7 @@ public class EntityFolder implements UDMLObject {
 	private String			presentationTableID;
 	private String			presentationTableName;
 	private String			presentationTableMappingID;
-	private String			presentationDispayName;
+	private String			presentationDisplayName;
 	private String			presentationDescription;
 	private Vector <String>	folderAttributeIDs = null;
 	private String[]		presentationTableAliases = null;
@@ -28,7 +28,6 @@ public class EntityFolder implements UDMLObject {
 		String header = declare.trim();
 		int indexAS = header.indexOf(" AS ");
 		presentationTableID = header.substring(entityFolder.length(), indexAS).trim().replaceAll("\"", "");
-
 		if (header.indexOf(" ENTITY ") != -1 && header.indexOf(" ENTITY ") != header.lastIndexOf(" ENTITY ")) {
 			presentationTableName = header.substring(indexAS + 4, header.indexOf(" ENTITY ", indexAS)).trim().replaceAll("\"", "");
 			presentationTableMappingID = header.substring(header.indexOf(" ENTITY ", indexAS + 4) + 8).trim().replaceAll("\"", "");
@@ -48,35 +47,36 @@ public class EntityFolder implements UDMLObject {
 			} while (line.charAt(line.length()-1) != ')');
 		}
 
-		//ALIASES
-		if (!line.contains(";")) {
-			do {
-				line = udml.nextLine().trim().replaceAll("\"", "");
-			} while (line.indexOf("ALIASES (") != -1);
-			if (line.indexOf("ALIASES (") != -1)
-				presentationTableAliases = line.substring(
-						line.indexOf("ALIASES (")+9, 
-						line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
-		}
-
-		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
-			line = udml.nextLine();
-			//DISPLAY NAME
-			if (line.contains("DISPLAY NAME ")) {
-				presentationDispayName = line.trim().substring(line.indexOf("DISPLAY NAME ")+13, line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
+		while (!line.contains(";") && udml.hasNextLine()) {
+			line = udml.nextLine().trim().replaceAll("\"", "");
+			//ALIASES
+			if (line.contains("ALIASES (")) {
+				presentationTableAliases = line.substring(line.indexOf("ALIASES (")+9, line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
 			}
 
-			//DESCRIPTION
+			if (line.contains("DISPLAY NAME ")) {
+				presentationDisplayName = line.trim().substring(line.indexOf("DISPLAY NAME ")+13, line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
+			}
+
 			if (line.contains("DESCRIPTION ")) {
-				int openBracket = line.indexOf("{")+1;
+				//some UDML versions no longer use brackets...
+				int descriptionStarts;
+				String descriptionStops;
+				if (line.contains("{")) {
+					descriptionStarts = line.indexOf("{")+1;
+					descriptionStops = "}";
+				}
+				else {
+					descriptionStarts = line.indexOf("DESCRIPTION ") + 12;
+					descriptionStops = " TRUE";
+				}
 				int length = line.length();
-				presentationDescription = line.substring( openBracket, length).replaceAll("}", "").trim();
+				presentationDescription = line.substring( descriptionStarts, length).replaceAll(descriptionStops, "").replaceAll("\"", "").trim();
 				//LARGE TEXT
-				while (!line.contains("}")) {
+				while (!line.contains(descriptionStops) && udml.hasNextLine()) {
 					line = udml.nextLine().trim();
 					presentationDescription += "\n";
-					presentationDescription += line.trim().replaceAll("}", "");
+					presentationDescription += line.trim().replaceAll(descriptionStops, "").replaceAll("\"", "");
 				}
 			}
 		}
@@ -103,10 +103,10 @@ public class EntityFolder implements UDMLObject {
 		}
 		Node nPresentationTableMappingID = xmldoc.createTextNode(presentationTableMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
-		if (presentationDispayName == null) {
-			presentationDispayName = "";
+		if (presentationDisplayName == null) {
+			presentationDisplayName = "";
 		}
-		Node nPresentationColumnDisplayName = xmldoc.createTextNode(presentationDispayName);
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(presentationDisplayName);
 		if (presentationDescription == null) {
 			presentationDescription = "";
 		}
