@@ -89,7 +89,6 @@ public class MetadataExtract {
 		}
 
 		//UDML file is parsed
-		logger.warn("weird message");
 		new UDMLParser(request.getArg("udml"), request.getArg("rpdxml"));
 
 		//Custom transformation
