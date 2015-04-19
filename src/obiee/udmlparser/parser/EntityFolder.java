@@ -18,10 +18,10 @@ public class EntityFolder implements UDMLObject {
 	private String			presentationTableID;
 	private String			presentationTableName;
 	private String			presentationTableMappingID;
-	private String			presentationDisplayName;
+	private String			displayName;
 	private String			presentationDescription;
 	private Vector <String>	folderAttributeIDs = null;
-	private String[]		presentationTableAliases = null;
+	private String[]		aliases = null;
 
 	public EntityFolder (String declare, String entityFolder, Repository udml) {
 		String line;
@@ -51,11 +51,11 @@ public class EntityFolder implements UDMLObject {
 			line = udml.nextLine().trim().replaceAll("\"", "");
 			//ALIASES
 			if (line.contains("ALIASES (")) {
-				presentationTableAliases = line.substring(line.indexOf("ALIASES (")+9, line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
+				aliases = line.substring(line.indexOf("ALIASES (")+9, line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
 			}
 
 			if (line.contains("DISPLAY NAME ")) {
-				presentationDisplayName = line.trim().substring(line.indexOf("DISPLAY NAME ")+13, line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
+				displayName = line.trim().substring(line.indexOf("DISPLAY NAME ")+13, line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
 			}
 
 			if (line.contains("DESCRIPTION ")) {
@@ -103,10 +103,10 @@ public class EntityFolder implements UDMLObject {
 		}
 		Node nPresentationTableMappingID = xmldoc.createTextNode(presentationTableMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
-		if (presentationDisplayName == null) {
-			presentationDisplayName = "";
+		if (displayName == null) {
+			displayName = "";
 		}
-		Node nPresentationColumnDisplayName = xmldoc.createTextNode(presentationDisplayName);
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(displayName);
 		if (presentationDescription == null) {
 			presentationDescription = "";
 		}
@@ -136,13 +136,13 @@ public class EntityFolder implements UDMLObject {
 		Element ePresentationTableAlias = null;
 		Node nCatalogFolderAlias = null;
 
-		if(presentationTableAliases != null)
-			for (int i=0; i< presentationTableAliases.length; i++) {
+		if(aliases != null)
+			for (int i=0; i< aliases.length; i++) {
 				ePresentationTableAlias = xmldoc.createElement("PresentationTableAlias");
-				if (presentationTableAliases[i] == null) {
+				if (aliases[i] == null) {
 					nCatalogFolderAlias = xmldoc.createTextNode("");
 				} else {
-					nCatalogFolderAlias = xmldoc.createTextNode(presentationTableAliases[i]);
+					nCatalogFolderAlias = xmldoc.createTextNode(aliases[i]);
 				}
 				ePresentationTableAlias.appendChild(nCatalogFolderAlias);
 				ePresentationTableAliasList.appendChild(ePresentationTableAlias);
