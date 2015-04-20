@@ -23,11 +23,11 @@ public class LogicalForeignKey implements UDMLObject {
 		String line2 = "";
 		int indexLogicalTable = 0;
 		String header = declare.trim();
-		int indexAS = header.indexOf(" AS ");
-		logicalForeignKeyJoinID = header.substring(subjectArea.length(),indexAS).trim().replaceAll("\"", "");
+		int onMarker = header.indexOf(" AS ");
+		logicalForeignKeyJoinID = header.substring(subjectArea.length(),onMarker).trim().replaceAll("\"", "");
 
 		logicalTableIDs = new Vector<String>();
-		while (!line.contains(") COUNTERPART KEY ") && !line.contains(";")) {
+		while (!line.contains(") COUNTERPART KEY ") && !line.contains(";") && udml.hasNextLine()) {
 			line = udml.nextLine().trim();
 		}
 
@@ -38,7 +38,7 @@ public class LogicalForeignKey implements UDMLObject {
 		logicalTableIDs.add(line2.substring(0, indexLogicalTable).replace("\"", ""));
 
 		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
+		while (!(line.contains("PRIVILEGES") && line.endsWith(";")) & udml.hasNextLine()) {
 			line = udml.nextLine();
 		}
 	}

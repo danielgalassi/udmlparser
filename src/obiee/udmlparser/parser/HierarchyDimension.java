@@ -19,15 +19,16 @@ public class HierarchyDimension implements UDMLObject {
 	public HierarchyDimension (String declare, String hierarchyDimension, Repository udml) {
 		String line;
 		String header = declare.trim();
-		int indexAS = header.indexOf(" AS ");
+		int asMarker = header.indexOf(" AS ");
+		int onMarker = header.indexOf(" ON");
 
-		hierarchyDimensionID = header.substring(hierarchyDimension.length(), indexAS).trim().replaceAll("\"", "");
+		hierarchyDimensionID = header.substring(hierarchyDimension.length(), asMarker).trim().replaceAll("\"", "");
 
-		hierarchyDimensionName = header.substring(indexAS+4, header.indexOf(" ON")).trim().replaceAll("\"", "");
+		hierarchyDimensionName = header.substring(asMarker+4, onMarker).trim().replaceAll("\"", "");
 
 		//NO FURTHER ACTIONS
 		line = udml.nextLine();
-		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
+		while (!(line.contains("PRIVILEGES") && line.endsWith(";")) && udml.hasNextLine()) {
 			line = udml.nextLine();
 		}
 	}

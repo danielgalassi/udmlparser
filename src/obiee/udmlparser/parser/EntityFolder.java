@@ -82,7 +82,7 @@ public class EntityFolder implements UDMLObject {
 				int length = line.length();
 				description = line.substring(descriptionStarts, length).replaceAll(descriptionStops, "").replaceAll("\"", "").trim();
 				//LARGE TEXT
-				while (!line.contains("PRIVILEGES ") && !line.endsWith(";") && !line.contains(descriptionStops) && udml.hasNextLine()) {
+				while (!(line.contains("PRIVILEGES ") && line.endsWith(";")) && !line.contains(descriptionStops) && udml.hasNextLine()) {
 					line = udml.nextLine().trim();
 
 					description += "\n";

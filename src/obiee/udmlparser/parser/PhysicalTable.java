@@ -40,7 +40,6 @@ public class PhysicalTable implements UDMLObject {
 			physicalTableName = header.substring(indexAS+4, indexHaving).trim().replaceAll("\"", "");
 		}
 		isPhysicalAlias = false;
-
 		line = udml.nextLine();
 
 		physicalumnColumnIDs = new Vector<String>();
@@ -52,7 +51,6 @@ public class PhysicalTable implements UDMLObject {
 
 		do {
 			line = udml.nextLine().trim().replaceAll("\"", "");
-
 			//This is a marker used in Opaque Views.
 			if (line.indexOf("TABLE TYPE SELECT DATABASE MAP") != -1)
 				do {
@@ -61,8 +59,7 @@ public class PhysicalTable implements UDMLObject {
 
 			if (line.contains(" AS ") && line.contains(" TYPE ")) {
 				//FQPHYSCOLNAME
-				physicalumnColumnIDs.add(line.substring(0, line.indexOf(" AS ")).
-						trim().replaceAll("\"", ""));
+				physicalumnColumnIDs.add(line.substring(0, line.indexOf(" AS ")).trim().replaceAll("\"", ""));
 				//PHYSCOLNAME
 				indexColName = line.indexOf(" TYPE ");
 				if (line.contains(" EXTERNAL ") && line.indexOf(" EXTERNAL ") < indexColName) {
@@ -80,14 +77,14 @@ public class PhysicalTable implements UDMLObject {
 				//DATA TYPE
 				physicalColumnDataTypes.add(line.substring(line.indexOf(" TYPE ")+6, line.indexOf(" PRECISION ")).trim().replaceAll("\"", ""));
 				//SIZE
-				int indexSCALE = line.indexOf(" SCALE ");
-				int indexPRECISION = line.indexOf(" PRECISION ")+11;
+				int scaleMarker = line.indexOf(" SCALE ");
+				int precisionMarker = line.indexOf(" PRECISION ")+11;
 
 				if (specialCaseSCALE(line)) {
 					physicalColumnSizes.add("SCALE");
 				}
 				else {
-					physicalColumnSizes.add(line.substring(indexPRECISION, indexSCALE).trim().replaceAll("\"", ""));
+					physicalColumnSizes.add(line.substring(precisionMarker, scaleMarker).trim().replaceAll("\"", ""));
 				}
 				//SCALE & NULLABLE
 				if (line.contains(" NOT NULLABLE")) {
@@ -100,11 +97,11 @@ public class PhysicalTable implements UDMLObject {
 				}
 			}
 
-			if (line.indexOf(")") == 0 && line.contains(" SOURCE ")) {
+			if (line.startsWith(")") && line.contains(" SOURCE ")) {
 				physicalTableSource = line.substring(line.indexOf(" SOURCE ")+8);
 				isPhysicalAlias = true;
 			}
-		} while (!( line.indexOf("PRIVILEGES (") != -1 && line.indexOf(";") != -1));
+		} while (!(line.contains("PRIVILEGES (") && line.endsWith(";")) && udml.hasNextLine());
 	}
 
 	/**

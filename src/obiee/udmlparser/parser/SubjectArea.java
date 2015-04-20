@@ -37,15 +37,15 @@ public class SubjectArea implements UDMLObject {
 	public SubjectArea (String declare, String sSubjectArea, Repository udml) {
 		String line;
 		String header = declare.trim();
-		int indexAS = header.indexOf(" AS ");
-		int indexICON = header.indexOf(" ICON INDEX ");
-		subjectAreaID = header.substring(sSubjectArea.length(),indexAS).trim().replaceAll("\"", "");
+		int asMarker = header.indexOf(" AS ");
+		int iconMarker = header.indexOf(" ICON INDEX ");
+		subjectAreaID = header.substring(sSubjectArea.length(),asMarker).trim().replaceAll("\"", "");
 
-		if (indexICON != -1) {
-			subjectAreaName = header.substring(indexAS+4, indexICON).trim().replaceAll("\"", "");
+		if (iconMarker != -1) {
+			subjectAreaName = header.substring(asMarker+4, iconMarker).trim().replaceAll("\"", "");
 		}
 		else {
-			subjectAreaName = header.substring(indexAS+4).trim().replaceAll("\"", "");
+			subjectAreaName = header.substring(asMarker+4).trim().replaceAll("\"", "");
 		}
 
 		line = udml.nextLine();
@@ -70,7 +70,7 @@ public class SubjectArea implements UDMLObject {
 		}
 
 		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
+		while (!(line.contains("PRIVILEGES") && line.contains(";")) && udml.hasNextLine()) {
 			line = udml.nextLine();
 		}
 	}

@@ -77,7 +77,7 @@ public class FolderAttribute implements UDMLObject {
 					description += line.trim().replaceAll(descriptionStops, "").replaceAll("\"", "");
 				}
 			}
-		} while (!line.contains("PRIVILEGES ") && !line.endsWith(";") && udml.hasNextLine());
+		} while (!(line.contains("PRIVILEGES ") && line.endsWith(";")) && udml.hasNextLine());
 	}
 
 	/**
