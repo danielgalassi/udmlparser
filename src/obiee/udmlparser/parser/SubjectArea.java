@@ -137,6 +137,10 @@ public class SubjectArea implements UDMLObject {
 		eBusinessCatalog.appendChild(eLogicalTableList);
 		return eBusinessCatalog;
 	}
+
+	public String getID() {
+		return subjectAreaID;
+	}
 }
 /*
  * DECLARE SUBJECT AREA <FQ Subject Area Name> AS <Subject Area Name>

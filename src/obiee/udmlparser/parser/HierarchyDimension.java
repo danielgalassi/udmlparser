@@ -60,6 +60,10 @@ public class HierarchyDimension implements UDMLObject {
 
 		return eHierDim;
 	}
+
+	public String getID() {
+		return hierarchyDimensionID;
+	}
 }
 /*
 DECLARE DIMENSION "Paint"."MarketDim" AS "MarketDim" ON

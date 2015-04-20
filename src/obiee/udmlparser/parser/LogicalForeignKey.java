@@ -87,6 +87,10 @@ public class LogicalForeignKey implements UDMLObject {
 		eLogicalJoin.setAttribute("type", "LogicalForeignKey-based");
 		return eLogicalJoin;
 	}
+
+	public String getID() {
+		return logicalForeignKeyJoinID;
+	}
 }
 /*
  *	DECLARE LOGICAL FOREIGN KEY "Paint"."Sales Facts"."Sales Facts_FKey" AS "Sales Facts_FKey" HAVING

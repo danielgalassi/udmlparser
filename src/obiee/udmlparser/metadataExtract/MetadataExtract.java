@@ -70,7 +70,7 @@ public class MetadataExtract {
 
 		File temp = new File ("temp.xml");
 		logger.info("Cleaning up temporary file {}", temp.getAbsolutePath());
-		temp.deleteOnExit();
+		//temp.deleteOnExit();
 	}
 
 	/**
@@ -100,6 +100,10 @@ public class MetadataExtract {
 		if (request.isBusMatrixModeOn()) {
 			buildBusMatrix();
 		}
+	}
+
+	public static String getSubjectArea() {
+		return request.getArg("list");
 	}
 }
 /*

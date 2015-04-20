@@ -147,6 +147,10 @@ public class FolderAttribute implements UDMLObject {
 		ePresentationColumn.appendChild(ePresentationColumnAliasList);
 		return ePresentationColumn;
 	}
+
+	public String getID() {
+		return presentationColumnID;
+	}
 }
 /*
  * DECLARE FOLDER ATTRIBUTE <FQ Folder Attribute Name> AS <Folder Attribute Name> LOGICAL ATTRIBUTE  <FQ Logical Column Name>

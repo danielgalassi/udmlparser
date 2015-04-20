@@ -200,6 +200,10 @@ public class CatalogFolder implements UDMLObject {
 		return ePresentationCatalog;
 	}
 
+	public String getID() {
+		return catalogFolderID;
+	}
+
 }
 /*
  * DECLARE CATALOG FOLDER <FQ Catalog Name> AS <Catalog Name>

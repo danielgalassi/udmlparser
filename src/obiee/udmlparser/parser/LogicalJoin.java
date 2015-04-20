@@ -100,6 +100,10 @@ public class LogicalJoin implements UDMLObject {
 		eLogicalJoin.appendChild(eLogicalTableList);
 		return eLogicalJoin;
 	}
+
+	public String getID() {
+		return logicalJoinID;
+	}
 }
 /*
  *	DECLARE ROLE RELATIONSHIP "Relationship_2004:3135491005258178" AS "Relationship_2004:3135491005258178"

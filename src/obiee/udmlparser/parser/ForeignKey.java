@@ -115,6 +115,10 @@ public class ForeignKey implements UDMLObject {
 		eForeignKey.appendChild(eFKColumnList);
 		return eForeignKey;
 	}
+
+	public String getID() {
+		return foreignKeyID;
+	}
 }
 /*
  * DECLARE FOREIGN KEY <FQ Foreign Key Name> AS <Foreign Key Name> HAVING
