@@ -63,10 +63,13 @@ public class MetadataExtract {
 		InputStream busMatrixLogic = me.getInternalResource("obiee/udmlparser/bundledApps/BusMatrix.xsl");
 		InputStream htmlOutput = me.getInternalResource("obiee/udmlparser/bundledApps/Output.xsl");
 
+		InputStream subjectAreaSelection = me.getInternalResource("obiee/udmlparser/bundledApps/SubjectAreaSelection.xsl");
+		XMLUtils.applyStylesheet(request.getArg("rpdxml"), subjectAreaSelection, "temp2.xml");
+
 		logger.info("Generating Bus Matrix document...");
 
-		XMLUtils.applyStylesheet(request.getArg("rpdxml"), busMatrixLogic, "temp.xml");
-		XMLUtils.applyStylesheet("temp.xml", htmlOutput, request.getArg("target"));
+		//XMLUtils.applyStylesheet(request.getArg("rpdxml"), busMatrixLogic, "temp.xml");
+		//XMLUtils.applyStylesheet("temp.xml", htmlOutput, request.getArg("target"));
 
 		File temp = new File ("temp.xml");
 		logger.info("Cleaning up temporary file {}", temp.getAbsolutePath());
