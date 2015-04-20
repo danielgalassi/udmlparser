@@ -106,14 +106,6 @@ public class RequestProcessor {
 	 */
 	public Request getRequest() {
 		Request request = new Request();
-		if (cli.hasOption("list")) {
-			logger.info("Found subject area list, all other subject areas and business model tables will be excluded");
-			if (!request.isBusMatrixModeOn()) {
-				logger.info("Bundled App invoked");
-				request.setBusMatrixMode("busmatrix");
-			}
-			request.setArg("list", cli.getOptionValue("list").toUpperCase());
-		}
 		if (cli.hasOption("cmd")) {
 			logger.info("Bundled App invoked");
 			request.setBusMatrixMode(cli.getOptionValue("cmd"));
@@ -133,6 +125,19 @@ public class RequestProcessor {
 		}
 		if (cli.hasOption("udmltgt")) {
 			request.setArg("target", cli.getOptionValue("udmltgt"));
+		}
+		if (cli.hasOption("list")) {
+			logger.info("Found subject area list, all other subject areas and business model tables will be excluded");
+			if (!request.isBusMatrixModeOn()) {
+				logger.info("Bundled App invoked");
+				request.setBusMatrixMode("busmatrix");
+			}
+			request.setArg("list", cli.getOptionValue("list").toUpperCase());
+			if (!cli.hasOption("udmltgt")) {
+				long html = System.currentTimeMillis();
+				logger.warn("The bus matrix will be saved as {}.html", html);
+				request.setArg("target", html + ".html");
+			}
 		}
 		return request;
 	}
