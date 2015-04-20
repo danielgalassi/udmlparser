@@ -70,10 +70,10 @@ public class UDMLParser {
 		do {
 			UDMLObject object = null;
 			header = repository.nextLine();
-			if (header.indexOf(catalogFolders) != -1) { //pres subject area
-				logger.info("Processing Subject Area...");
-				object = new CatalogFolder(header, catalogFolders, repository);
-			}
+//			if (header.indexOf(catalogFolders) != -1) { //pres subject area
+//				logger.info("Processing Subject Area...");
+//				object = new CatalogFolder(header, catalogFolders, repository);
+//			}
 //			if (header.indexOf(subjectAreas) != -1) { //bmm subject area
 //				logger.info("Processing Business Model...");
 //				object = new SubjectArea(header, subjectAreas, repository);
@@ -86,10 +86,11 @@ public class UDMLParser {
 //				logger.info("Processing Logical (Foreign Key) Join...");
 //				object = new LogicalForeignKey(header, logicalForeignKeys, repository);
 //			}
-//			if (header.indexOf(folderAttributes) != -1) { //pres column
-//				logger.info("Processing Presentation Column...");
-//				object = new FolderAttribute(header, folderAttributes, repository);
-//			}
+			if (header.indexOf(folderAttributes) != -1) { //pres column
+				logger.info("Processing Presentation Column...");
+				object = new FolderAttribute(header, folderAttributes, repository);
+			}
+			//TODO fix foreign key and remaining parsers
 			if (!MetadataExtract.isBusMatrixInvoked()) {
 //				if (header.indexOf(entityFolders) != -1) { //pres folder
 //					logger.info("Processing Presentation Folder...");

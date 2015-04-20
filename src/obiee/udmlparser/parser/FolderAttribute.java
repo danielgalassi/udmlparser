@@ -16,9 +16,9 @@ public class FolderAttribute implements UDMLObject {
 	private String		presentationColumnID;
 	private String		presentationColumnName;
 	private String		presentationColumnMappingID;
-	private String		presentationDispayName;
-	private String		presentationDescription;
-	private String[] 	presentationColumnAliases = null;
+	private String		displayName;
+	private String		description;
+	private String[] 	aliases = null;
 
 
 	public FolderAttribute (String declare, String presentationColumn, Repository udml) {
@@ -36,51 +36,48 @@ public class FolderAttribute implements UDMLObject {
 			presentationColumnMappingID = header.substring(indexAttribute+19, header.indexOf(" OVERRIDE LOGICAL NAME")).trim().replace("\"", "");
 		}
 
-		//ALIASES
 		do {
-			boolean keywordFound = false;
 			line = udml.nextLine().trim().replaceAll("\"", "");
-			if(line.indexOf("ALIASES (") != -1) {
-				presentationColumnAliases = line.substring(
-						line.indexOf("ALIASES (")+9, 
-						line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
-				keywordFound = true;
+
+			//ALIASES
+			if (line.contains("ALIASES (")) {
+				int aliasesBegins = line.indexOf("ALIASES (") + 9;
+				int aliasesEnds = line.lastIndexOf(")") - 1;
+				aliases = line.substring(aliasesBegins, aliasesEnds).trim().replaceAll("\"", "").split(",");
 			}
 
 			//DISPLAY NAME
-			if (line.indexOf("DISPLAY NAME ") != -1 && !keywordFound) {
-				presentationDispayName = line.trim().substring(
-						line.indexOf("DISPLAY NAME ")+13,
-						line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
-				keywordFound = true;
+			if (line.contentEquals("DISPLAY NAME ")) {
+				if (line.contains("DISPLAY NAME ")) {
+					int displayNameBegins = line.indexOf("DISPLAY NAME ") + 13;
+					int displayNameEnds = line.lastIndexOf(" ON") - 1;
+					displayName = line.trim().substring(displayNameBegins, displayNameEnds).trim().replaceAll("\"", "");
+				}
+
 			}
 
 			//DESCRIPTION
-			if (line.indexOf("DESCRIPTION") != -1 && !keywordFound) {
+			if (line.contains("DESCRIPTION ") || line.contains("CUSTOM DESCRIPTION ")) {
 				int descriptionStarts;
 				String descriptionStops;
-				//some versions of UDML may no longer use brackets for descriptions (CUSTOM DESCRIPTION = no brackets, DESCRIPTION = brackets)
 				if (line.contains("{")) {
-					descriptionStarts = line.indexOf("{")+1;
+					descriptionStarts = line.indexOf("{") + 1;
 					descriptionStops = "}";
 				}
-				else {
+				else { //CUSTOM DESCRIPTION
 					descriptionStarts = line.indexOf("DESCRIPTION ") + 12;
 					descriptionStops = " TRUE";
 				}
-				presentationDescription = line.trim().substring(
-						descriptionStarts,
-						line.length()).trim().replaceAll(descriptionStops, "");
+				int length = line.length();
+				description = line.substring(descriptionStarts, length).replaceAll(descriptionStops, "").replaceAll("\"", "").trim();
 				//LARGE TEXT
-				while (line.indexOf(descriptionStops) == -1){
+				while (!line.contains("PRIVILEGES ") && !line.endsWith(";") && !line.contains(descriptionStops) && udml.hasNextLine()) {
 					line = udml.nextLine().trim();
-					presentationDescription += "\n";
-					presentationDescription += line.trim().replaceAll(descriptionStops, "");
-					keywordFound = true;
+					description += "\n";
+					description += line.trim().replaceAll(descriptionStops, "").replaceAll("\"", "");
 				}
 			}
-
-		} while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1);
+		} while (!line.contains("PRIVILEGES ") && !line.endsWith(";") && udml.hasNextLine());
 	}
 
 	/**
@@ -102,14 +99,14 @@ public class FolderAttribute implements UDMLObject {
 		}
 		Node nPresentationColumnMappingID = xmldoc.createTextNode(presentationColumnMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
-		if (presentationDispayName == null) {
-			presentationDispayName = "";
+		if (displayName == null) {
+			displayName = "";
 		}
-		Node nPresentationColumnDisplayName = xmldoc.createTextNode(presentationDispayName);
-		if (presentationDescription == null) {
-			presentationDescription = "";
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(displayName);
+		if (description == null) {
+			description = "";
 		}
-		Node nPresentationColumnDescription = xmldoc.createTextNode(presentationDescription);
+		Node nPresentationColumnDescription = xmldoc.createTextNode(description);
 
 		Element ePresentationColumn = xmldoc.createElement("PresentationColumn");
 		Element ePresentationColumnID = xmldoc.createElement("PresentationColumnID");
@@ -135,8 +132,8 @@ public class FolderAttribute implements UDMLObject {
 		Element ePresentationColumnAlias = null;
 		Node nCatalogFolderAlias = null;
 
-		if(presentationColumnAliases != null)
-			for (String sPresColAlias : presentationColumnAliases) {
+		if(aliases != null)
+			for (String sPresColAlias : aliases) {
 				ePresentationColumnAlias = xmldoc.createElement("PresentationColumnAlias");
 				if (sPresColAlias == null)
 					nCatalogFolderAlias = xmldoc.createTextNode("");

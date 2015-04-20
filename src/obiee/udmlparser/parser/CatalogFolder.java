@@ -17,32 +17,32 @@ public class CatalogFolder implements UDMLObject {
 
 	private String			catalogFolderID;
 	private String			catalogFolderName;
-	private String[]		catalogFolderAliases = null;
+	private String[]		aliases = null;
 	private String			catalogFolderMappingID;
 	private Vector <String>	entityFolderIDs = null;
-	private String			presentationDispayName;
-	private String			presentationDescription;
+	private String			displayName;
+	private String			description;
 	private String			implicitFactColumn;
 
 	public CatalogFolder(String declare, String catalogFolder, Repository udml) {
 		String line;
 		String trimmedHeader = declare.trim();
-		int as = trimmedHeader.indexOf(" AS ");
+		int asMarker = trimmedHeader.indexOf(" AS ");
 		//finds custom icons in Subject Areas
-		int icon = trimmedHeader.indexOf(" ICON INDEX ");
-		catalogFolderID = trimmedHeader.substring(catalogFolder.length(), as).trim().replaceAll("\"", "");
-		if (icon != -1) {
-			catalogFolderName = trimmedHeader.substring(as+4, icon).trim().replaceAll("\"", "");
+		int iconMarker = trimmedHeader.indexOf(" ICON INDEX ");
+		catalogFolderID = trimmedHeader.substring(catalogFolder.length(), asMarker).trim().replaceAll("\"", "");
+		if (iconMarker != -1) {
+			catalogFolderName = trimmedHeader.substring(asMarker+4, iconMarker).trim().replaceAll("\"", "");
 		}
 		else {
-			catalogFolderName = trimmedHeader.substring(as+4).trim().replaceAll("\"", "");
+			catalogFolderName = trimmedHeader.substring(asMarker+4).trim().replaceAll("\"", "");
 		}
 		//SUBJECT AREA
 		line = udml.nextLine().trim().replaceAll("\"", "");
 
-		int subjectAreaIdx = line.indexOf("SUBJECT AREA ");
-		if (subjectAreaIdx != -1) {
-			catalogFolderMappingID = line.substring(subjectAreaIdx+13).trim().replaceAll("\"", "");
+		int subjectAreaMarker = line.indexOf("SUBJECT AREA ");
+		if (subjectAreaMarker != -1) {
+			catalogFolderMappingID = line.substring(subjectAreaMarker + 13).trim().replaceAll("\"", "");
 		}
 
 		//ENTITY FOLDERS LIST
@@ -57,9 +57,9 @@ public class CatalogFolder implements UDMLObject {
 
 		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES,
 		//RECOVERING ALIASES
-		while (!line.contains(";") && udml.hasNextLine()) {
+		while (!line.contains("PRIVILEGES ") && !line.endsWith(";") && udml.hasNextLine()) {
 			line = udml.nextLine().trim().replaceAll("\"", "");
-			
+
 			//DEFAULT FACT COLUMN
 			if (line.contains("DEFAULT FACT COLUMN ")) {
 				int implicitFactColumnBegins = line.indexOf("DEFAULT FACT COLUMN ") + 20;
@@ -70,7 +70,7 @@ public class CatalogFolder implements UDMLObject {
 			if (line.contains("ALIASES (")) {
 				int aliasesBegins = line.indexOf("ALIASES (") + 9;
 				int aliasesEnds = line.lastIndexOf(")") - 1;
-				catalogFolderAliases = line.substring(aliasesBegins, aliasesEnds).trim().replaceAll("\"", "").split(",");
+				aliases = line.substring(aliasesBegins, aliasesEnds).trim().replaceAll("\"", "").split(",");
 			}
 
 			//DISPLAY NAME
@@ -78,7 +78,7 @@ public class CatalogFolder implements UDMLObject {
 				if (line.contains("DISPLAY NAME ")) {
 					int displayNameBegins = line.indexOf("DISPLAY NAME ") + 13;
 					int displayNameEnds = line.lastIndexOf(" ON") - 1;
-					presentationDispayName = line.trim().substring(displayNameBegins, displayNameEnds).trim().replaceAll("\"", "");
+					displayName = line.trim().substring(displayNameBegins, displayNameEnds).trim().replaceAll("\"", "");
 				}
 
 			}
@@ -91,17 +91,17 @@ public class CatalogFolder implements UDMLObject {
 					descriptionStarts = line.indexOf("{") + 1;
 					descriptionStops = "}";
 				}
-				else {
+				else { //CUSTOM DESCRIPTION
 					descriptionStarts = line.indexOf("DESCRIPTION ") + 12;
 					descriptionStops = " TRUE";
 				}
 				int length = line.length();
-				presentationDescription = line.substring(descriptionStarts, length).replaceAll(descriptionStops, "").replaceAll("\"", "").trim();
+				description = line.substring(descriptionStarts, length).replaceAll(descriptionStops, "").replaceAll("\"", "").trim();
 				//LARGE TEXT
-				while (!line.contains(descriptionStops) && udml.hasNextLine()) {
+				while (!line.contains("PRIVILEGES ") && !line.endsWith(";") && !line.contains(descriptionStops) && udml.hasNextLine()) {
 					line = udml.nextLine().trim();
-					presentationDescription += "\n";
-					presentationDescription += line.trim().replaceAll(descriptionStops, "").replaceAll("\"", "");
+					description += "\n";
+					description += line.trim().replaceAll(descriptionStops, "").replaceAll("\"", "");
 				}
 			}
 		}
@@ -126,17 +126,17 @@ public class CatalogFolder implements UDMLObject {
 		Node nCatalogFolderMappingID = xmldoc.createTextNode(catalogFolderMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
 
-		if (presentationDispayName == null)
-			presentationDispayName = "";
-		Node nPresentationColumnDisplayName = xmldoc.createTextNode(presentationDispayName);
+		if (displayName == null)
+			displayName = "";
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(displayName);
 
 		if (implicitFactColumn == null)
 			implicitFactColumn = "";
 		Node nImplicitFactColumn = xmldoc.createTextNode(implicitFactColumn);
 
-		if (presentationDescription == null)
-			presentationDescription = "";
-		Node nPresentationColumnDescription = xmldoc.createTextNode(presentationDescription);
+		if (description == null)
+			description = "";
+		Node nPresentationColumnDescription = xmldoc.createTextNode(description);
 
 		Element ePresentationCatalog = xmldoc.createElement("PresentationCatalog");
 		Element ePresentationCatalogID = xmldoc.createElement("PresentationCatalogID");
@@ -165,8 +165,8 @@ public class CatalogFolder implements UDMLObject {
 		Element eCatalogFolderAlias = null;
 		Node nCatalogFolderAlias = null;
 
-		if(catalogFolderAliases != null)
-			for (String sCatFolderAlias : catalogFolderAliases) {
+		if(aliases != null) {
+			for (String sCatFolderAlias : aliases) {
 				eCatalogFolderAlias = xmldoc.createElement("PresentationCatalogAlias");
 				if (sCatFolderAlias == null)
 					nCatalogFolderAlias = xmldoc.createTextNode("");
@@ -176,6 +176,7 @@ public class CatalogFolder implements UDMLObject {
 				eCatalogFolderAlias.appendChild(nCatalogFolderAlias);
 				eCatalogFolderAliasList.appendChild(eCatalogFolderAlias);
 			}
+		}
 
 		ePresentationCatalog.appendChild(eCatalogFolderAliasList);
 
