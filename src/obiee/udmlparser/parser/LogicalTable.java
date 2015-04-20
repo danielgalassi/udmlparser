@@ -27,9 +27,9 @@ public class LogicalTable implements UDMLObject {
 	public LogicalTable (String declare, String logicalTable, Repository udml) {
 		String line;
 		String header = declare.trim();
-		int indexAS = header.indexOf(" AS ");
-		logicalTableID = header.substring( logicalTable.length(), indexAS).trim().replaceAll("\"", "");
-		logicalTableName = header.substring( indexAS + 4, header.indexOf(" HAVING")).trim().replaceAll("\"", "");
+		int asMarker = header.indexOf(" AS ");
+		logicalTableID = header.substring( logicalTable.length(), asMarker).trim().replaceAll("\"", "");
+		logicalTableName = header.substring( asMarker + 4, header.indexOf(" HAVING")).trim().replaceAll("\"", "");
 
 		line = udml.nextLine();
 		logicalColumnIDs = new Vector<String>();
@@ -63,10 +63,10 @@ public class LogicalTable implements UDMLObject {
 					derivedLogicalColumnExpressions.add("");
 				}
 			}
-		} while (!line.contains("KEYS (") && !line.contains("SOURCES (") && !line.contains("PRIVILEGES ("));
+		} while (udml.hasNextLine() && !line.contains("KEYS (") && !line.contains("SOURCES (") && !(line.contains("PRIVILEGES (") && line.endsWith(";")));
 
-		//DISCARD SOURCES, DESCRIPTION AND PRIVILEGES
-		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
+		//DISCARD KEYS, SOURCES, DESCRIPTION AND PRIVILEGES
+		while (!(line.contains("PRIVILEGES") && line.endsWith(";")) && udml.hasNextLine()) {
 			line = udml.nextLine();
 		}
 

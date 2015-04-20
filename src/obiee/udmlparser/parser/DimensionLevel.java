@@ -91,7 +91,7 @@ public class DimensionLevel implements UDMLObject {
 		}
 
 		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-		while (line.indexOf("PRIVILEGES") == -1 && line.indexOf(";") == -1) {
+		while (!(line.contains("PRIVILEGES ") && line.endsWith(";")) && udml.hasNextLine()) {
 			line = udml.nextLine();
 		}
 

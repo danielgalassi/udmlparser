@@ -27,11 +27,11 @@ public class Repository {
 			logger.fatal("A repository could not be created. {} thrown while creating a representation of a repository file", e.getClass().getCanonicalName());
 		}
 	}
-	
+
 	public String nextLine() {
 		return udml.nextLine();
 	}
-	
+
 	public boolean isValid() {
 		boolean isUDML = false;
 		if (!(udml==null) && hasNextLine()) {

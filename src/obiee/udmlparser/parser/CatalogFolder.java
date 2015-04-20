@@ -17,31 +17,32 @@ public class CatalogFolder implements UDMLObject {
 
 	private String			catalogFolderID;
 	private String			catalogFolderName;
-	private String[]		catalogFolderAliases = null;
+	private String[]		aliases = null;
 	private String			catalogFolderMappingID;
 	private Vector <String>	entityFolderIDs = null;
-	private String			presentationDispayName;
-	private String			presentationDescription;
+	private String			displayName;
+	private String			description;
+	private String			implicitFactColumn;
 
 	public CatalogFolder(String declare, String catalogFolder, Repository udml) {
 		String line;
 		String trimmedHeader = declare.trim();
-		int as = trimmedHeader.indexOf(" AS ");
+		int asMarker = trimmedHeader.indexOf(" AS ");
 		//finds custom icons in Subject Areas
-		int icon = trimmedHeader.indexOf(" ICON INDEX ");
-		catalogFolderID = trimmedHeader.substring(catalogFolder.length(), as).trim().replaceAll("\"", "");
-		if (icon != -1) {
-			catalogFolderName = trimmedHeader.substring(as+4, icon).trim().replaceAll("\"", "");
+		int iconMarker = trimmedHeader.indexOf(" ICON INDEX ");
+		catalogFolderID = trimmedHeader.substring(catalogFolder.length(), asMarker).trim().replaceAll("\"", "");
+		if (iconMarker != -1) {
+			catalogFolderName = trimmedHeader.substring(asMarker+4, iconMarker).trim().replaceAll("\"", "");
 		}
 		else {
-			catalogFolderName = trimmedHeader.substring(as+4).trim().replaceAll("\"", "");
+			catalogFolderName = trimmedHeader.substring(asMarker+4).trim().replaceAll("\"", "");
 		}
 		//SUBJECT AREA
 		line = udml.nextLine().trim().replaceAll("\"", "");
 
-		int subjectAreaIdx = line.indexOf("SUBJECT AREA ");
-		if (subjectAreaIdx != -1) {
-			catalogFolderMappingID = line.substring(subjectAreaIdx+13).trim().replaceAll("\"", "");
+		int subjectAreaMarker = line.indexOf("SUBJECT AREA ");
+		if (subjectAreaMarker != -1) {
+			catalogFolderMappingID = line.substring(subjectAreaMarker + 13).trim().replaceAll("\"", "");
 		}
 
 		//ENTITY FOLDERS LIST
@@ -51,40 +52,59 @@ public class CatalogFolder implements UDMLObject {
 			do {
 				line = udml.nextLine().trim().replaceAll("\"", "");
 				entityFolderIDs.add(line.substring(0,line.length()-1));
-			} while (line.charAt(line.length()-1) != ')');
+			} while (!line.endsWith(")"));
 		}
 
 		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES,
 		//RECOVERING ALIASES
-		do {
+		while (!line.contains("PRIVILEGES ") && !line.endsWith(";") && udml.hasNextLine()) {
 			line = udml.nextLine().trim().replaceAll("\"", "");
-			int aliasesIdx = line.indexOf("ALIASES (");
-			int lastParIdx = line.lastIndexOf(")");
-			if (aliasesIdx != -1)
-				catalogFolderAliases = line.substring(aliasesIdx+9, lastParIdx).trim().replaceAll("\"", "").split(",");
+
+			//DEFAULT FACT COLUMN
+			if (line.contains("DEFAULT FACT COLUMN ")) {
+				int implicitFactColumnBegins = line.indexOf("DEFAULT FACT COLUMN ") + 20;
+				implicitFactColumn = line.substring(implicitFactColumnBegins, line.length()).trim().replaceAll("\"", "");
+			}
+
+			//ALIASES
+			if (line.contains("ALIASES (")) {
+				int aliasesBegins = line.indexOf("ALIASES (") + 9;
+				int aliasesEnds = line.lastIndexOf(")") - 1;
+				aliases = line.substring(aliasesBegins, aliasesEnds).trim().replaceAll("\"", "").split(",");
+			}
 
 			//DISPLAY NAME
-			int displayNameIdx = line.indexOf("DISPLAY NAME ");
-			if (displayNameIdx != -1){
-				int i1 = displayNameIdx+13;
-				int i2 = line.lastIndexOf(" ON");
-				presentationDispayName = line.trim().substring(i1, i2).trim().replaceAll("\"", "");
+			if (line.contentEquals("DISPLAY NAME ")) {
+				if (line.contains("DISPLAY NAME ")) {
+					int displayNameBegins = line.indexOf("DISPLAY NAME ") + 13;
+					int displayNameEnds = line.lastIndexOf(" ON") - 1;
+					displayName = line.trim().substring(displayNameBegins, displayNameEnds).trim().replaceAll("\"", "");
+				}
+
 			}
 
 			//DESCRIPTION
-			if (line.indexOf("DESCRIPTION ") != -1){
-				presentationDescription = line.trim().substring(
-						line.indexOf("{")+1,
-						line.length()).
-						trim().replaceAll("}", "");
+			if (line.contains("DESCRIPTION ") || line.contains("CUSTOM DESCRIPTION ")) {
+				int descriptionStarts;
+				String descriptionStops;
+				if (line.contains("{")) {
+					descriptionStarts = line.indexOf("{") + 1;
+					descriptionStops = "}";
+				}
+				else { //CUSTOM DESCRIPTION
+					descriptionStarts = line.indexOf("DESCRIPTION ") + 12;
+					descriptionStops = " TRUE";
+				}
+				int length = line.length();
+				description = line.substring(descriptionStarts, length).replaceAll(descriptionStops, "").replaceAll("\"", "").trim();
 				//LARGE TEXT
-				while (line.indexOf("}") == -1){
+				while (!(line.contains("PRIVILEGES ") && line.endsWith(";")) && !line.contains(descriptionStops) && udml.hasNextLine()) {
 					line = udml.nextLine().trim();
-					presentationDescription += "\n";
-					presentationDescription += line.trim().replaceAll("}", "");
+					description += "\n";
+					description += line.trim().replaceAll(descriptionStops, "").replaceAll("\"", "");
 				}
 			}
-		} while (line.indexOf(";") == -1);
+		}
 	}
 
 	/**
@@ -106,13 +126,17 @@ public class CatalogFolder implements UDMLObject {
 		Node nCatalogFolderMappingID = xmldoc.createTextNode(catalogFolderMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
 
-		if (presentationDispayName == null)
-			presentationDispayName = "";
-		Node nPresentationColumnDisplayName = xmldoc.createTextNode(presentationDispayName);
+		if (displayName == null)
+			displayName = "";
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(displayName);
 
-		if (presentationDescription == null)
-			presentationDescription = "";
-		Node nPresentationColumnDescription = xmldoc.createTextNode(presentationDescription);
+		if (implicitFactColumn == null)
+			implicitFactColumn = "";
+		Node nImplicitFactColumn = xmldoc.createTextNode(implicitFactColumn);
+
+		if (description == null)
+			description = "";
+		Node nPresentationColumnDescription = xmldoc.createTextNode(description);
 
 		Element ePresentationCatalog = xmldoc.createElement("PresentationCatalog");
 		Element ePresentationCatalogID = xmldoc.createElement("PresentationCatalogID");
@@ -120,11 +144,13 @@ public class CatalogFolder implements UDMLObject {
 		Element eCatalogFolderMappingID = xmldoc.createElement("PresentationCatalogMappingID");
 		//added DISPLAY NAME and DESCRIPTION elements
 		Element ePresentationDisplayName = xmldoc.createElement("displayName");
+		Element eImplicitFactColumn = xmldoc.createElement("ImplicitFactColumn");
 		Element ePresentationDescription = xmldoc.createElement("description");
 
 		ePresentationCatalogID.appendChild(nPresentationCatalogID);
 		ePresentationCatalogName.appendChild(nPresentationCatalogName);
 		eCatalogFolderMappingID.appendChild(nCatalogFolderMappingID);
+		eImplicitFactColumn.appendChild(nImplicitFactColumn);
 		ePresentationDisplayName.appendChild(nPresentationColumnDisplayName);
 		ePresentationDescription.appendChild(nPresentationColumnDescription);
 
@@ -132,14 +158,15 @@ public class CatalogFolder implements UDMLObject {
 		ePresentationCatalog.appendChild(ePresentationCatalogName);
 		ePresentationCatalog.appendChild(eCatalogFolderMappingID);
 		ePresentationCatalog.appendChild(ePresentationDisplayName);
+		ePresentationCatalog.appendChild(eImplicitFactColumn);
 		ePresentationCatalog.appendChild(ePresentationDescription);
 
 		Element eCatalogFolderAliasList = xmldoc.createElement("PresentationCatalogAliasList");
 		Element eCatalogFolderAlias = null;
 		Node nCatalogFolderAlias = null;
 
-		if(catalogFolderAliases != null)
-			for (String sCatFolderAlias : catalogFolderAliases) {
+		if(aliases != null) {
+			for (String sCatFolderAlias : aliases) {
 				eCatalogFolderAlias = xmldoc.createElement("PresentationCatalogAlias");
 				if (sCatFolderAlias == null)
 					nCatalogFolderAlias = xmldoc.createTextNode("");
@@ -149,6 +176,7 @@ public class CatalogFolder implements UDMLObject {
 				eCatalogFolderAlias.appendChild(nCatalogFolderAlias);
 				eCatalogFolderAliasList.appendChild(eCatalogFolderAlias);
 			}
+		}
 
 		ePresentationCatalog.appendChild(eCatalogFolderAliasList);
 

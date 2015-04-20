@@ -34,14 +34,14 @@ public class LogicalJoin implements UDMLObject {
 		String line = "";
 		int joinSpecifications = 0;
 		String header = declare.trim();
-		int indexAS = header.indexOf(" AS ");
-		logicalJoinID = header.substring(subjectArea.length(),indexAS).trim().replaceAll("\"", "");
+		int asMarker = header.indexOf(" AS ");
+		logicalJoinID = header.substring(subjectArea.length(),asMarker).trim().replaceAll("\"", "");
 
 		String logicalJoinSpecification = "DECLARE ROLE \"" + logicalJoinID;
 		logicalTableIDs = new Vector<String>();
 		while (joinSpecifications < 2) {
 			line = udml.nextLine();
-			while (!line.contains(logicalJoinSpecification)) {
+			while (!line.contains(logicalJoinSpecification) && udml.hasNextLine()) {
 				line = udml.nextLine();
 			}
 
@@ -51,7 +51,7 @@ public class LogicalJoin implements UDMLObject {
 		}
 
 		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-		while (!line.contains("PRIVILEGES") && line.contains(";")) {
+		while (!(line.contains("PRIVILEGES") && line.endsWith(";")) && udml.hasNextLine()) {
 			line = udml.nextLine();
 		}
 	}

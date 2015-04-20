@@ -18,17 +18,16 @@ public class EntityFolder implements UDMLObject {
 	private String			presentationTableID;
 	private String			presentationTableName;
 	private String			presentationTableMappingID;
-	private String			presentationDispayName;
-	private String			presentationDescription;
+	private String			displayName;
+	private String			description;
 	private Vector <String>	folderAttributeIDs = null;
-	private String[]		presentationTableAliases = null;
+	private String[]		aliases = null;
 
 	public EntityFolder (String declare, String entityFolder, Repository udml) {
 		String line;
 		String header = declare.trim();
 		int indexAS = header.indexOf(" AS ");
 		presentationTableID = header.substring(entityFolder.length(), indexAS).trim().replaceAll("\"", "");
-
 		if (header.indexOf(" ENTITY ") != -1 && header.indexOf(" ENTITY ") != header.lastIndexOf(" ENTITY ")) {
 			presentationTableName = header.substring(indexAS + 4, header.indexOf(" ENTITY ", indexAS)).trim().replaceAll("\"", "");
 			presentationTableMappingID = header.substring(header.indexOf(" ENTITY ", indexAS + 4) + 8).trim().replaceAll("\"", "");
@@ -45,40 +44,52 @@ public class EntityFolder implements UDMLObject {
 			do {
 				line = udml.nextLine().trim().replaceAll("\"", "");
 				folderAttributeIDs.add(line.substring(0,line.length()-1));
-			} while (line.charAt(line.length()-1) != ')');
+			} while (!line.endsWith(")"));
 		}
 
-		//ALIASES
-		if (!line.contains(";")) {
-			do {
-				line = udml.nextLine().trim().replaceAll("\"", "");
-			} while (line.indexOf("ALIASES (") != -1);
-			if (line.indexOf("ALIASES (") != -1)
-				presentationTableAliases = line.substring(
-						line.indexOf("ALIASES (")+9, 
-						line.lastIndexOf(")")).trim().replaceAll("\"", "").split(",");
-		}
+		while (!line.contains("PRIVILEGES ") && !line.endsWith(";") && udml.hasNextLine()) {
+			line = udml.nextLine().trim().replaceAll("\"", "");
 
-		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
-		while (!line.contains("PRIVILEGES") && !line.contains(";")) {
-			line = udml.nextLine();
+			//ALIASES
+			if (line.contains("ALIASES (")) {
+				int aliasesBegins = line.indexOf("ALIASES (") + 9;
+				int aliasesEnds = line.lastIndexOf(")") - 1;
+				aliases = line.substring(aliasesBegins, aliasesEnds).trim().replaceAll("\"", "").split(",");
+			}
+
 			//DISPLAY NAME
-			if (line.contains("DISPLAY NAME ")) {
-				presentationDispayName = line.trim().substring(line.indexOf("DISPLAY NAME ")+13, line.lastIndexOf(" ON")).trim().replaceAll("\"", "");
+			if (line.contentEquals("DISPLAY NAME ")) {
+				if (line.contains("DISPLAY NAME ")) {
+					int displayNameBegins = line.indexOf("DISPLAY NAME ") + 13;
+					int displayNameEnds = line.lastIndexOf(" ON") - 1;
+					displayName = line.trim().substring(displayNameBegins, displayNameEnds).trim().replaceAll("\"", "");
+				}
+
 			}
 
 			//DESCRIPTION
-			if (line.contains("DESCRIPTION ")) {
-				int openBracket = line.indexOf("{")+1;
+			if (line.contains("DESCRIPTION ") || line.contains("CUSTOM DESCRIPTION ")) {
+				int descriptionStarts;
+				String descriptionStops;
+				if (line.contains("{")) {
+					descriptionStarts = line.indexOf("{") + 1;
+					descriptionStops = "}";
+				}
+				else { //CUSTOM DESCRIPTION
+					descriptionStarts = line.indexOf("DESCRIPTION ") + 12;
+					descriptionStops = " TRUE";
+				}
 				int length = line.length();
-				presentationDescription = line.substring( openBracket, length).replaceAll("}", "").trim();
+				description = line.substring(descriptionStarts, length).replaceAll(descriptionStops, "").replaceAll("\"", "").trim();
 				//LARGE TEXT
-				while (!line.contains("}")) {
+				while (!(line.contains("PRIVILEGES ") && line.endsWith(";")) && !line.contains(descriptionStops) && udml.hasNextLine()) {
 					line = udml.nextLine().trim();
-					presentationDescription += "\n";
-					presentationDescription += line.trim().replaceAll("}", "");
+
+					description += "\n";
+					description += line.trim().replaceAll(descriptionStops, "").replaceAll("\"", "");
 				}
 			}
+
 		}
 	}
 
@@ -103,14 +114,14 @@ public class EntityFolder implements UDMLObject {
 		}
 		Node nPresentationTableMappingID = xmldoc.createTextNode(presentationTableMappingID);
 		//added DISPLAY NAME and DESCRIPTION nodes
-		if (presentationDispayName == null) {
-			presentationDispayName = "";
+		if (displayName == null) {
+			displayName = "";
 		}
-		Node nPresentationColumnDisplayName = xmldoc.createTextNode(presentationDispayName);
-		if (presentationDescription == null) {
-			presentationDescription = "";
+		Node nPresentationColumnDisplayName = xmldoc.createTextNode(displayName);
+		if (description == null) {
+			description = "";
 		}
-		Node nPresentationColumnDescription = xmldoc.createTextNode(presentationDescription);
+		Node nPresentationColumnDescription = xmldoc.createTextNode(description);
 
 		Element ePresentationTable = xmldoc.createElement("PresentationTable");
 		Element ePresentationTableID = xmldoc.createElement("PresentationTableID");
@@ -136,13 +147,13 @@ public class EntityFolder implements UDMLObject {
 		Element ePresentationTableAlias = null;
 		Node nCatalogFolderAlias = null;
 
-		if(presentationTableAliases != null)
-			for (int i=0; i< presentationTableAliases.length; i++) {
+		if(aliases != null)
+			for (int i=0; i< aliases.length; i++) {
 				ePresentationTableAlias = xmldoc.createElement("PresentationTableAlias");
-				if (presentationTableAliases[i] == null) {
+				if (aliases[i] == null) {
 					nCatalogFolderAlias = xmldoc.createTextNode("");
 				} else {
-					nCatalogFolderAlias = xmldoc.createTextNode(presentationTableAliases[i]);
+					nCatalogFolderAlias = xmldoc.createTextNode(aliases[i]);
 				}
 				ePresentationTableAlias.appendChild(nCatalogFolderAlias);
 				ePresentationTableAliasList.appendChild(ePresentationTableAlias);

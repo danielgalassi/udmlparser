@@ -24,13 +24,12 @@ public class LogicalTableSource implements UDMLObject {
 	public LogicalTableSource (String declare, String logicalTableSource, Repository udml) {
 		String line;
 		String header = declare.trim();
-		int indexAS = header.indexOf(" AS ");
+		int asMarker = header.indexOf(" AS ");
 		int eol;
 		int cbr;
+		this.logicalTableSourceID = header.substring( logicalTableSource.length(),asMarker).trim().replaceAll("\"", "");
 
-		this.logicalTableSourceID = header.substring( logicalTableSource.length(),indexAS).trim().replaceAll("\"", "");
-
-		this.logicalTableSourceName = header.substring(indexAS + 4).trim().replaceAll("\"", "");
+		this.logicalTableSourceName = header.substring(asMarker + 4).trim().replaceAll("\"", "");
 
 		//DISCARD HEADING
 		do {
@@ -43,11 +42,8 @@ public class LogicalTableSource implements UDMLObject {
 			logicalColumnCalculations = new Vector<String>();
 			do {
 				line = udml.nextLine().trim();
-				if (line.indexOf(" AS ") != -1 && line.indexOf(" CAST") == -1) {
-					logicalColumnIDs.add(line.substring(
-							line.indexOf("{") + 1,
-							line.indexOf("}")).
-							replaceAll("\"", ""));
+				if (line.contains(" AS ") && !line.contains(" CAST")) {
+					logicalColumnIDs.add(line.substring(line.indexOf("{") + 1, line.indexOf("}")).replaceAll("\"", ""));
 					//"end-of-line" in case } is missing. Issue # 6.
 					eol = line.lastIndexOf("}");
 					if (eol < line.lastIndexOf("{")-1) {
@@ -62,7 +58,7 @@ public class LogicalTableSource implements UDMLObject {
 			} while (!line.contains("FROM"));
 		}
 
-		while (!line.contains("PRIVILEGES") && line.contains(";")) {
+		while (!(line.contains("PRIVILEGES") && line.contains(";")) && udml.hasNextLine()) {
 			line = udml.nextLine();
 		}
 	}

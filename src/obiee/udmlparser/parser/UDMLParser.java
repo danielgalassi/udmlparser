@@ -45,6 +45,7 @@ public class UDMLParser {
 	 * @param output target XML file
 	 */
 	public UDMLParser(String input, String output) {
+
 		rpdxml		= XMLUtils.createDocument();
 		root		= rpdxml.createElement("UDML");
 		repository	= new Repository(input);
@@ -69,52 +70,52 @@ public class UDMLParser {
 		do {
 			UDMLObject object = null;
 			header = repository.nextLine();
-			if (header.indexOf(catalogFolders) != -1) { //pres subject area
+			if (header.contains(catalogFolders)) { //pres subject area
 				logger.info("Processing Subject Area...");
 				object = new CatalogFolder(header, catalogFolders, repository);
 			}
-			if (header.indexOf(subjectAreas) != -1) { //bmm subject area
+			if (header.contains(subjectAreas)) { //bmm subject area
 				logger.info("Processing Business Model...");
 				object = new SubjectArea(header, subjectAreas, repository);
 			}
-			if (header.indexOf(logicalJoins) != -1) { //logical join (BMM)
+			if (header.contains(logicalJoins)) { //logical join (BMM)
 				logger.info("Processing Logical Join...");
 				object = new LogicalJoin(header, logicalJoins, repository);
 			}
-			if (header.indexOf(logicalForeignKeys) != -1) { //logical foreign key join (BMM)
+			if (header.contains(logicalForeignKeys)) { //logical foreign key join (BMM)
 				logger.info("Processing Logical (Foreign Key) Join...");
 				object = new LogicalForeignKey(header, logicalForeignKeys, repository);
 			}
+			if (header.contains(folderAttributes)) { //pres column
+				logger.info("Processing Presentation Column...");
+				object = new FolderAttribute(header, folderAttributes, repository);
+			}
 			if (!MetadataExtract.isBusMatrixInvoked()) {
-				if (header.indexOf(entityFolders) != -1) { //pres folder
+				if (header.contains(entityFolders)) { //pres folder
 					logger.info("Processing Presentation Folder...");
 					object = new EntityFolder(header, entityFolders, repository);
 				}
-				if (header.indexOf(folderAttributes) != -1) { //pres column
-					logger.info("Processing Presentation Column...");
-					object = new FolderAttribute(header, folderAttributes, repository);
-				}
-				if (header.indexOf(logicalTables) != -1 && header.indexOf(logicalTableSources) == -1) { //logl tbl
+				if (header.contains(logicalTables) && !header.contains(logicalTableSources)) { //logl tbl
 					logger.info("Processing Logical Table...");
 					object = new LogicalTable(header, logicalTables, repository);
 				}
-				if (header.indexOf(logicalTableSources) != -1) { //logl tbl src
+				if (header.contains(logicalTableSources)) { //logl tbl src
 					logger.info("Processing Logical Table Source...");
 					object = new LogicalTableSource(header,logicalTableSources,repository);
 				}
-				if (header.indexOf(physicalTables) != -1 && header.indexOf(physicalTableKeys) == -1) { //physical tbl
+				if (header.contains(physicalTables) && !header.contains(physicalTableKeys)) { //physical tbl
 					logger.info("Processing Physical Table...");
 					object = new PhysicalTable(header, physicalTables, repository);
 				}
-				if (header.indexOf(dimensionLevels) != -1) { //hier. dim. level
+				if (header.contains(dimensionLevels)) { //hier. dim. level
 					logger.info("Processing Hierarchy Dim Level...");
 					object = new DimensionLevel(header, dimensionLevels, repository);
 				}
-				if (header.indexOf(hierarchyDims) != -1) { //hier dim
+				if (header.contains(hierarchyDims)) { //hier dim
 					logger.info("Processing Hierarchy Dimension...");
 					object = new HierarchyDimension(header, hierarchyDims, repository);
 				}
-				if (header.indexOf(foreignKeys) != -1) { //join
+				if (header.contains(foreignKeys)) { //join
 					logger.info("Processing Foreign Key...");
 					object = new ForeignKey(header, foreignKeys, repository);
 				}

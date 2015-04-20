@@ -52,7 +52,7 @@ public class ForeignKey implements UDMLObject {
 		} while (!line.contains(") REFERENCES "));
 
 		//DISCARD DESCRIPTION AND PRIVILEGES
-		while (!line.contains("PRIVILEGES") && line.contains(";")) {
+		while (!(line.contains("PRIVILEGES ") && line.endsWith(";")) && udml.hasNextLine()) {
 			line = udml.nextLine();
 		}
 

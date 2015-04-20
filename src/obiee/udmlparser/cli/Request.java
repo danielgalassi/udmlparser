@@ -15,23 +15,27 @@ public class Request {
 
 	/** A set of (key,value) pairs representing all (no flags) attributes*/
 	private Map<String, String> request = new HashMap<String, String>();
-	private boolean isBusMatrixInvoked = false;
-	private boolean isTransformationInvoked = false;
+	private boolean busMatrix = false;
+	private boolean transformation = false;
+
+	public boolean isSubjectAreaListOn () {
+		return request.containsKey("list");
+	}
 
 	public void invokeTransformation(boolean invoked) {
-		isTransformationInvoked = invoked;
+		transformation = invoked;
 	}
 
 	public boolean isTransformationInvoked() {
-		return isTransformationInvoked;
+		return transformation;
 	}
 
-	public void invokeBusMatrix(String value) {
-		isBusMatrixInvoked = (value.equals("busmatrix"));
+	public void setBusMatrixMode(String value) {
+		busMatrix = (value.toLowerCase().equals("busmatrix"));
 	}
 
-	public boolean isBusMatrixInvoked() {
-		return isBusMatrixInvoked;
+	public boolean isBusMatrixModeOn() {
+		return busMatrix;
 	}
 
 	/**

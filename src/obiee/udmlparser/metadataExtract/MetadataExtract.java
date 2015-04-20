@@ -35,7 +35,11 @@ public class MetadataExtract {
 	 * @return true if the BusMatrix app has been invoked, false otherwise.
 	 */
 	public static boolean isBusMatrixInvoked () {
-		return request.isBusMatrixInvoked();
+		return request.isBusMatrixModeOn();
+	}
+
+	public static boolean isSubjectAreaListOn () {
+		return request.isSubjectAreaListOn();
 	}
 
 	/**
@@ -93,7 +97,7 @@ public class MetadataExtract {
 		}
 
 		//transforms the RPD XML file into a bus matrix HTML page
-		if (request.isBusMatrixInvoked()) {
+		if (request.isBusMatrixModeOn()) {
 			buildBusMatrix();
 		}
 	}
