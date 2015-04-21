@@ -111,7 +111,7 @@ public class MetadataExtract {
 		}
 	}
 
-	public static String getSubjectArea() {
+	public static String getSubjectAreaList() {
 		return request.getArg("list");
 	}
 }

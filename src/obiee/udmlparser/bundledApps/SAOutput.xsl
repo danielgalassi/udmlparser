@@ -40,14 +40,15 @@
 			&#169;
 		</span-->
 	</h1>
-	<!--ul-->
+	<ul>
 	<xsl:for-each select="//SubjectArea/SubjectAreaName">
-	<!-- Creating the Subject Area list -->
-	<xsl:variable name="SubjectArea" select="."/>
-	<li><a href="#{.}"><xsl:value-of select="."/></a></li>
-	<!--/xsl:for-each-->
-	<!--/ul-->
+		<!-- Creating the Subject Area list -->
+		<li><a href="#{.}"><xsl:value-of select="."/></a></li>
+	</xsl:for-each>
+	</ul>
 	<br/>
+	<xsl:for-each select="//SubjectArea/SubjectAreaName">
+		<xsl:variable name="SubjectArea" select="."/>
 	<xsl:for-each select="../BusinessModelID">
 	<!--xsl:for-each select="//BusinessCatalog/BusinessCatalogID"-->
 		<!-- Business Model Header Section -->
@@ -66,7 +67,7 @@
 		<!--br/-->
 
 		<!-- Matrix Section -->
-		<h4><xsl:value-of select="$SubjectArea"></xsl:value-of>
+		<h4><a name="{$SubjectArea}" id="{$SubjectArea}"></a><xsl:value-of select="$SubjectArea"></xsl:value-of>
 		</h4>
 		<table>
 		<tbody>
