@@ -79,7 +79,7 @@ public class MetadataExtract {
 		//TODO flag dimensions with no joins if possible
 		File temp = new File ("temp.xml");
 		logger.info("Cleaning up temporary file {}", temp.getAbsolutePath());
-		//temp.deleteOnExit();
+		temp.deleteOnExit();
 	}
 
 	/**

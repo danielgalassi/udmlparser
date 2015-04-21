@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="c:/danielgalassi/udmlparser.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/udmlparser/udmlparser.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" mainClassHandleIdentifier="=udmlparser/src&lt;obiee.udmlparser.metadataExtract{MetadataExtract.java[MetadataExtract" manifestLocation="/udmlparser/manifest" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <file path="/udmlparser/.project"/>
+        <file path="/udmlparser/.gitignore"/>
+        <file path="/udmlparser/foaf.rdf"/>
+        <javaElement handleIdentifier="=udmlparser/config"/>
+        <file path="/udmlparser/.classpath"/>
+        <javaElement handleIdentifier="=udmlparser/src"/>
+        <file path="/udmlparser/doap.rdf"/>
+        <folder path="/udmlparser/lib"/>
+    </selectedElements>
+</jardesc>
