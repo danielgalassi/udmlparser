@@ -73,10 +73,10 @@ public class MetadataExtract {
 		}
 
 		logger.info("Generating Bus Matrix document...");
-
 		XMLUtils.applyStylesheet(request.getArg("rpdxml"), busMatrixLogic, "temp.xml");
 		XMLUtils.applyStylesheet("temp.xml", htmlOutput, request.getArg("target"));
 
+		//TODO flag dimensions with no joins if possible
 		File temp = new File ("temp.xml");
 		logger.info("Cleaning up temporary file {}", temp.getAbsolutePath());
 		//temp.deleteOnExit();

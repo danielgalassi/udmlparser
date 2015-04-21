@@ -119,10 +119,12 @@
 		</table>
 
 		<br/><br/>
-		<hr style="height: 1px; border: 0; background-color: #AAAAAA; width: 70%;"/>
 
 	</xsl:for-each>
 	</xsl:for-each>
+
+	<br/><br/>
+	<hr style="height: 1px; border: 0; background-color: #AAAAAA; width: 70%;"/>
 
 	<div style="padding-top: 20px;">
 		<p style="color: rgb(128, 128, 128); float: left;">Mozilla Firefox&#8482; or Google Chrome&#169; are strongly recommended for best results.</p>
