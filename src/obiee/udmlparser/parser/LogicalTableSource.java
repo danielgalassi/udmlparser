@@ -145,6 +145,10 @@ public class LogicalTableSource implements UDMLObject {
 		eLogicalTableSource.appendChild(eLogicalColumnList);
 		return eLogicalTableSource;
 	}
+
+	public String getID() {
+		return logicalTableSourceID;
+	}
 }
 /*
  * DECLARE LOGICAL TABLE SOURCE <FQ LTS name> AS <LTS name>

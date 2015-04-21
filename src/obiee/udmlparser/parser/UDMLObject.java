@@ -12,5 +12,6 @@ import org.w3c.dom.Element;
  */
 public interface UDMLObject {
 
+	public String getID();
 	public Element serialize(Document doc);
 }

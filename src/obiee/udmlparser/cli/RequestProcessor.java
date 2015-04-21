@@ -58,7 +58,7 @@ public class RequestProcessor {
 	 * @see <code>MissingOptionException</code>
 	 */
 	private void validatingOptions() throws Exception {
-		if (cli.hasOption("udmltgt") && !cli.hasOption("udmlxsl") && !cli.hasOption("cmd")) {
+		if (cli.hasOption("udmltgt") && !(cli.hasOption("udmlxsl") || cli.hasOption("cmd") || cli.hasOption("list"))) {
 			throw new MissingOptionException("Transformation requested without XSL stylesheet");
 		}
 		if (cli.hasOption("help")) {

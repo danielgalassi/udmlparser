@@ -65,6 +65,7 @@ public class UDMLParser {
 	 */
 	private void parse() {
 		String header;
+		String selection = MetadataExtract.getSubjectAreaList();
 
 		logger.info("Parsing UDML...");
 		do {
@@ -73,6 +74,11 @@ public class UDMLParser {
 			if (header.contains(catalogFolders)) { //pres subject area
 				logger.info("Processing Subject Area...");
 				object = new CatalogFolder(header, catalogFolders, repository);
+				if (MetadataExtract.isSubjectAreaListOn()) {
+					if (!selection.contains(object.getID().toUpperCase())) {
+						object = null;
+					}
+				}
 			}
 			if (header.contains(subjectAreas)) { //bmm subject area
 				logger.info("Processing Business Model...");
@@ -89,6 +95,13 @@ public class UDMLParser {
 			if (header.contains(folderAttributes)) { //pres column
 				logger.info("Processing Presentation Column...");
 				object = new FolderAttribute(header, folderAttributes, repository);
+				if (MetadataExtract.isSubjectAreaListOn()) {
+					int marker = object.getID().indexOf("..");
+					String partialSA = object.getID().substring(0, marker-1).toUpperCase();
+					if (!selection.contains(partialSA)) {
+						object = null;
+					}
+				}
 			}
 			if (!MetadataExtract.isBusMatrixInvoked()) {
 				if (header.contains(entityFolders)) { //pres folder

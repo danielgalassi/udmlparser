@@ -174,6 +174,10 @@ public class LogicalTable implements UDMLObject {
 		eLogicalTable.appendChild(eLogicalColumnList);
 		return eLogicalTable;
 	}
+
+	public String getID() {
+		return logicalTableID;
+	}
 }
 /*
  * DECLARE LOGICAL TABLE <FQ logical tbl name> AS <logical tbl name> HAVING

@@ -143,6 +143,10 @@ public class DimensionLevel implements UDMLObject {
 		eDimensionLevel.appendChild(eLogicalTableList);
 		return eDimensionLevel;
 	}
+
+	public String getID() {
+		return dimensionLevelID;
+	}
 }
 /*
  * DECLARE LEVEL FQ Dimension Level name AS Dimension Level Alias

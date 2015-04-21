@@ -180,6 +180,10 @@ public class EntityFolder implements UDMLObject {
 		ePresentationTable.appendChild(ePresentationAttributeIDList);
 		return ePresentationTable;
 	}
+
+	public String getID() {
+		return presentationTableID;
+	}
 }
 /*
  * DECLARE ENTITY FOLDER <FQ Entity Folder Name> AS <Entity Folder Name> ENTITY  <FQ Logical Table Name>

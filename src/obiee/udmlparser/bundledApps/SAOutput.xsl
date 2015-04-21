@@ -34,37 +34,40 @@
 	<title>Oracle Business Intelligence Metadata</title>
 	</head>
 	<body>
-	<!-- Business Models list Section -->
-	<h1>OBIEE Business Models
+	<!-- Subject Area list Section -->
+	<h1>OBIEE Subject Areas
 		<!--span style="font-size: 24px; color: #676767; -moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); display: inline-block;">
 			&#169;
 		</span-->
 	</h1>
 	<ul>
-	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">
-	<!-- Creating the Business Models list -->
-	<li><a href="#{.}"><xsl:value-of select="."/></a></li>
+	<xsl:for-each select="//SubjectArea/SubjectAreaName">
+		<!-- Creating the Subject Area list -->
+		<li><a href="#{.}"><xsl:value-of select="."/></a></li>
 	</xsl:for-each>
 	</ul>
 	<br/>
-	<xsl:for-each select="//BusinessCatalog/BusinessCatalogID">			
+	<xsl:for-each select="//SubjectArea/SubjectAreaName">
+		<xsl:variable name="SubjectArea" select="."/>
+	<xsl:for-each select="../BusinessModelID">
+	<!--xsl:for-each select="//BusinessCatalog/BusinessCatalogID"-->
 		<!-- Business Model Header Section -->
-		<h2><a name="{.}" id="{.}"></a><xsl:value-of select="."/></h2>
+		<!--h2><a name="{.}" id="{.}"></a><xsl:value-of select="."/></h2-->
 		<xsl:variable name="bmlength" select="string-length(.)"/>
 		<!-- Subject Area Section -->
-		<xsl:for-each select="../PresentationCatalogIDList">
-			<h3>Subject Areas</h3>
-			<ul>
+		<!--xsl:for-each select="../PresentationCatalogIDList"-->
+			<!--h3>Subject Areas</h3-->
 			<!-- Creating the subject areas list -->
+			<!--ul>
 			<xsl:for-each select="PresentationCatalogID">
 			<li><xsl:value-of select="."/></li>
 			</xsl:for-each>
-			</ul>
-		</xsl:for-each>
-		<br/>
+			</ul-->
+		<!--/xsl:for-each-->
+		<!--br/-->
 
 		<!-- Matrix Section -->
-		<h4>Business Model Bus Matrix
+		<h4><a name="{$SubjectArea}" id="{$SubjectArea}"></a><xsl:value-of select="$SubjectArea"></xsl:value-of>
 		</h4>
 		<table>
 		<tbody>
@@ -90,7 +93,7 @@
 				<tr>
 				<!-- Fact Table Name -->
 				<xsl:choose>
-					<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering') or contains(., 'Foldering') or contains(., 'DO NOT DELETE')">
+				<xsl:when test="contains(., 'DO NOT USE') or contains(., 'DEPRECATED') or contains(., 'for Foldering') or contains(., 'Foldering') or contains(., 'DO NOT DELETE')">
 						<td style="font-family: Helvetica, sans-serif; font-weight: bold; font-size: 8pt; color: #555555; background-color: rgb(255, 255, 200)" width="300" title="Identified as a deprecated practice."><xsl:value-of select="substring(., $bmlength+2)"/></td>
 					</xsl:when>
 					<xsl:otherwise>
@@ -116,9 +119,13 @@
 		</table>
 
 		<br/><br/>
-		<hr style="height: 1px; border: 0; background-color: #AAAAAA; width: 70%;"/>
 
 	</xsl:for-each>
+	</xsl:for-each>
+
+	<br/><br/>
+	<hr style="height: 1px; border: 0; background-color: #AAAAAA; width: 70%;"/>
+
 	<div style="padding-top: 20px;">
 		<p style="color: rgb(128, 128, 128); float: left;">Mozilla Firefox&#8482; or Google Chrome&#169; are strongly recommended for best results.</p>
 		<p style="color: rgb(128, 128, 128); float: right;">Generated using UDMLParser / Bus Matrix application.</p>

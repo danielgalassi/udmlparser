@@ -241,6 +241,10 @@ public class PhysicalTable implements UDMLObject {
 
 		return false;
 	}
+
+	public String getID() {
+		return physicalTableID;
+	}
 }
 /*
  * DECLARE TABLE <FQ table name> AS <table name> HAVING
