@@ -60,16 +60,22 @@ public class MetadataExtract {
 
 	public static void buildBusMatrix() {
 		MetadataExtract me = new MetadataExtract();
-		InputStream busMatrixLogic = me.getInternalResource("obiee/udmlparser/bundledApps/BusMatrix.xsl");
-		InputStream htmlOutput = me.getInternalResource("obiee/udmlparser/bundledApps/Output.xsl");
+		InputStream busMatrixLogic;
+		InputStream htmlOutput;
 
-		InputStream subjectAreaSelection = me.getInternalResource("obiee/udmlparser/bundledApps/SubjectAreaSelection.xsl");
-		XMLUtils.applyStylesheet(request.getArg("rpdxml"), subjectAreaSelection, "temp2.xml");
+		if (isSubjectAreaListOn()) {
+			busMatrixLogic = me.getInternalResource("obiee/udmlparser/bundledApps/SubjectAreaSelection.xsl");
+			htmlOutput = me.getInternalResource("obiee/udmlparser/bundledApps/SAOutput.xsl");
+		}
+		else {
+			busMatrixLogic = me.getInternalResource("obiee/udmlparser/bundledApps/BusMatrix.xsl");
+			htmlOutput = me.getInternalResource("obiee/udmlparser/bundledApps/Output.xsl");
+		}
 
 		logger.info("Generating Bus Matrix document...");
 
-		//XMLUtils.applyStylesheet(request.getArg("rpdxml"), busMatrixLogic, "temp.xml");
-		//XMLUtils.applyStylesheet("temp.xml", htmlOutput, request.getArg("target"));
+		XMLUtils.applyStylesheet(request.getArg("rpdxml"), busMatrixLogic, "temp.xml");
+		XMLUtils.applyStylesheet("temp.xml", htmlOutput, request.getArg("target"));
 
 		File temp = new File ("temp.xml");
 		logger.info("Cleaning up temporary file {}", temp.getAbsolutePath());
