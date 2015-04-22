@@ -24,7 +24,7 @@ So this is my kind of business case... a tool extracting metadata to some indepe
 So, it's just:<br>
 <i>a parser utility, generating XML structures out of <b>OBIEE</b> UDML repository statements.</i>
 
-Oh... and now (March 2013) you can also "reverse-engineer" your business models, generating <a href='http://code.google.com/p/udmlparser/wiki/NewFeatures'>Bus Matrices</a>!<br>
+Oh... and now (March 2013) you can also "reverse-engineer" your business models, generating <a href='https://github.com/danielgalassi/udmlparser/blob/wiki/NewFeatures.md'>Bus Matrices</a>!<br>
 </font>
 
 
