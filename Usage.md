@@ -9,7 +9,7 @@
 
 ### First things first ###
 
-  * Download the JAR file from the Home Page (link to Google Drive).
+  * Download the JAR file from [BinTray](https://bintray.com/danielgalassi/oracle-bi-utilities/analytics-validator-service/view).
 
   * If you want to download older versions, please follow this link to the old [Downloads](https://code.google.com/p/udmlparser/downloads/list) section.
 
