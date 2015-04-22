@@ -34,8 +34,9 @@ Oh... and now (March 2013) you can also "reverse-engineer" your business models,
 </font>
 
 
-|![https://github.com/danielgalassi/udmlparser/blob/master/UDML.jpg](https://github.com/danielgalassi/udmlparser/blob/master/UDML.jpg)|![https://github.com/danielgalassi/udmlparser/blob/master/XML.jpg](https://github.com/danielgalassi/udmlparser/blob/master/XML.jpg)|
-|:----------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------|
+![https://github.com/danielgalassi/udmlparser/blob/master/UDML.jpg](https://github.com/danielgalassi/udmlparser/blob/master/UDML.jpg)
+
+![https://github.com/danielgalassi/udmlparser/blob/master/XML.jpg](https://github.com/danielgalassi/udmlparser/blob/master/XML.jpg)
 
 ![http://udmlparser.googlecode.com/svn/trunk/BusMatrix.jpg](https://github.com/danielgalassi/udmlparser/blob/master/BusMatrix.jpg)
 
