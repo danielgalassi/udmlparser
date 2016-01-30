@@ -22,7 +22,7 @@ public class SubjectArea implements UDMLObject {
 
 	private void parseLogicalTable(String line) {
 		int indexSA = line.indexOf(") SUBJECT AREA ");
-		if (line.endsWith(",")) {
+		if (line.endsWith(",") || line.endsWith(")")) {
 			logicalTablesIDs.add(line.substring(0, line.length()-1));
 		}
 		if (indexSA != -1) {
@@ -49,7 +49,6 @@ public class SubjectArea implements UDMLObject {
 		}
 
 		line = udml.nextLine();
-
 		//HIERARCHY DIMENSIONS
 		if (line.endsWith("DIMENSIONS (")) {
 			hierarchyDimensionIDs = new Vector<String>();
@@ -59,14 +58,17 @@ public class SubjectArea implements UDMLObject {
 				line = udml.nextLine().trim().replaceAll("\"", "");
 			};
 		}
-
 		//LOGICAL TABLES LIST
 		if (line.endsWith("LOGICAL TABLES (")) {
 			logicalTablesIDs = new Vector<String>();
+			boolean isEndOfLogicalTables = false;
 			do {
 				line = udml.nextLine().trim().replaceAll("\"", "");
-				parseLogicalTable(line);
-			} while (!line.contains(") SUBJECT AREA "));
+				if (!line.contains("LOGICAL DISPLAY FOLDERS (")) {
+					parseLogicalTable(line);
+				}
+				isEndOfLogicalTables = line.contains(") SUBJECT AREA ") || line.contains("LOGICAL DISPLAY FOLDERS (");
+			} while (!isEndOfLogicalTables);
 		}
 
 		//NO FURTHER ACTIONS FOR DESCRIPTION AND PRIVILEGES
